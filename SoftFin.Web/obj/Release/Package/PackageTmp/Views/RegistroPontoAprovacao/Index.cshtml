@@ -1,0 +1,301 @@
+﻿@{
+    ViewBag.Title = "Aprovação de Ponto por Data e Usuário";
+}
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal" class="form-control" id="dataFinal" value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Usuário</label>
+                @Html.DropDownList("usuario_id", (SelectList)ViewData["usuarios"], "---Selecione---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-2 form-group'>
+                <br />
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+
+    <div>
+        <button class="btn btn-primary" type="submit">
+            <span class="glyphicon glyphicon-ok"></span> Salvar</button>
+    </div>
+    <br />
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Detalhe do Lançamento</h4>
+            </div>
+            <div class="modal-body">
+               
+                    <div class="row">
+                        <div class='col-md-4 form-group'>
+                            <span> <label id="entidadeNome"></label></span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <span> <label id="entidadeData"></label></span>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 1</label>
+                        <input type="text" id="entidadePonto1" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 2</label>
+                        <input type="text" id="entidadePonto2" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 3</label>
+                        <input type="text" id="entidadePonto3" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 4</label>
+                        <input type="text" id="entidadePonto4" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 5</label>
+                        <input type="text" id="entidadePonto5" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 6</label>
+                        <input type="text" id="entidadePonto6" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 7</label>
+                        <input type="text" id="entidadePonto7" class="form-control" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Ponto 8</label>
+                        <input type="text" id="entidadePonto8" class="form-control" />
+                    </div>
+                </div>
+                        
+                <div class="alert alert-error"  hidden id="DivErro">
+                </div>
+                <div class="alert alert-info" hidden id="DivSucesso">
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSalvar">Salvar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+
+
+
+    var key = 0;
+    function btnEditar(value) {
+        key = value;
+        $('#indicator').show();
+        $.ajax(
+            {
+                url: "ObterId",
+                data: {
+                    'id': value
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    $('#entidadeNome').html(data.nome);
+                    $('#entidadeData').html(data.data);
+                    $('#entidadePonto1').val(data.ponto1);
+                    $('#entidadePonto2').val(data.ponto2);
+                    $('#entidadePonto3').val(data.ponto3);
+                    $('#entidadePonto4').val(data.ponto4);
+                    $('#entidadePonto5').val(data.ponto5);
+                    $('#entidadePonto6').val(data.ponto6);
+                    $('#entidadePonto7').val(data.ponto7);
+                    $('#entidadePonto8').val(data.ponto8);
+                    $('#indicator').hide();
+                    $("#myModal").modal();
+                },
+                error: function () {
+                    $('#indicator').hide();
+                    alert("error");
+                }
+            }
+        );
+
+
+    };
+
+
+    $('#btnSalvar').click(function () {
+        $('#indicator').show();
+        $("#DivErro").hide();
+        $("#DivSucesso").hide();
+
+        $.ajax(
+            {
+                url: "Salvar",
+                data: {
+                    'id': key,
+                    'ponto1': $("#entidadePonto1").val(),
+                    'ponto2': $("#entidadePonto2").val(),
+                    'ponto3': $("#entidadePonto3").val(),
+                    'ponto4': $("#entidadePonto4").val(),
+                    'ponto5': $("#entidadePonto5").val(),
+                    'ponto6': $("#entidadePonto6").val(),
+                    'ponto7': $("#entidadePonto7").val(),
+                    'ponto8': $("#entidadePonto8").val()
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    if (data.CDStatus == "OK") {
+                        Pesquisa();
+                        $("#DivSucesso").show();
+                        $("#DivSucesso").html("Salvo com sucesso")
+                    }
+                    else {
+                        $("#DivErro").show();
+                        $("#DivErro").html(data.DSMessage)
+                    }
+                },
+                error: function () {
+                    $('#indicator').hide();
+                    alert("error");
+                }
+            });
+    });
+
+
+    $('#pesquisa').click(function () {
+        Pesquisa();
+    });
+
+
+    function Pesquisa()
+    {
+        $('#indicator').show();
+        if ($("#usuario_id").val() == "") {
+            alert("Selecione um usuário");
+            return;
+        }
+        $.ajax(
+            {
+                url: "Pesquisa",
+                data: {
+                    'dataInicial': $("#dataInicial").val(),
+                    'dataFinal': $("#dataFinal").val(),
+                    'usuario': $("#usuario_id").val(),
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    montaTabela(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    }
+
+    function montaTabela(jsonData) {
+
+        var table = '                    <table class="table table-striped table-bordered table-hover">';
+        table += '                        <thead>';
+        table += '                            <tr>';
+        table += '                                <th class="center" width="20%">Usuário</th>';
+        table += '                                <th class="center" width="10%">Data</th>';
+        table += '                                <th class="center" width="7%">Ponto1</th>';
+        table += '                                <th class="center" width="7%">Ponto2</th>';
+        table += '                                <th class="center" width="7%">Ponto3</th>';
+        table += '                                <th class="center" width="7%">Ponto4</th>';
+        table += '                                <th class="center" width="7%">Ponto5</th>';
+        table += '                                <th class="center" width="7%">Ponto6</th>';
+        table += '                                <th class="center" width="7%">Ponto7</th>';
+        table += '                                <th class="center" width="7%">Ponto8</th>';
+        table += '                                <th class="center" width="14%">Comentários</th>';
+        table += '                            </tr>';
+        table += '                        </thead>';
+        table += '                        <tbody>';
+
+        $.each(jsonData, function (index, item) {
+
+
+
+
+
+            table += '<tr>';
+            table += '<td class="active">' + item.usuario + '</td>';
+            table += '<td class="active">' + item.data + '</td>';
+            table += '<td class="active">' + item.ponto1 + '</td>';
+            table += '<td class="active">' + item.ponto2 + '</td>';
+            table += '<td class="active">' + item.ponto3 + '</td>';
+            table += '<td class="active">' + item.ponto4 + '</td>';
+            table += '<td class="active">' + item.ponto5 + '</td>';
+            table += '<td class="active">' + item.ponto6 + '</td>';
+            table += '<td class="active">' + item.ponto7 + '</td>';
+            table += '<td class="active">' + item.ponto8 + '</td>';
+            table += '<td class="active">' + item.comentarios + '</td>';
+
+            table += '</tr>';
+
+            table += '<tr>';
+            table += '<td>Situação/Descrição</td>'
+            table += '<td class="active" colspan=2>'
+            table += '  <select id="Situacao_' + item.id + '" name="Situacao_' + item.id + '" class="form-control">'
+            table += '      <option value="">Em Analise</option>'
+            table += '      <option value="Aprovado">Aprovado</option>'
+            table += '      <option value="Reprovado">Reprovado</option>'
+            table += '  </select> '
+            table += '</td>';
+            table += '<td class="active" colspan=4><input type="text" id="txtDesc_' + item.id + '" name="txtDesc_' + item.id + '" class="form-control"></td>';
+            table += '      <td class="active" colspan=4><button class="btn btn-primary" type="button" onclick="btnEditar(' + item.id + ')">Editar</button></td>';
+            table += '</tr>';
+        });
+        table += '                        </tbody>';
+        table += '                     </table>';
+
+        $('div#Lista').html(table);
+    }
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

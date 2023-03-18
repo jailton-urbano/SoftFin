@@ -1,0 +1,47 @@
+﻿@model SoftFin.Web.Models.UsuarioEstabelecimento
+
+@{
+    ViewBag.Title = "Selecione a Empresa e o Estabelecimento";
+    ViewBag.SubTitle = "";
+    ViewBag.Helplink = "";
+    ViewBag.MigalhaA = "Principal";
+    ViewBag.MigalhaB = "Selecione a Empresa e o Estabelecimento";
+    ViewBag.MigalhaC = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div class="container-fluid">
+             <div class="row">
+                <div class="col-md-6 form-group">
+                    <div class="editor-label">
+                        Selecione a Empresa e o Estabelecimento que deseja administrar
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.estabelecimento_id, ViewData["Estabelecimentos"] as SelectList,null, new { @class = "form-control" })    
+                        @Html.ValidationMessageFor(model => model.estabelecimento_id)
+                    </div>
+                </div>
+             </div>   
+             <div class="row">
+                <div class="col-md-4 form-group">
+                    <button class="btn btn-primary" type="submit">
+                        <span class="glyphicon glyphicon-ok"></span> OK</button>
+                </div>
+             </div>
+        </div>
+    </fieldset>
+}
+
+
+
+@*@section Scripts {
+    
+}*@

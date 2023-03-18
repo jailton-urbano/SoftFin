@@ -1,0 +1,138 @@
+﻿@model SoftFin.GestorProcessos.Models.TabelaCampo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TabelaCampo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Tabela.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tabela.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoCampo.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoCampo.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Campo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Campo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TamanhoColuna)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TamanhoColuna)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TamanhoCampo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TamanhoCampo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Precisao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Precisao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FK)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FK)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FKUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FKUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FKRetorno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FKRetorno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FKParam)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FKParam)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ordem)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ordem)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Obrigatorio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Obrigatorio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SQLDefault)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SQLDefault)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

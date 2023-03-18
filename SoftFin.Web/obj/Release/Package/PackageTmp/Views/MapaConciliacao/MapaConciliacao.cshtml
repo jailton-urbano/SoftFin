@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "Mapa de Conciliação Bancária";
+}
+
+
+
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                Mês/Ano Base: 
+                <input type="text" name="dataFinal" id="dataFinal" class = "form-control" value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-4 form-group'>
+                Banco/Conta: 
+                @Html.DropDownList("banco", (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+
+    <div class="alert alert-info" id="divalert">
+        @ViewBag.msg
+    </div>
+}
+
+<style>
+    .col-md-2 form-group
+    {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .text-right-bold
+    {
+        text-align: right !important;
+        font-weight: bold;
+    }
+
+    .text-right
+    {
+        text-align: right !important;
+    }
+        .text-right-red
+    {
+        text-align: right !important;
+        color: red;
+    }
+        .text-right-blue
+    {
+        text-align: right !important;
+        color: blue;
+    }
+    .text-center
+    {
+        text-align: center !important;
+    }
+
+    .result
+    {
+        background-color: lightgreen;
+    }
+
+    .green
+    {
+        background-color: green;
+        color: green;
+    }
+
+    .red
+    {
+        background-color: red;
+        color: red;
+    }
+
+</style>
+<script>
+
+    
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+    });
+
+
+    $('#pesquisa').click(function () {
+        $('#indicator').show();
+        $("#divalert").html("");
+        $('div#Lista').html("");
+
+        $.ajax(
+            {
+                url: "geraMapaConciliacao",
+                data: {
+                     'DataFinal': $("#dataFinal").val(),
+                    'banco': $("#banco").val()
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    try { 
+                        montaMapaConciliacao(data);
+                        $('#indicator').hide();
+                    }
+                    catch (err) {
+                        $('#indicator').hide();
+                        if (data.substring(0, 4) == "OPS!")
+                            $("#divalert").html(data);
+                        else
+                            $("#divalert").html("OPS! - " + err);
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+    function montaMapaConciliacao(jsonData) {
+        var table = '<table width="120" cellpadding="5" class="table table-condensed table-bordered"><thead><tr><th scope="col" class="text-center">Data</th><th scope="col" class="text-center">Saldo Real</th><th scope="col" class="text-center">Saldo Calculado</th><th scope="col" class="text-center">Conciliação</th></tr></thead><tbody>';
+
+        $.each(jsonData, function (index, mvto) {
+            console.log(mvto);
+                table += '<tr>';
+                table += '<td class="active">' + mvto.data.replace("00:00:00","") + '</td>';
+                if (mvto.statusSaldoReal == "1") {
+                    table += '<td class="green">' + mvto.statusSaldoReal + '</td>';
+                }
+                else {
+                    table += '<td class="red">' + mvto.statusSaldoReal + '</td>';
+                }
+                if (mvto.statusSaldoCalculado == "1") {
+                    table += '<td class="green">' + mvto.statusSaldoCalculado + '</td>';
+                }
+                else {
+                    table += '<td class="red">' + mvto.statusSaldoCalculado + '</td>';
+                }
+
+                if (mvto.statusLanctosConciliacao == "1") {
+                    table += '<td class="green">' + mvto.statusSaldoCalculado + '</td>';
+                }
+                else if(mvto.statusLanctosConciliacao == "0") {
+                    table += '<td class="red">' + mvto.statusLanctosConciliacao + '</td>';
+                }
+                else {
+                    table += '<td class="">' + mvto.statusLanctosConciliacao + '</td>';
+                }
+
+                table += '</tr>';
+        });
+
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+    
+</script>

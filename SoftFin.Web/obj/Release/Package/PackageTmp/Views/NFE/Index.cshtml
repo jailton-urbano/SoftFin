@@ -1,0 +1,2146 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/NFe/NFeIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none">
+
+    <script type="text/ng-template" id="modalStatus.html">
+        <div>
+            <div class="modal-header">
+                <h3>Status Sefaz</h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" ng-show="showOK">
+                    {{msgOK}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalCancelamento.html">
+        <div>
+            <div class="modal-header">
+                <h3>Cancelamento Nota ?</h3>
+            </div>
+            <div class="modal-body">
+                <div class=''>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                        <div class='col-md-12 form-group'>
+                            <label>Motivo</label>
+                            <input type="text" ng-model="motivo" class="form-control" required />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" ng-click="ok()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Cancelar
+                </button>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalCartaCorrecao.html">
+        <div>
+            <div class="modal-header">
+                <h3>Enviar Carta de Correção?</h3>
+            </div>
+            <div class="modal-body">
+                <div class=''>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                        <div class='col-md-12 form-group'>
+                            <label>Correção</label>
+                            <textarea ng-model="motivo" class="form-control" required cols="50" rows="10" maxlength="1000"></textarea>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" ng-click="ok()" ng-disabled="enableOK" ng-show="showOK">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    OK
+                    {{msgok}}
+                </button>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalFP.html">
+        <div>
+            <div class="modal-header">
+                <h3>Forma de Pagamento</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class='row'>
+                        <div class='col-md-4 form-group'>
+                            <label>Indicador da Forma de Pagamento</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.indPag" ng-options="o.Value as o.Text for o in ListaFP" ng-required="true">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Meio de pagamento </label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tPag" ng-options="o.Value as o.Text for o in ListaMP" ng-required="true">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Valor do Pagamento</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.vPag" class="form-control" required ui-number-mask="2" />
+                        </div>
+
+                        <div class='col-md-12 form-group'>
+                            <label>Tipo de Integração para pagamento</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tpIntegra" ng-options="o.Value as o.Text for o in ListaTI">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-12 form-group'>
+                            <label>
+                                CNPJ da Credenciadora de cartão de
+                                crédito e/ou débito
+                            </label>
+                            <input type="text" ng-disabled="ModoConsulta" ng-model="entidade.CNPJ" class="form-control" ng-maxlength="20" ui-br-cnpj-mask />
+                        </div>
+                        <div class='col-md-12 form-group'>
+                            <label>
+                                Bandeira da operadora de cartão de crédito
+                                e/ou débito
+                            </label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tBand" ng-options="o.Value as o.Text for o in ListaTB">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-8 form-group'>
+                            <label>
+                                Número de autorização da operação cartão
+                                de crédito e/ou débito
+                            </label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.cAut" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>
+                                Valor do troco
+                            </label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.vTroco" class="form-control" ui-number-mask="2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalItem.html">
+        <div>
+            <div class="modal-header">
+                <h3>Manutenção de Itens</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>Tabela</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.TabelaPrecoItemProdutoServico_id" ng-options="o.Value as o.Text for o in ListaTabelas" ng-required="true" ng-change="ObterProdutos()">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-12 form-group'>
+                            <label>Produto</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.idProduto" ng-options="o.Value as o.Text for o in objsProdutos" ng-required="true" ng-change="CarregaPadroes()">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Operação</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.operacao_id" ng-options="o.Value as o.Text for o in ListaOperacoes" ng-required="true" ng-change="SomaTudo()">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Quantidade</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.quantidade" class="form-control" required ng-change="SomaTudo()" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Desconto</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.desconto" ui-number-mask="2" class="form-control" required ng-change="SomaTudo()" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Valor Unitário</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.valorUnitario" ui-number-mask="2" class="form-control" readonly />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Valor</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.valor" ui-number-mask="2" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalDuplicata.html">
+        <div>
+            <div class="modal-header">
+                <h3>Manutenção de Duplicata</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class='row'>
+                        <div class='col-md-4 form-group'>
+                            <label>Número</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='duplicata.numero' class='form-control' />
+                        </div>
+                        <div class='col-md-4 form-group' datetimez ng-model="duplicata.vencto">
+                            <label>Vencimento</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="duplicata.vencto" ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Valor</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='duplicata.valor' class='form-control' ui-number-mask="2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalVolume.html">
+        <div>
+            <div class="modal-header">
+                <h3>Manutenção de Volume</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Quantidade</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.qtde' class='form-control' ui-number-mask="0">
+                        </div>
+                        <div class='col-md-5 form-group'>
+                            <label>Especie</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.especie' class='form-control' />
+                        </div>
+                        <div class='col-md-5 form-group'>
+                            <label>Marca</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.marca' class='form-control' />
+                        </div>
+                        <div class='col-md-6 form-group'>
+                            <label>Numeração</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.numeracao' class='form-control' />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Peso Liquido</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.pesoLiquido' class='form-control' ui-number-mask="3" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Peso Bruto</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.pesoBruto' class='form-control' ui-number-mask="3" />
+                        </div>
+                        <div class='col-md-6 form-group'>
+                            <label>Lacres(Separar por virgulas)</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='volume.lacres' class='form-control' />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalReboque.html">
+        <div>
+            <div class="modal-header">
+                <h3>Manutenção de Reboque</h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class='col-md-6 form-group'>
+                        <label>Placa</label>
+                        <input type='text' ng-disabled='ModoConsulta' ng-model='reboque.placa' class='form-control' ng-maxlength="7" maxlength="7" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>UF</label>
+                        <input type='text' ng-disabled='ModoConsulta' ng-model='reboque.ufplaca' class='form-control' ng-maxlength="2" maxlength="2" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>RNTC</label>
+                        <input type='text' ng-disabled='ModoConsulta' ng-model='reboque.RNTC' class='form-control' ng-maxlength="7" maxlength="7" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="modalNFReferenciada.html">
+        <div>
+            <div class="modal-header">
+                <h3>Manutenção de Nota Fiscal Referenciada</h3>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4>NF-e/CTE</h4>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>NFe</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.NFe' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>CTe</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.CTe' class='form-control' />
+                        </div>
+                    </div>
+                    <h4>Nota Fiscal</h4>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Série</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfserie' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Número</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfnumero' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Modelo</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfmodelo' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>UF</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfuf' class='form-control' />
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            <label>Ano e Mes(AAMM)</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfanoMesEmissao' class='form-control' />
+                        </div>
+
+                        <div class='col-md-4 form-group'>
+                            <label>CNPJ</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfcnpj' class='form-control' />
+                        </div>
+                    </div>
+
+
+
+
+                    <h4>Nota Fiscal do Produtor</h4>
+                    <div class='row'>
+
+                        <div class='col-md-2 form-group'>
+                            <label>Produtor Serie</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodserie' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Produtor Número</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodnumero' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Produtor Modelo</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodmodelo' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>UF</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfproduf' class='form-control' />
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Produtor Ano e Mes (AAMM)</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodanoMesEmissao' class='form-control' />
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Cnpj / Cpf</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodcnpjCpf' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>IE</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.nfprodIE' class='form-control' />
+                        </div>
+                    </div>
+                    <h4>Cupom Fiscal</h4>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Número ECF</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.ECF' class='form-control' />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Número COO</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.numeroCOO' class='form-control' ng-maxlength="30" maxlength="30" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Modelo(2B,2C,2D)</label>
+                            <input type='text' ng-disabled='ModoConsulta' ng-model='nfReferenciada.modelo' class='form-control' ng-maxlength="2" maxlength="2" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        {{DSMessage}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <input class="btn btn-danger" type="button" ng-click="ok()" value="Salvar">
+                    <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalBaixa.html">
+        <div>
+            <div class="modal-header">
+                <h3>Baixa de Nota - Perda ?</h3>
+            </div>
+            <div class="modal-body">
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+                <button class="btn btn-primary" ng-click="ok()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Baixar
+                </button>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalEnvio.html">
+        <div>
+            <div class="modal-header">
+                <h3>Enviar de Nota utilizando o certificado A1 Digital?</h3>
+            </div>
+            <div class="modal-body">
+                <div class=''>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                    <ul>
+                        <li ng-repeat="item in Alertas">{{item}}</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success" ng-show="showOK">
+                    {{msgOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                    <ul>
+                        <li ng-repeat="item in Alertas">{{item}}</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" ng-click="ok()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Enviar
+                </button>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalConsulta.html">
+        <div>
+            <div class="modal-header">
+                <h3>Consulta de Nota utilizando o certificado A1 Digital?</h3>
+            </div>
+            <div class="modal-body">
+                <div class=''>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                    <ul>
+                        <li ng-repeat="item in Alertas">{{item}}</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-success" ng-show="showOK">
+                    {{msgOK}}
+                    {{DSMessage}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                    <ul>
+                        <li ng-repeat="item in Alertas">{{item}}</li>
+                    </ul>
+                </div>
+
+                <input class="btn btn-danger" type="button" ng-click="ok()" value="Enviar">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalHistorico.html">
+        <div>
+            <div class="modal-header">
+                <h3>Histórico da Nota Integração Sefaz</h3>
+            </div>
+            <div class="modal-body">
+                <div class=''>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-show="!showDetalhe">
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridhistorico"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>
+
+                                </th>
+                                <th>
+                                    Aceito
+                                </th>
+                                <th>
+                                    Data
+                                </th>
+                                <th>
+                                    Tipo
+                                </th>
+                                <th>
+                                    Usuário
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item2 in objs|itemsPerPage:5" pagination-id="gridhistorico">
+                                <td>
+                                    <a href="../../NFe/HistorioDowloadXML/{{item2.id}}" target="_blank" style="margin-top: 4px; border-right-width: 0px; padding-right: 40px;"
+                                       class="btn btn-success">
+                                        <span class="glyphicon glyphicon-download"></span> Download XML
+                                    </a>
+                                </td>
+                                <td>
+                                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 40px;"
+                                            ng-click="DetalharHistorico(item2)"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-th-list"></span> Detalhar
+                                    </button>
+                                </td>
+                                <td>{{item2.aceito}}</td>
+                                <td>{{item2.dataInsert | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                                <td>{{item2.tipo}}</td>
+                                <td>{{item2.usuarioInsert}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridhistorico"></dir-pagination-controls>
+                </div>
+
+                <div ng-show="showDetalhe">
+                    <h5>Alertas</h5>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridAlertas"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Código
+                                </th>
+                                <th>
+                                    Descrição
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item2 in ListaAlertas|itemsPerPage:5" pagination-id="gridAlertas">
+                                <td>{{item2.codigo}}</td>
+                                <td>{{item2.descricao}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridAlertas"></dir-pagination-controls>
+                    <h5>Erros</h5>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridErros"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Código
+                                </th>
+                                <th>
+                                    Descrição
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item2 in ListaErros|itemsPerPage:5" pagination-id="gridErros">
+                                <td>{{item2.codigo}}</td>
+                                <td>{{item2.descricao}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridErros"></dir-pagination-controls>
+                    <button class="btn btn-success" ng-click="cancelDetalhe()">Fechar Detalhe</button>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalVencimento.html">
+        <div>
+            <div class="modal-header">
+                <h3>Alterar Vencimento da Nota Fiscal?</h3>
+            </div>
+            <div class="modal-body">
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-12 form-group'>
+                            <label>NFe: {{item.numeroNfe}} - Serie: {{item.serieNfe}}  - Emissão: {{item.dataEmissaoNfse  | date:'dd/MM/yyyy'}} - Vencimento: {{item.dataVencimentoNfse  | date:'dd/MM/yyyy'}} - Razão: {{item.razao}} - Valor: {{item.valor | number:2}}</label>
+                        </div>
+                        <div class='col-md-3 form-group' datetimez ng-model="vencimento" ng-disabled="ModoConsulta">
+                            <label>Data Vencimento</label>
+                            <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="vencimento" ui-date-mask ng-required="true" />
+                            <span class="add-on" ng-hide="ModoConsulta">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-hide="ModoConsulta"></i>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="ok()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Alterar
+                </button>
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+
+            </div>
+        </div>
+    </script>
+
+    <div ng-controller="MestreEntidade">
+
+
+        <div class='row'>
+            <div class="col-xs-3 col-md-9">
+                <h2><b>{{NotaFiscalPessoaTomador.razao}}</b></h2>
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <img src="~/Content/images/nota01.png" alt="SoftFin" style="width: 120px; height: 100px;">
+
+            </div>
+        </div>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Nota Fiscal Eletrônica:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search'>
+                                <div class='container'>
+
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataEmissaoRpsIni">
+                                            <label>Data Emissão Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataEmissaoRpsIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="nfe.dataEmissaoRpsFim">
+                                            <label>Data Emissão Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataEmissaoRpsFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Bruto Inicial</label>
+                                            <input type="text" ng-model="filtro.valorBrutoIni" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Bruto Final</label>
+                                            <input type="text" ng-model="filtro.valorBrutoFim" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Ordem</label>
+                                            <input type="text" ng-model="filtro.Numero" class="form-control" ui-number-mask="0" />
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataVencimentoNfseIni">
+                                            <label>Data Vencimento Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataVencimentoNfseIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataVencimentoNfseFim">
+                                            <label>Data Vencimento Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataVencimentoNfseFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisa()">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" ng-disabled="ModoConsulta" class="form-control" ng-model="procurar" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <button style="border-right-width: 0px; padding-right: 123px;"
+                                    ng-click="Pesquisa()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 103px;"
+                                    ng-click="GerarNota()"
+                                    ng-show="EditAccess"
+                                    title="Nova nota"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Nota Avulsa
+                            </button>
+                            <button style="margin-top: 4px; padding-right: 96px;"
+                                    ng-click="BuscaOV()"
+                                    ng-show="EditAccess"
+                                    title="Novo registro"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Faturamento
+                            </button>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 101px;"
+                                    ng-click="Status()"
+                                    ng-show="EditAccess"
+                                    title="Verificar se está funcional o serviço web do Sefaz"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-plus-sign"></span> Status Sefaz
+                            </button>
+                            @*<button style="margin-top: 4px; border-right-width: 0px; padding-right: 124px;"
+                ng-click="Inutilizar()"
+                title="Inutiliza Faixa de numeração"
+                class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove-sign"></span> Inutilizar
+        </button>*@
+                        </th>
+                        <th>Identificação</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-show="ListaOV.length == 0">
+                        <td colspan="2">{{MsgPesquisa}}</td>
+                    </tr>
+                    <tr dir-paginate="item in ListaOV|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7" pagination-id="gridOV" class="{{item.active}}">
+                        <td style="width: 40px;">
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 130px;"
+                                    ng-click="Detalhe(item)"
+                                    title="Detalhes da nota"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhe
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 136px;"
+                                    ng-click="Alterar(item)"
+                                    title="Alterar a nota"
+                                    ng-show="item.situacao == 1"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Alterar
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 54px;"
+                                    ng-click="AlterarVencto(item)"
+                                    title="Alterar vencimento da nota"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-calendar"></span> Alterar Vencimento
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 145px;"
+                                    ng-click="Baixa(item)" title="Baixar nota perdida"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-minus"></span> Baixa
+                            </button>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 86px;"
+                                    ng-click="Cancelamento(item)"
+                                    title="Cancela a nota"
+                                    ng-show="item.situacao != 4"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Cancelamento
+                            </button>
+
+                            @*<button style="margin-top: 4px; border-right-width: 0px; padding-right: 152px;"
+                                        ng-click="Boleto(item)"
+                                        class="btn btn-default">
+                                    <span class="glyphicon glyphicon-barcode"></span> Boleto
+                                </button>*@
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 72px;"
+                                    ng-click="Envio(item)"
+                                    title="Enviar nota ao Sefaz"
+                                    ng-show="item.situacao == 1"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-open-file"></span> Envio Nota Sefaz
+                            </button>
+                            @*<button style="margin-top: 4px; border-right-width: 0px; padding-right: 63px;"
+                                        ng-click="Consulta(item)"
+                                        class="btn btn-success">
+                                    <span class="glyphicon glyphicon-thumbs-up"></span> Consulta Nota Sefaz
+                                </button>*@
+
+                            <a href="~/NFe/GerarXML/{{item.id}}" target="_blank" style="margin-top: 4px; border-right-width: 0px; padding-right: 112px;"
+                               ng-show="item.situacao == 1"
+                               title="Gera um XML"
+                               class="btn btn-warning">
+                                <span class="glyphicon glyphicon-share-alt"></span> Gerar XML
+                            </a>
+                            <a href="~/NFe/GerarDANFE/{{item.id}}" target="_blank" style="margin-top: 4px; border-right-width: 0px; padding-right: 96px;"
+                               class="btn btn-warning"
+                               ng-show="item.situacao == 2" title="Gera uma DANFE">
+                                <span class="glyphicon glyphicon-share-alt"></span> Gerar DANFE
+                            </a>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 12x;padding-right: 12px;"
+                                    ng-click="Historico(item)" title="Exibir histórico de integração com o Sefaz"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-time"></span> Histórico Integração Sefaz
+                            </button>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 138px;"
+                                    ng-click="Copiar(item)"
+                                    title="A partir de uma nota cria uma outra"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-duplicate"></span> Copiar
+                            </button>
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 63px;"
+                                    ng-click="CartaCorrecao(item)"
+                                    title="Enviar carta de correção para o Sefaz"
+                                    class="btn btn-success"
+                                    ng-show="item.situacao == 2">
+                                <span class="glyphicon glyphicon-list-alt"></span> Carta de Correção
+                            </button>
+
+                            <a href="~/NFe/Download/{{item.id}}" target="_blank"
+                               style="margin-top: 4px; border-right-width: 0px; padding-right: 66px;"
+                               class="btn btn-success"
+                               ng-show="item.situacao == 2"
+                               title="Faz o download da NFe">
+                                <span class="glyphicon glyphicon-arrow-down"></span> Download de NFe
+                            </a>
+                        </td>
+
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('loteNfe')">Lote </span> /
+                                <span ng-click="ordenar('numeroNfe')">Número </span> /
+                                <span ng-click="ordenar('serieNfe')">Serie</span> 
+                            </b>
+                            <br />
+                            {{item.loteNfe}} /
+                            {{item.numeroNfe}} /
+                            {{item.serieNfe}} 
+
+                            <br />
+                            <b>
+                                
+                                <span ng-click="ordenar('dataEmissaoNfse')">Emissão </span>  /
+                                <span ng-click="ordenar('dataVencimentoNfse')">Data Vencto </span> /
+                                <span ng-click="ordenar('dataVencimentoNfse')">Data Vencto Original</span>
+                            </b>
+                            <br />
+                            
+                            {{item.dataEmissaoNfse | date:'dd/MM/yyyy'}} /
+                            {{item.dataVencimentoNfse | date:'dd/MM/yyyy'}} /
+                            {{item.DataVencimentoOriginal | date:'dd/MM/yyyy'}}
+
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('valor')">Valor </span> / <span ng-click="ordenar('CFOP')">CFOP </span>  / <span ng-click="ordenar('situacao')">Situação</span>
+                            </b>
+                            <br />
+                            {{item.valor | number:2}} / {{item.CFOP}} /
+                            <span class="label label-sm label-primary" ng-show="item.situacao == '1'"> {{item.situacao | status}}</span>
+                            <span class="label label-sm label-success" ng-show="item.situacao == '2'"> {{item.situacao | status}}</span>
+                            <span class="label label-sm label-danger" ng-show="item.situacao == '3'"> {{item.situacao | status}}</span>
+                            <span class="label label-sm label-danger" ng-show="item.situacao == '4'"> {{item.situacao | status}}</span>
+                            <span class="label label-sm label-warning" ng-show="item.situacao == '5'"> {{item.situacao | status}}</span>
+
+
+                            <br />
+
+                            <b>
+                                <span ng-click="ordenar('razao')">Razão</span> /
+                                <span ng-click="ordenar('Numero')">Ordem</span>
+                            </b>
+                            <br />
+                            {{item.razao}} / {{item.Numero}}
+                            <br />
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+                <br /><label>Erros</label><br />
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+                <br /><label>Alertas</label><br />
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="!showGrid">
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="Salvar()" value="{{msgSalvar}}" ng-show="!ModoConsulta">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Salvar
+                </button>
+                <button class="btn btn-default" ng-click="Voltar()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Dados Nota</h2>
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Lote</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="nf.loteNfe" class="form-control" ng-required="true" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número</label>
+                                    <input type="text" ng-model="nf.numeroNfe" class="form-control" ng-disabled="ModoConsulta" />
+                                </div>
+                                <div class='col-md-1 form-group'>
+                                    <label>Serie</label>
+                                    <input type="text" ng-model="nf.serieNfe" class="form-control" ng-disabled="ModoConsulta" />
+                                </div>
+
+
+                                <div class='col-md-2 form-group' datetimez ng-model="nf.dataEmissaoNfse" ng-disabled="ModoConsulta">
+                                    <label>Data Emissão</label>
+                                    <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataEmissaoNfse" ui-date-mask ng-required="true" />
+                                    <span class="add-on" ng-hide="ModoConsulta">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-disabled="ModoConsulta"></i>
+                                    </span>
+                                </div>
+
+                                <div class='col-md-2 form-group' datetimez ng-model="nf.dataVencimentoNfse" ng-disabled="ModoConsulta">
+                                    <label>Vencimento</label>
+                                    <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataVencimentoNfse" ui-date-mask ng-required="true" />
+                                    <span class="add-on" ng-hide="ModoConsulta">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-hide="ModoConsulta"></i>
+                                    </span>
+                                </div>
+
+                                <div class='col-md-3 form-group' datetimey ng-model="nfe.dataHoraSaida" ng-disabled="ModoConsulta">
+
+                                    <label>
+                                        Data e Hora Saída
+                                    </label>
+                                    <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy hh:mm" type="text" class="form-control" ng-model="nfe.dataHoraSaida" ui-date-time-mask ng-required="true" />
+                                    <span class="add-on" ng-hide="ModoConsulta">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-disabled="ModoConsulta"></i>
+                                    </span>
+                                </div>
+
+
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-6 form-group'>
+                                    <label>Chave de acesso</label>
+                                    <input type="text" ng-model="nfe.chaveAcesso" class="form-control" ng-disabled="ModoConsulta" />
+                                </div>
+
+                                <div class='col-md-6 form-group'>
+                                    <label>Descrição</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="ov.descricao" class="form-control" ng-required="true" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-12 form-group'>
+                                    <label>CFOP</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nfe.CFOP" ng-options="o.Value as o.Text for o in ListaCFOP" ng-required="true">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Tipo</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nf.tipoNfe" ng-options="o.Value as o.Text for o in ListaTipoNFe" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Banco</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nf.banco_id" ng-options="o.Value as o.Text for o in ListaBancos" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Unidade de Negócio</label>
+                                    <select class="form-control" ng-model="ov.unidadeNegocio_ID" ng-disabled="ModoConsulta"
+                                            ng-options="o.Value as o.Text for o in ListaUnidadeNegocios" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Cliente</h2>
+                            <div class='row'>
+                                <div class='col-md-8 form-group'>
+                                    <label>Razão</label>
+                                    <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.razao" class="form-control" ng-maxlength="150" ng-required="true" />
+                                    <button ng-click="BuscaPessoa('Tomador')" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Fone</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.fone" class="form-control" ng-maxlength="15" ng-required="true" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Tipo de Endereço</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.tipoEndereco" class="form-control" ng-maxlength="35" ng-required="true" />
+                                </div>
+                                <div class='col-md-5 form-group'>
+                                    <label>Endereço</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.endereco" class="form-control" ng-maxlength="35" ng-required="true" />
+
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.numero" class="form-control" ng-maxlength="15" ng-required="true" />
+
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Complemento</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.complemento" class="form-control" ng-maxlength="20" />
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Bairro</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.bairro" class="form-control" ng-maxlength="60" ng-required="true" />
+
+                                </div>
+                                <div class='col-md-5 form-group'>
+                                    <label>Cidade</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.cidade" class="form-control" ng-maxlength="60" ng-required="true" />
+
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>UF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="NotaFiscalPessoaTomador.uf" ng-options="o.Sigla as o.Sigla for o in Estados" ng-required="true">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>CEP</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.cep" class="form-control" ng-maxlength="10" ng-required="true" />
+                                </div>
+                            </div>
+                            <div class='row'>
+
+                                <div class='col-md-6 form-group'>
+                                    <label>Email</label>
+                                    <input ng-disabled="ModoConsulta" type="email" ng-model="NotaFiscalPessoaTomador.email" class="form-control" ng-maxlength="300" ng-required="true" />
+                                </div>
+                                <div class='col-md-3 form-group'>
+
+                                    <label>Indicador de CNPJ/CPF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="NotaFiscalPessoaTomador.indicadorCnpjCpf" ng-required="true" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>CPF/CNPJ</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="NotaFiscalPessoaTomador.indicadorCnpjCpf != 1" ng-required="true" />
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="NotaFiscalPessoaTomador.indicadorCnpjCpf == 1" ng-required="true" />
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Incrição Estadual</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.inscricaoEstadual" class="form-control" ng-maxlength="20" />
+
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Inscrição Municipal</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="NotaFiscalPessoaTomador.inscricaoMunicipal" class="form-control" ng-maxlength="20" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Itens da Nota</h2>
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta && EditAccess" 
+                                                        ng-click="NovoItem()"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                            <th>Impostos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in nfeItems|orderBy:sortKey:reverse|itemsPerPage:7" pagination-id="griditem">
+                                            <td style="width: 40px;">
+
+                                                @*<button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                            ng-click="AlterarItem(item, $index)"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-edit"></span> Editar
+                                    </button>*@
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirItem($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-remove"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarItem('nomeProduto')"> Produto </span> /
+                                                    <span ng-click="ordenarItem('operacao')"> Operação </span> /
+                                                    <span ng-click="ordenarItem('valorUnitario')"> Valor Unitário </span> /
+                                                    <span ng-click="ordenarItem('quantidade')">Quantidade</span> /
+                                                    <span ng-click="ordenarItem('desconto')">Desconto</span> /
+                                                    <span ng-click="ordenarItem('valor')">Valor</span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.nomeProduto}} / {{item.operacao}} / {{item.valorUnitario}} / {{item.quantidade}} / {{item.desconto | number:2}} / {{item.valor | number:2}}</label>
+                                                <br />
+
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarItem('CFOP')"> CFOP </span> /
+                                                    <span ng-click="ordenarItem('CSOSN')"> CSOSN </span> /
+                                                    <span ng-click="ordenarItem('NCM')">NCM</span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.CFOP}} / {{item.CSOSN}} / {{item.NCM}}</label>
+                                                <br />
+                                                <b>
+                                                    <span ng-click="ordenarItem('valorICMS')"> ICMS </span> /
+                                                    <span ng-click="ordenarItem('valorIPI')"> IPI </span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.ICMS}} / {{item.valorIPI}}</label>
+                                                <br />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+
+                            <h2>Impostos</h2>
+                            <div class='row'>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Total     Produto </label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorProduto" class="form-control" ui-number-mask="2" readonly>
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Frete</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorFrete" class="form-control" ui-number-mask="2" ng-required="true" ng-blur="RecalcularNota()" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Seguro</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorSeguro" class="form-control" ui-number-mask="2" ng-required="true" ng-blur="RecalcularNota()" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Outros</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorOutro" class="form-control" ui-number-mask="2" ng-required="true" ng-blur="RecalcularNota()" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Base ICMS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.baseICMS" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>ICMS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorICMS" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Base ICMS ST</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.baseICMSST" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>ICMS ST</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorICMSST" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Pis</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorPIS" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor CONFINS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorCONFINS" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor CSLL</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorCSLL" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor II</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorII" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Desconto</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valorDesconto" class="form-control" ui-number-mask="2" readonly />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor da Nota</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.valor" class="form-control" ui-number-mask="2" readonly>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Forma de Pagamento</h2>
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridFP"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta && EditAccess"
+                                                        ng-click="NovoFP(null)"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                            <th>Cartão ou Cartão de Débito</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in listaFormaPagamento|itemsPerPage:7" pagination-id="gridFP">
+                                            <td style="width: 40px;">
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirFP($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-remove"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                
+                                                    <b> Forma de Pagamento: </b> {{item.indPag}} - {{item.indPag |filtroindPag}}  <br />
+                                                    <b> Meio de pagamento: </b> {{item.tPag}} - {{item.tPag |filtrotPag}}  <br />
+                                                    <b> Valor do Pagamento:</b> {{item.vPag | number:2}}
+                                                
+
+                                            </td>
+                                            <td>
+                                                
+                                                    <b> Tipo de Integração para pagamento: </b>
+                                                    {{item.tpIntegra}} - {{item.tpIntegra |filtrotpIntegra}}  <br />
+                                                    <b>
+                                                        CNPJ da Credenciadora:
+                                                    </b>
+                                                    {{item.CNPJ}}  <br />
+                                                    <b>
+                                                        Bandeira da operadora:
+                                                    </b>
+                                                    {{item.tBand}} - {{item.tBand |filtrotBand}}  <br />
+                                                    <b>
+                                                        Número de autorização:
+                                                    </b>
+                                                    {{item.cAut}}  <br />
+                                                    <b>
+                                                        Valor do troco:
+                                                    </b>
+                                                    {{item.vTroco | number:2}}
+                                               
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridFP"></dir-pagination-controls>
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Transporte</h2>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Modalidade Frete</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="transp.modalidadeFrete" ng-options="o.Value as o.Text for o in ListaModalidadeFrete">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-8 form-group'>
+                                    <label>Nome ou Razão</label>
+                                    <input type="text" ng-model="transp.nomeRazao" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="150" maxlength="150" />
+                                    <button ng-click="BuscaPessoa('Transportadora')" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+                                    <label>Indicador de CNPJ/CPF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="transp.indicadorCnpjCpf" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>CPF/CNPJ</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="transp.indicadorCnpjCpf != 1" />
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="transp.indicadorCnpjCpf == 1" />
+                                </div>
+
+                                <div class='col-md-6 form-group'>
+                                    <label>Endereço Completo</label>
+                                    <input type="text" ng-model="transp.EnderecoCompleto" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="60" maxlength="60" />
+                                </div>
+                                <div class='col-md-6 form-group'>
+                                    <label>Cidade</label>
+                                    <input type="text" ng-model="transp.cidade" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="60" maxlength="60" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>UF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="transp.uf" ng-options="o.Sigla as o.Sigla for o in Estados">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Incrição Estadual</label>
+                                    <input type="text" ng-model="transp.IE" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="14" maxlength="14" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Placa</label>
+                                    <input type="text" ng-model="transp.placa" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="7" maxlength="7" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>UF da Placa</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="transp.ufplaca" ng-options="o.Sigla as o.Sigla for o in Estados">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>RNTC</label>
+                                    <input type="text" ng-model="transp.RNTC" class="form-control" ng-disabled="ModoConsulta" ng-maxlength="25" maxlength="25" />
+                                </div>
+                            </div>
+
+                            <h3>Transporte Retenção ICMS</h3>
+
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Serviço</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.valorServico" class="form-control" ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Base ICMS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.baseCalculo" class="form-control" ui-number-mask="2" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Aliquota ICMS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.aliquota" class="form-control" ui-number-mask="2" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor ICMS</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.ICMSRetido" class="form-control" ui-number-mask="2" />
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Municipio de Ocorrência(Código IBGE)</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="transp.codigoMunicipioOcorrencia" class="form-control" ng-maxlength="7" maxlength="7" />
+                                    <button ng-click="BuscaMunicipios('transp')" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                    <button ng-click="transp.codigoMunicipioOcorrencia = ''" ng-show="!ModoConsulta  && EditAccess"
+                                            class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-trash"></span> Limpar
+                                    </button>
+                                </div>
+
+                                <div class='col-md-12 form-group'>
+                                    <label>CFOP</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="transp.CFOP" ng-options="o.Value as o.Text for o in ListaCFOP">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+
+                            <h3>Volumes</h3>
+
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridTransp"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta && EditAccess"
+                                                        ng-click="IncluirVolume()"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in listaVolumes|orderBy:sortKey:reverseVolumes|itemsPerPage:7" pagination-id="gridTransp"class="{{item.active}}">
+                                            <td style="width: 40px;">
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirVolume($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarVolumes('qtde')"> Quantidade </span> /
+                                                    <span ng-click="ordenarVolumes('especie')"> Especie </span> /
+                                                    <span ng-click="ordenarVolumes('marca')"> Marca</span> /
+                                                    <span ng-click="ordenarVolumes('numeracao')"> Numeração</span> /
+                                                    <span ng-click="ordenarVolumes('pesoLiquido')"> Peso Liquido</span> /
+                                                    <span ng-click="ordenarVolumes('pesoBruto')"> Peso Bruto</span> /
+                                                    <span ng-click="ordenarVolumes('lacres')"> Lacres</span>
+                                                </b>
+                                                <br />
+                                                <label>
+                                                    {{item.qtde}} /
+                                                    {{item.especie}} /
+                                                    {{item.marca}} /
+                                                    {{item.numeracao}} /
+                                                    {{item.pesoLiquido | number:2}} /
+                                                    {{item.pesoBruto | number:2}} /
+                                                    {{item.lacres}}
+                                                </label>
+                                                <br />
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridTransp"></dir-pagination-controls>
+                            </div>
+
+
+                            <h3>Reboques</h3>
+
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridReboque"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta  && EditAccess"
+                                                        ng-click="IncluirReboque()"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in listaReboques|orderBy:sortKey:reverseReboques|itemsPerPage:7" pagination-id="gridReboque" class="{{item.active}}">
+                                            <td style="width: 40px;">
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirReboque($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarReboques('placa')"> Placa </span> /
+                                                    <span ng-click="ordenarReboques('ufplaca')"> UF </span> /
+                                                    <span ng-click="ordenarReboques('RNTC')"> RNTC</span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.placa}} / {{item.ufplaca}} / {{item.RNTC}}</label>
+                                                <br />
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridReboque"></dir-pagination-controls>
+                            </div>
+
+                            <h3>Retirada</h3>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+
+                                    <label>Indicador de CNPJ/CPF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="retirada.indicadorCnpjCpf" ng-required="true" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>CPF/CNPJ</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="retirada.indicadorCnpjCpf != 1" />
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="retirada.indicadorCnpjCpf == 1" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Endereço</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.endereco" class="form-control" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.numero" class="form-control" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Complemento</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.complemento" class="form-control" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Bairro</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.bairro" class="form-control" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Cidade</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.cidade" class="form-control" />
+                                    <button ng-click="BuscaMunicipios('retirada')" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código IBGE</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="retirada.codMunicipio" class="form-control" />
+                                </div>
+                            </div>
+
+                            <h3>Local Entrega</h3>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+
+                                    <label>Indicador de CNPJ/CPF</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="entrega.indicadorCnpjCpf" ng-required="true" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>CPF/CNPJ</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="entrega.indicadorCnpjCpf != 1" />
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="entrega.indicadorCnpjCpf == 1" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Endereço</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.endereco" class="form-control" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.numero" class="form-control" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Complemento</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.complemento" class="form-control" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Bairro</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.bairro" class="form-control" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Cidade</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.cidade" class="form-control" />
+                                    <button ng-click="BuscaMunicipios('entrega')" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código IBGE</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="entrega.codMunicipio" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Fatura</h2>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Forma de Pagamento</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nfe.faturaFormaPgto" ng-options="o.Value as o.Text for o in ListafaturaFormaPgto" ng-required="true" ng-change="ObterProdutos()">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.faturaNumero" class="form-control" ui-number-mask="0" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Original</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.faturaValorOriginal" class="form-control" ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Desconto</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.faturaValorDesconto" class="form-control" ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Liquido</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.faturaValorLiquido" class="form-control" ui-number-mask="2" />
+                                </div>
+
+                            </div>
+
+                            <h2>Duplicatas</h2>
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridDuplicata"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta && EditAccess"
+                                                        ng-click="IncluirDuplicata()"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in listaDuplicatas|orderBy:sortKey:reverseDuplicatas|itemsPerPage:7" pagination-id="gridDuplicata" class="{{item.active}}">
+                                            <td style="width: 40px;">
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirDuplicata($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarDuplicatas('numero')"> Número </span> /
+                                                    <span ng-click="ordenarDuplicatas('vencto')"> Vencimento </span> /
+                                                    <span ng-click="ordenarDuplicatas('valor')"> Valor</span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.numero}} / {{item.vencto | date:'dd/MM/yyyy'}} / {{item.valor | number:2}}</label>
+                                                <br />
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridDuplicata"></dir-pagination-controls>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <h2>Informações</h2>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Mensagem Padrão</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="mensagemPadrao" ng-options="o.Value as o.Text for o in ListaMensagemPadrao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                    <button ng-click="PreenchePadrao()" ng-show="!ModoConsulta"
+                                            class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-pencil"></span> Preenche
+                                    </button>
+                                    <button ng-click="ConsultaPadrao()" ng-show="!ModoConsulta"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span> Consulta
+                                    </button>
+                                </div>
+
+                                <div class='col-md-12 form-group'>
+                                    <label>Informação Complementares</label>
+                                    <textarea ng-disabled="ModoConsulta" rows="8" cols="80" type="" ng-model="nfe.informacaoComplementar" class="form-control"></textarea>
+                                </div>
+                                <div class='col-md-12 form-group'>
+                                    <label>Informação Complementares de interesse ao Fisco</label>
+                                    <textarea ng-disabled="ModoConsulta" rows="8" cols="80" type="" ng-model="nfe.informacaoComplementarFisco" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Indicador de Presença de Comprador</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nfe.indicadorPresencaComprador" ng-options="o.Value as o.Text for o in ListaIndicadorPresencaComprador">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Email Destinátario</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.emailDestinatario" class="form-control" />
+                                </div>
+                            </div>
+                            <h3>Exportação - Embarque</h3>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Local Embarque Exportação</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.localEmbarqueExportacao" class="form-control" ng-maxlength="30" maxlength="30" />
+                                </div>
+                                <div class='col-md-1 form-group'>
+                                    <label>UF</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.ufEmbarqueExportacao" class="form-control" ng-maxlength="2" maxlength="2" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Identificação Comprador Extrangeiro</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.identificacaoCompradorExtrangeiro" class="form-control" ng-maxlength="60" maxlength="30" />
+                                </div>
+
+                            </div>
+                            <h3>Exportação - Compras</h3>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Informação Pedido Compra</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.informacaoPedidoCompra" class="form-control" ng-maxlength="60" maxlength="60" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Informação Contato</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.informacaoContato" class="form-control" ng-maxlength="60" maxlength="60" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Informação de Nota de empenho de compras publicas</label>
+                                    <input type="text" ng-disabled="ModoConsulta" ng-model="nfe.informacaoNotaEmpenhoCompras" class="form-control" ng-maxlength="60" maxlength="60" />
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+
+                            <h2>Notas Fiscais Referenciadas</h2>
+                            <div class='row'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridDNFReferenciada"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 168px;">
+                                                <button style="margin-top: 4px; padding-right: 72px;" ng-show="!ModoConsulta && EditAccess"
+                                                        ng-click="IncluirNFReferenciada()"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>Dados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in listaNFReferenciada|orderBy:sortKey:reversenfereferenciadas|itemsPerPage:7"  pagination-id="gridDNFReferenciada" class="{{item.active}}">
+                                            <td style="width: 40px;">
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;" ng-show="!ModoConsulta && EditAccess"
+                                                        type="button"
+                                                        ng-click="ExcluirNFReferenciada($index)"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                </button>
+
+                                            </td>
+
+                                            <td>
+                                                <b>
+                                                    <span ng-click="ordenarRefereciada('NFe')"> NFe </span> /
+                                                    <span ng-click="ordenarRefereciada('CTe')"> CTe </span> /
+                                                    <span ng-click="ordenarRefereciada('nfserie')">Serie</span> /
+                                                    <span ng-click="ordenarRefereciada('nfuf')">UF</span>
+                                                </b>
+                                                <br />
+                                                <label>{{item.NFe}} / {{item.CTe}} / {{item.nfserie}} / {{item.nfuf}}</label>
+                                                <br />
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true"  pagination-id="gridDNFReferenciada"></dir-pagination-controls>
+
+
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="Salvar()" value="{{msgSalvar}}" ng-show="!ModoConsulta">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Salvar
+                </button>
+                <button class="btn btn-default" ng-click="Voltar()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="alert alert-info" ng-show="showOK">
+        {{msgOK}}
+        <br /><label>Erros</label><br />
+        <ul>
+            <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+        </ul>
+        <br /><label>Alertas</label><br />
+        <ul>
+            <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+        </ul>
+    </div>
+    <div class="alert alert-danger" ng-show="showNOK">
+        {{msgNOK}}
+        <ul>
+            <li ng-repeat="item in Erros">{{item}}</li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+

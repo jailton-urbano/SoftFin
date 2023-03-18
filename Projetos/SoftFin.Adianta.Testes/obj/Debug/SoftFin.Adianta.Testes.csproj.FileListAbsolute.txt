@@ -1,0 +1,17 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.Testes.dll.config
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.Testes.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.Testes.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\Newtonsoft.Json.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\System.Net.Http.Formatting.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\SoftFin.Adianta.dll.config
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\Newtonsoft.Json.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\System.Net.Http.Formatting.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\bin\Debug\pt-BR\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\obj\Debug\SoftFin.Adianta.Testes.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\obj\Debug\SoftFin.Adianta.Testes.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\obj\Debug\SoftFin.Adianta.Testes.csproj.CopyComplete
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\obj\Debug\SoftFin.Adianta.Testes.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta.Testes\obj\Debug\SoftFin.Adianta.Testes.pdb

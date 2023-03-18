@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Gráfico Saldo de Caixa";
+}
+
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-stats"></span> Gerar Gráfico</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="curve_chart" style="width: 950px; height: 500px">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["corechart"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraGraficoSaldoCaixa",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (chartsdata) {
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                var data = new google.visualization.DataTable();
+
+
+                //Adiciona Colunas
+                data.addColumn('string', 'Data');
+
+                for (var i = 0; i < chartsdata.Banco.length; i++) {
+                    data.addColumn('number', chartsdata.Banco[i].nomeBanco);
+                }
+
+                //Adiciona primeira linha
+                data.addRow();
+
+                //atualiza controle de quebra
+                var dataAnt = chartsdata.Saldo[0].dataS;
+
+                //gera primeira data
+                data.setValue(0, 0, chartsdata.Saldo[0].dataS);
+
+                //cria variável linha
+                var linha = 0;
+                var coluna = 0;
+
+                //Leitura das linhas
+                for (var x = 0; x < chartsdata.Saldo.length; x++) {
+
+                    if (dataAnt == chartsdata.Saldo[x].dataS) {
+
+                        //Leitura das colunas
+                        for (var i = 0; i < chartsdata.Banco.length; i++) {
+                            var coluna = i + 1;
+                            if (chartsdata.Banco[i].codigoBanco == chartsdata.Saldo[x].codigoBanco) {
+                                data.setValue(linha, coluna, chartsdata.Saldo[x].valor);
+                            }
+                        }
+                    }
+                    else {
+                        //atualiza controles
+                        linha++;
+                        data.addRow();
+                        dataAnt = chartsdata.Saldo[x].dataS;
+                        data.setValue(linha, 0, dataAnt);
+                        x--;
+                    }
+                }
+
+                var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+                    chart.draw(data,
+                        {
+                            title: "Evolução do Saldo de Caixa",
+                            curveType: 'function',
+                        });
+
+                    $('#indicator').hide();
+
+                    },
+                    error: function () {
+                        alert("Ops...");
+                    }
+                });
+            })
+</script>

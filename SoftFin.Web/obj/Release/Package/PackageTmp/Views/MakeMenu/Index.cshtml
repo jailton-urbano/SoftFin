@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/css/dndlist.css" rel="stylesheet" />
+<link href="~/css/prism.css" rel="stylesheet" />
+<link href="~/css/simple.css" rel="stylesheet" />
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/draganddroplists/angular-drag-and-drop-lists.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/angular/draganddroplists/prism.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+
+
+<!-- The dnd-list directive allows to drop elements into it.
+     The dropped data will be added to the referenced list -->
+<div class="simpleDemo row" ng-app="SOFTFIN" ng-controller="SimpleDemoController">
+    <div class="col-md-8">
+        <div class="row">
+            <div ng-repeat="(listName, list) in models.lists" class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">List {{listName}}</h3>
+                    </div>
+                    <div class="panel-body" >
+                        <ul dnd-list="list">
+                            <!-- The dnd-draggable directive makes an element draggable and will
+             transfer the object that was assigned to it. If an element was
+             dragged away, you have to remove it from the original list
+             yourself using the dnd-moved attribute -->
+                            <li ng-repeat="item in list"
+                                dnd-draggable="item"
+                                dnd-moved="list.splice($index, 1)"
+                                dnd-effect-allowed="move"
+                                dnd-selected="models.selected = item"
+                                ng-class="{'selected': models.selected === item}">
+                                {{item.label}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div view-source="simple"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Generated Model</h3>
+            </div>
+            <div class="panel-body">
+                <pre class="code">{{modelAsJson}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        //$('#txtDataDocumento,#txtDatVencimento,#txtDarfDataPagamento,#txtDarfDataPagamento,#txtDataPreVistaPagar,#txtFGTSDataPagamento,#txtdARFDataVencimento').datepicker({
+        //    startDate: '-3d'
+        //});
+    });
+</script>
+
+
+
+<script>
+
+
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks', 'dndLists']);
+
+    app.controller("SimpleDemoController", function ($scope) {
+
+        $scope.models = {
+            selected: null,
+            lists: { "A": [], "B": [] }
+        };
+
+        // Generate initial model
+        for (var i = 1; i <= 3; ++i) {
+            $scope.models.lists.A.push({ label: "Item A" + i });
+            $scope.models.lists.B.push({ label: "Item B" + i });
+        }
+
+        // Model to JSON for demo purpose
+        $scope.$watch('models', function (model) {
+            $scope.modelAsJson = angular.toJson(model, true);
+        }, true);
+
+    });
+</script>
+

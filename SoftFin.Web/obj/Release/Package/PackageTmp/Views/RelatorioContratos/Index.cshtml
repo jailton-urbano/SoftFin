@@ -1,0 +1,140 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/RelatorioContratos/RelatorioContratos.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div class='row'>
+
+
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.dataIni">
+                <label>Data Emissão Inicial</label>
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataIni" ui-date-mask />
+
+            </div>
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.dataFim">
+                <label>Data Emissão Final</label>
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataFim" ui-date-mask />
+
+            </div>
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.excel">
+                <label>Gerar Excel</label>
+                <input type="checkbox" ng-model="filtro.excel" ng-true-value="true" ng-false-value="false" />
+
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <button style="border-right-width: 0px; padding-right: 49px;"
+                    ng-click="Pesquisar()"
+                    title="Atualiza a lista na tela"
+                    class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+
+        </div>
+
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <label>Filtro : </label>
+                <input type="text" class="form-control" ng-model="procurar" />
+            </div>
+
+        </div>
+        <div class="row">
+            <table  class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('Codigo')"> Codigo </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('Nome')"> Nome </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('CI')"> Contrato Item </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('Valor')"> Valor Contrato Item</span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('DataEmissao')">  Dt.Emissão </span>
+                        </th>
+
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('Situacao')"> Situação </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('Parcela')"> Parcela </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('ValorParcela')"> Valor Parcela </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="ordenar('TipoContrato')"> Tipo Contrato </span>
+                        </th>
+                        <th ng-repeat="item in Unidades">
+                            <span style="cursor: pointer;"> {{item}} </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in Lista|filter:procurar|orderBy:sortKey:reverse">
+
+                        <td>
+                            {{item.Codigo}}
+                        </td>
+                        <td>
+                            {{item.Nome}}
+                        </td>
+                        <td>
+                            {{item.CI}}
+                        </td>
+                        <td>
+                            {{item.ValorCI | number:2}}
+                        </td>
+                        <td>
+                            {{item.DataEmissao  | date:'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{item.Situacao}}
+                        </td>
+                        <td>
+                            {{item.Parcela}}
+                        </td>
+
+                        <td>
+                            {{item.ValorParcela | number:2}}
+                        </td>
+                        <td>
+                            {{item.TipoContrato}}
+                        </td>
+
+
+                        <td ng-repeat="itemUnidade in item.Unidades track by $index">
+                            {{itemUnidade | number:2}}
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+

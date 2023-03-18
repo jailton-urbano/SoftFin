@@ -1,0 +1,90 @@
+﻿@model SoftFin.Web.Models.Fornecedor
+@{
+    ViewBag.Title = "Fornecedor - Novo";
+
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.pessoa_id)
+                    @Html.DropDownListFor(model => model.pessoa_id, (SelectList)ViewData["pessoa"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoa_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeNegocio_id)
+                    @Html.DropDownListFor(model => model.unidadeNegocio_id, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.unidadeNegocio_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.responsavel_id)
+                    @Html.DropDownListFor(model => model.responsavel_id, (SelectList)ViewData["responsavel"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.responsavel_id)                </div>
+            </div>
+            <div class='row'>
+
+
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataContratada)
+                    @if (Model.dataContratada == null)
+                    {
+                        <input type='text' id='dataContratada' class = "form-control" name='dataContratada' class='text-box single-line'   />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataContratada' class = "form-control" name='dataContratada' class='text-box single-line'  value='@Model.dataContratada.Value.ToString("dd/MM/yyyy")' />
+                    } 
+                    @Html.ValidationMessageFor(x => x.dataContratada)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataSaida)
+                    @if (Model.dataSaida == null)
+                    {
+                        <input type='text' id='dataSaida' class = "form-control" name='dataSaida' class='text-box single-line'  />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataSaida' class = "form-control" name='dataSaida' class='text-box single-line'  value='@Model.dataSaida.Value.ToString("dd/MM/yyyy")' />
+                    }
+                    @Html.ValidationMessageFor(x => x.dataSaida)
+                </div>
+                <div class='col-md-6 form-group'>
+                    @Html.LabelFor(x => x.NomeEmpresa)
+                    @Html.TextBoxFor(x => x.NomeEmpresa, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.NomeEmpresa)
+                </div>
+            </div>
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    </fieldset>
+}
+
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#dataContratada,#dataSaida').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

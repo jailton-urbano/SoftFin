@@ -1,0 +1,112 @@
+﻿@model SoftFin.Web.Models.NotadeDebito
+@{
+    ViewBag.Title = "Nota de Débito - Alterar";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.situacaoNotaDebito_id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.numero)
+                    <br />
+                    @Html.TextBoxFor(model => model.numero, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.numero)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataEmissao)
+                    <br />
+                    <input type='text' id='DataEmissao' name='DataEmissao' class = "form-control" value='@Model.DataEmissao.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.DataEmissao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataVencimento)
+                    <br />
+                    <input type='text' id='DataVencimento' name='DataVencimento' class = "form-control" value='@Model.DataVencimento.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.DataVencimento)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.cliente_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.cliente_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    <br />
+                    @Html.TextBoxFor(model => model.valor, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    <br />
+                    @Html.TextAreaFor(x => x.descricao, 7, 1, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.comentario)
+                    <br />
+                    @Html.TextAreaFor(x => x.comentario, 3, 1, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.comentario)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+<style type='text/css'>
+    <!--
+    #id
+    {
+        width: 275.00px;
+    }
+
+    #apelido
+    {
+        width: 275.00px;
+    }
+
+    #codigo
+    {
+        width: 85.00px;
+    }
+
+    #nome
+    {
+        width: 275.00px;
+    }
+
+    #Holding_id
+    {
+        width: 275.00px;
+    }
+
+    #Holding
+    {
+        width: 275.00px;
+    }
+    -->
+</style>

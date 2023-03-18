@@ -1,0 +1,524 @@
+﻿
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/LancamentoContabil/Index.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Lançamento ?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.pessoa_funcionario}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+        <script type="text/ng-template" id="modalEditar.html">
+            <div>
+                <div class="modal-header">
+                    <h3 ng-show="entidade.modo == 'I'">Novo Lançamento</h3>
+                    <h3 ng-show="entidade.modo == 'A'">Editar Lançamento</h3>
+                    <h3 ng-show="entidade.modo == 'E'">Excluir Lançamento</h3>
+                </div>
+                <div class="modal-body">
+                   
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label>Centro de Custo / Unidade</label>
+                                <select  ng-disabled="entidade.modo == 'E'" class="form-control" ng-model="entidade.unidadeNegocio_ID" ng-options="o.Value as o.Text for o in ListaUnidade">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class='col-md-6 form-group'>
+                                <label>Conta Contábil</label>
+                                <select ng-disabled="entidade.modo == 'E'" class="form-control" ng-model="entidade.contaContabil_id" ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-6 form-group'>
+                                <label>Débito / Crédito</label>
+                                <select ng-disabled="entidade.modo == 'E'" class="form-control" ng-model="entidade.DebitoCredito" ng-options="o.Value as o.Text for o in ListaDC">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-6 form-group'>
+                                <label>Valor</label>
+                                <input ng-disabled="entidade.modo == 'E'" type="text" ng-model="entidade.valor" class="form-control" required ui-number-mask="2" />
+                            </div>
+
+                        </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalArquivo.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Geração de Arquivo</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group' datetimez ng-model="ini">
+                            <label>Data Lançamento</label>
+                            <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="ini" required ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-2 form-group' datetimez ng-model="fim">
+                            <label>Data Lançamento</label>
+                            <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="fim" required ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            <label>Tipo de Arquivo</label>
+                            <select class="form-control" ng-model="tipoarquivo" ng-options="o.Value as o.Text for o in ListaArquivos">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <a href="~/../../LancamentoContabil/{{tipoarquivo}}?ini={{ini}}&fim={{fim}}" target="_blank" 
+                       class="btn btn-primary"
+                       title="Gera arquivo">
+                        <span class="glyphicon glyphicon-share-alt"></span> Gerar Arquivo txt
+                    </a>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="grid"></dir-pagination-controls>
+            <table class="table table-bordered" >
+                <thead>
+                    <tr>
+                        <th>
+
+
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="ObterTodos()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="Novo()"
+                                    title="Novo registro"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 58px;"
+                                    ng-click="Arquivo()"
+                                    title="Novo registro"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-plus"></span> Arquivo
+                            </button>
+
+                        </th>
+                        <th>Dados</th>
+                        <th>Lançamentos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:5" pagination-id="grid">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Alterar(item)" ng-disabled="item.origem != 'Manual'"
+                                    title="Edita o lançamento"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"  ng-disabled="item.origem != 'Manual'"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('data')"> Data Lançamento </span>
+                                
+                                / <span ng-click="ordenar('codigoLancamento')"> Código</span>
+                                / <span ng-click="ordenar('origem')"> Origem</span>
+                                / <span ng-click="ordenar('histórico')"> Histórico </span>
+                                
+                            </b>
+                            <br />
+                            <label>
+                                {{item.data | date:'dd/MM/yyyy'}}
+                                / {{item.codigoLancamento}}
+                                / {{item.origem}}
+                                / {{item.historico}}
+                            </label>
+                            <br />
+
+
+
+                        </td>
+
+                        <td>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span ng-click="ordenar('contaContabil_id')">Conta Contábil</span>
+                                            / <span ng-click="ordenar('unidadeNegocio_ID')">(Centro de Custo ou Unidade)</span>
+                                        </th>
+
+                                        <th style="text-align:right">
+                                            Débito
+                                        </th>
+                                        <th style="text-align:right">
+                                            Crédito
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="item2 in item.LancamentoContabilDetalhes|itemsPerPage:50 " pagination-id="grid2">
+                                        <td>
+                                            <br />
+                                            <label>
+                                                {{item2.contaContabil_id | filtraGrid:ListaContaContabil }}
+                                                / {{item2.unidadeNegocio_ID | filtraGrid:ListaUnidade }}
+                                            </label>
+                                            <br />
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label ng-show="item2.DebitoCredito == 'D' ">
+                                                {{item2.valor | number:2}}
+                                            </label>
+                                            <br />
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label ng-show="item2.DebitoCredito == 'C' ">
+                                                {{item2.valor | number:2}}
+                                            </label>
+                                            <br />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td style="text-align:right">{{item.totDebito | number:2}}</td>
+                                        <td style="text-align:right">{{item.totCredito | number:2}}</td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="grid"></dir-pagination-controls>
+
+
+
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+            <div class="panel panel-primary">
+
+
+
+                <div ng-form="frm">
+                    <div class="panel-body">
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código Lançamento</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.codigoLancamento" class="form-control" ng-maxlength="20" maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group' datetimez ng-model="entidade.data" ng-disabled="ModoConsulta">
+                                    <label>Data Lançamento</label>
+                                    <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.data" required ui-date-mask />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Histórico</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.historico" class="form-control" required ng-maxlength="350" maxlength="350" />
+                                </div>
+
+
+
+                            </div>
+                            
+
+                            <div class="row">
+                                <div class='col-md-12 form-group'>
+                                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+                                    <table class="table table-bordered" pagination-id="griditem">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <button style="margin-top: 4px; padding-right: 72px;"
+                                                            ng-click="NovoDet()"
+                                                            ng-disabled="ModoConsulta"
+                                                            title="Novo registro"
+                                                            class="btn btn-primary">
+                                                        <span class="glyphicon glyphicon-plus"></span> Novo
+                                                    </button>
+                                                </th>
+                                                <th>
+                                                    <span ng-click="ordenar('contaContabil_id')">Conta Contábil</span>
+                                                        / <span ng-click="ordenar('unidadeNegocio_ID')">(Centro de Custo ou Unidade)</span>
+                                                </th>
+                                                    
+                                                <th style="text-align:right">
+                                                    Débito
+                                                </th>
+                                                <th style="text-align:right">
+                                                    Crédito
+                                                </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr dir-paginate="item in entidade.LancamentoContabilDetalhes|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7">
+                                                <td style="width: 40px;">
+                                                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                            ng-click="AlterarDet(item, $index)" ng-disabled="ModoConsulta"
+                                                            title="Edita o lançamento"
+                                                            class="btn btn-primary">
+                                                        <span class="glyphicon glyphicon-edit"></span> Editar
+                                                    </button>
+
+                                                    <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                                            type="button"
+                                                            ng-click="ExcluirDet(item, $index)" ng-disabled="ModoConsulta"
+                                                            title="Remove o lançamento"
+                                                            class="btn btn-danger">
+                                                        <span class="glyphicon glyphicon-remove"></span> Excluir
+                                                    </button>
+                                                </td>
+
+                                                <td>
+                                                    <b>
+
+
+                                                    </b>
+                                                    <br />
+                                                    <label>
+                                                          {{item.contaContabil_id | filtraGrid:ListaContaContabil }}
+                                                        / {{item.unidadeNegocio_ID | filtraGrid:ListaUnidade }}
+                                                    </label>
+                                                    <br />
+                                                </td>
+                                                <td style="text-align:right">
+                                                    <label ng-show="item.DebitoCredito == 'D' ">
+                                                        {{item.valor | number:2}}
+                                                    </label>
+                                                    <br />
+                                                </td>
+                                                <td style="text-align:right">
+                                                    <label  ng-show="item.DebitoCredito == 'C' ">
+                                                         {{item.valor | number:2}}
+                                                    </label>
+                                                    <br />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td>Total</td>
+                                                <td style="text-align:right">{{totDebito | number:2}}</td>
+                                                <td style="text-align:right">{{totCredito | number:2}}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+                                </div>
+                            </div>
+
+
+
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+

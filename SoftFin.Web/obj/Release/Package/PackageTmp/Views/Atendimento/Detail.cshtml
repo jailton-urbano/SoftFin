@@ -1,0 +1,112 @@
+﻿@model SoftFin.Web.Models.Atendimento
+@{
+    ViewBag.Title = "Atendimento - Consulta";
+
+}
+
+
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+
+        @Html.ActionLink("Voltar", "/Index", "Atendimento", null, new { @class = "btn btn-primary" })
+        <br />
+        <br />
+        <div class='container-fluid'>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.pessoas_ID)
+                    @Html.TextBoxFor(x => x.Pessoa.nome, new { disabled = "disabled", @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.atendimentocategoria_id)
+                    @Html.TextBoxFor(x => x.AtendimentoCategoria.descricao, new { disabled = "disabled", @class = "form-control" })
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataAbertura)
+                    @Html.TextBoxFor(x => x.dataAbertura, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Contato)
+                    @Html.TextBoxFor(x => x.Contato, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.titulo)
+                    @Html.TextBoxFor(x => x.titulo, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextAreaFor(x => x.descricao, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.NomeArquivoAnexo) 
+
+                    <a href="../../Atendimento/Download/@Model.id">@Model.NomeArquivoAnexo</a>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var item in (List<SoftFin.Web.Models.AtendimentoHistorico>)ViewData["Historicos"])
+        {
+        <div class='container'>
+            
+            <div class='row'>
+
+                <div class='col-md-3 form-group'>
+                    Tipo Historico<br />
+                    @Html.TextBox("tipohistorico", item.AtendimentoTipoHistorico.descricao, new { disabled = "disabled", @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    Usuário<br />
+                    @Html.TextBox("usurio", item.usuario, new { disabled = "disabled", @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    Data<br />
+                    @Html.TextBox("data", item.data, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    Historico <br />
+                    @Html.TextArea("descricao", item.descricao, new { disabled = "disabled", @class = "form-control" })
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    Arquivo Anexo <br />
+                    <a href="../../Atendimento/DownloadItem/@item.id">@item.NomeArquivoAnexo</a>
+                </div>
+            </div>
+        </div>  
+        }
+
+        <br />
+        @Html.ActionLink("Voltar", "/Index", "Atendimento", null, new { @class = "btn btn-primary" })
+    </fieldset>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    //$('#dataAbertura').datepicker({ dateFormat: 'dd/mm/yy' });
+    //$('#dataFechamento').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+
+
+    

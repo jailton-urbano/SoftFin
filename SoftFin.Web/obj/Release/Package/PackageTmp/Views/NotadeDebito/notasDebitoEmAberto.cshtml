@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "Lista Notas de Débito em Aberto";
+}
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraNotasDebitoEmAberto",
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('number', 'Id');
+                data.addColumn('number', 'Número ND');
+                data.addColumn('string', 'Emissão');
+                data.addColumn('string', 'Vencimento');
+                data.addColumn('string', 'Cliente');
+                data.addColumn('number', 'Valor');
+                data.addColumn('number', 'Dias em Atraso');
+                data.addColumn('string', 'PDF');
+
+                for (var i = 0; i < tabledata.length; i++) {
+
+                    data.addRow([tabledata[i].id,
+                                 tabledata[i].numeroND,
+                                 tabledata[i].dataEmissaoNDS,
+                                 tabledata[i].dataVencimentoNDS,
+                                 tabledata[i].cliente,
+                                 tabledata[i].valorND,
+                                 tabledata[i].diasAtraso,
+                                 "<img src='../Content/images/pdf.gif' />"
+                    ]);
+                }
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                formatter.format(data, 5);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+                $('#indicator').hide();
+
+                // Add our selection handler.
+                google.visualization.events.addListener(table, 'select', function () {
+                    var row = table.getSelection()[0].row;
+                    var id = data.getValue(row, 0);
+                    alert(id);
+                });
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

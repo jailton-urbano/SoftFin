@@ -1,0 +1,22 @@
+﻿@if (HttpContext.Current.User.Identity.IsAuthenticated && SoftFin.Web.Negocios.Acesso.EstabLogado2() != 0)                        
+{
+    foreach (SoftFin.Web.Models.UsuarioAviso item in SoftFin.Web.Negocios.Acesso.Avisos())
+    {
+        <li>
+            <a href="#">
+                <div>
+                    <strong>@item.titulo</strong>
+                    <em>@item.dataPostagem</em>
+                    <div>@item.mensagem</div>
+                    @if (@item.Descricaolink != null)
+                    {
+                        <div><a href="@item.link"> @item.Descricaolink </a></div>
+                    }
+                    <a href="../../Home" class="btn btn-default" onclick="$.ajax({url: '../../Home/Lida/@item.id'});"><i class="fa fa-check"></i> Marcar como Lida</a>
+
+                </div>
+            </a>
+        </li>        
+    }
+
+}

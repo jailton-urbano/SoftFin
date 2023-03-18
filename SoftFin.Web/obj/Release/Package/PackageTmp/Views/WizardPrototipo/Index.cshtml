@@ -1,0 +1,693 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/WizardPrototipo/WizardPrototipoIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+
+
+        <div class="container-fluid" ng-show="showManutIntroducao">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <label><h2>Indrodução</h2></label>
+
+
+
+            <div class='row'>
+
+
+                <p>O passo-a-passo auxiliará na configuração do plano de contas de forma automatizada para que seja possível a emissão dos relatórios e demonstrativos contábeis da forma correta.</p>
+
+
+
+                <p>Esse recurso é útil caso o de plano de contas ter sido importado do arquivo do SPED contábil ou ter sido digitado diretamente no sistema.</p>
+
+
+
+                <p>Serão parametrizadas as seguintes informações das contas contábeis:</p>
+
+
+
+                <p> 1 – Contas totalizadoras e analíticas (Grupo, Sub-grupo, Sintéticas e analíticas);</p>
+
+                <p>2 – Natureza das contas (Ativo, Passivo, Resultado, etc);</p>
+
+                <p>3 – Em quais relatórios as contas deverão ser publicadas (balanço e balancete);</p>
+
+                <p>4 – Estrutura da DRE;</p>
+
+                <p>5 – Definição das contas redutoras;</p>
+
+
+
+                <p>AVISO - Caso seu plano de contas já estiver parametrizado, a execução do assistente acarretará na perda da configuração atual. Dessa forma recomendamos avaliar se a alteração manual no cadastro de contas pode ser mais vantajoso do que a execução do assistente.</p>
+
+
+            </div>
+
+            <div class='row'>
+                <div class='col-md-10 form-group'>
+                </div>
+
+
+                <div class='col-md-2 form-group'>
+                    <span class="input-group-btn">
+                        <button style="margin-right:10px;" type="button"
+                                ng-click="Next()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            Próximo &rarr;     {{msgSalvar}}
+                        </button>
+                    </span>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="container-fluid" ng-show="showManut1">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <label><h1>Passo 1 de 5</h1></label>
+
+            <p>
+                <span class="glyphicon glyphicon-list-alt" style="font-size:2.5rem" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" title="Exibir/Ocultar informações">
+
+                </span>
+
+            </p>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <h2>Definição do nível das contas, e se são totalizadoras ou analíticas</h2>
+
+
+
+                    <p>Baseado no campo de “Conta totalizadora”, de forma automatizada o sistema irá pré-classificar as contas como:</p>
+
+
+
+                    <p>G – Grupo – São as contas que não possuem conta totalizadora (acima). É a “cabeça” do grupo (exemplo – conta 1 – Ativo);</p>
+
+
+
+                    <p>P – Sub-grupo – São as contas que apontam para contas do tipo “G” como totalizadora (exemplo – conta 1.1 – Circulante);</p>
+
+
+
+                    <p>S – Sintética – São as contas que ficam em nível abaixo as do tipo “P” e que possuem outras contas apontando para ela como totalizadora;</p>
+
+
+
+                    <p>A – Analíticas – São as contas que não possuem contas apontando para ela como totalizadora.</p>
+
+
+
+                    <p>Após a execução da lógica acima o sistema irá apresentar essa pré-classificação na tela para validação ou ajustes do usuário. Quando as contas estiverem parametrizadas de acordo com o desejado o usuário pode seguir para o passo 2.</p>
+
+                </div>
+
+                
+            </div>
+
+
+            <div class='row'>
+
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid1"></dir-pagination-controls>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><span ng-click="ordenar()"> Conta Contábil </span></th>
+                            <th><span ng-click="ordenar()"> Tipo de Conta </span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:150" pagination-id="grid1">
+
+                            <td>{{item.ccds}}</td>
+                            <td>
+                                <div class='col-md-10 form-group'>
+                                    <select class="form-control" ng-model="item.Tipo" ng-options="o.Value as o.Text for o in ListTipo">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid1"></dir-pagination-controls>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                </div>
+                <div class='col-md-3 form-group'>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Back()"
+                                class="btn btn-default">
+                            &larr;	Anterior
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Next()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            Próximo &rarr;
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="showManut2">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <label><h1>Passo 2 de 5</h1></label>
+
+
+            <p>
+                <span class="glyphicon glyphicon-list-alt" style="font-size:2.5rem" type="button" data-toggle="collapse" data-target="#passo2" aria-expanded="false" aria-controls="collapseExample" title="Exibir/Ocultar informações">
+
+                </span>
+            </p>
+            <div class="collapse" id="passo2">
+                <div class="card card-body">
+                    <h2>Definição da natureza das contas</h2>
+
+
+
+                    <p>O sistema listará as contas do nível “G – grupo” para que o usuário defina sua natureza conforme segue:</p>
+
+
+
+                    <p>AN – Ativo normal</p>
+
+                    <p>PN – Passivo normal</p>
+
+                    <p>PL – Patrimonio normal</p>
+
+                    <p>RS – Resultado normal</p>
+
+
+
+                    <p>Quando as contas estiverem parametrizadas de acordo com o desejado o usuário pode seguir para o passo 3.</p>
+                </div>
+
+
+            </div>
+
+
+
+            <div class='row'>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid2"></dir-pagination-controls>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><span ng-click="ordenar()"> Conta Contábil </span></th>
+                            <th><span ng-click="ordenar()"> Natureza da Conta </span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:myFilter|itemsPerPage:150" pagination-id="grid2">
+
+                            <td>{{item.ccds}}</td>
+                            <td>
+                                <div class='col-md-10 form-group'>
+                                    <select id="selecionar" class="form-control" ng-model="item.CategoriaGeral" ng-options="o.Value as o.Text for o in ListNaturezaConta">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid2"></dir-pagination-controls>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                </div>
+                <div class='col-md-3 form-group'>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Back()"
+                                class="btn btn-default">
+                            &larr;	Anterior
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Next()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            Próximo &rarr;
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="showManut3">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+            <div id="cima"></div>
+            <label><h1>Passo 3 de 5</h1></label>
+
+            <p>
+                <span class="glyphicon glyphicon-list-alt" style="font-size:2.5rem" type="button" data-toggle="collapse" data-target="#passo3" aria-expanded="false" aria-controls="collapseExample" title="Exibir/Ocultar informações">
+
+                </span>
+            </p>
+            <div class="collapse" id="passo3">
+                <div class="card card-body">
+                    <h2>Definição dos demonstrativos que as contas deverão ser publicadas de acordo com sua natureza e detalhamento</h2>
+
+
+
+                    <p>Baseado no parâmetro de nível o sistema irá pré-classificar as contas como:</p>
+
+
+
+                    <p>BL – Balancete – contas que deverão ser publicadas somente no balancete. O sistema adotará como padrão as contas do tipo analítica nesse caso;</p>
+
+
+
+                    <p>AB – Ambos – contas que deverão ser publicadas tanto no balancete quanto nos demonstrativos contábeis (Balanço patrimonial e Demonstração de resultados). O sistema adotará como padrão as contas dos tipos Grupo, Sub-grupo e Sintéticas;</p>
+
+
+
+                    <p>DC – Demonstrativos contábeis – contas que deverão ser publicadas somente no Balanço patrimonial e no Demonstrativo de resultados. Na pré-classificação o sistema não definirá nenhum tipo de conta como “DC”, mas esse parâmetro será aceito para o caso de o Cliente desejar aplicar essa situação a alguma conta por alguma especificidade de seu negócio;</p>
+
+
+
+                    <p>Após a execução da lógica acima o sistema irá apresentar essa pré-classificação na tela para validação ou ajustes do usuário. Quando as contas estiverem parametrizadas de acordo com o desejado o usuário pode seguir para o passo 4.</p>
+
+
+
+                    <p>AVISO – Dependendo da característica do plano de contas da sua empresa, deve-se ter uma atenção especial para a revisão dos parâmetros de publicação para as contas sintéticas. Normalmente para os planos que possuírem muitos “níveis” de contas do tipo sintéticas entre as contas de sub-grupo e as analíticas, seja racional manter os níveis mais próximos das analíticas para publicação somente no balancete (BL).</p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class='row'>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid3"></dir-pagination-controls>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><span ng-click="ordenar()"> Conta Contábil </span></th>
+                            <th><span ng-click="ordenar()"> Publicação da Conta </span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:150" pagination-id="grid3">
+
+                            <td>{{item.ccds}}</td>
+                            <td>
+                                <div class='col-md-10 form-group'>
+                                    <select class="form-control" ng-model="item.IndicacaoPublicacao" ng-options="o.Value as o.Text for o in ListPublicacao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid3"></dir-pagination-controls>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                </div>
+                <div class='col-md-3 form-group'>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Back()"
+                                class="btn btn-default">
+                            &larr;	Anterior
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button" id="cima" ;
+                                ng-click="Next()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            Próximo &rarr;
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="showManut4">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <label><h1>Passo 4 de 5</h1></label>
+
+            <p> 
+                <span class="glyphicon glyphicon-list-alt" style="font-size:2.5rem" type="button" data-toggle="collapse" data-target="#passo4" aria-expanded="false" aria-controls="collapseExample" title="Exibir/Ocultar informações">
+
+                </span>
+            </p>
+            <div class="collapse" id="passo4">
+                <div class="card card-body">
+                    <h2>Definição da estrutura do Demonstrativo de resultado do exercício.</h2>
+
+
+
+                    <p>O sistema listará as contas do nível “P – Sub-grupo” e natureza “RS – Resultado normal” para que o usuário defina a estrutura do DRE conforme segue:</p>
+
+
+
+                    <p>ROB – Receita operacional bruta;</p>
+
+
+
+                    <p>DRB – Deduções da receita bruta;</p>
+
+
+
+                    <p>CDO – Custos da operação/vendas;</p>
+
+
+
+                    <p>Despesas da operação – Custos da operação/vendas;</p>
+
+
+
+                    <p>DFL – Despesas financeiras liquidas;</p>
+
+
+
+                    <p>ORD – Outras Receitas e despesas não operacionais;</p>
+
+
+
+                    <p>Quando as contas estiverem parametrizadas de acordo com o desejado o usuário pode seguir para o passo 5.</p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class='row'>
+
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid4"></dir-pagination-controls>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><span ng-click="ordenar()"> Conta Contábil </span></th>
+                            <th><span ng-click="ordenar()"> Localização DRE </span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:myFilter2|itemsPerPage:150" pagination-id="grid4">
+
+                            <td>{{item.ccds}}</td>
+                            <td>
+                                <div class='col-md-10 form-group'>
+                                    <select id="selecionar" class="form-control" ng-model="item.SubCategoria" ng-options="o.Value as o.Text for o in ListSubCategoria">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid4"></dir-pagination-controls>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                </div>
+                <div class='col-md-3 form-group'>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Back()"
+                                class="btn btn-default">
+                            &larr;	Anterior
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Next()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            Próximo &rarr;
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="showManut5">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <label><h1>Passo 5 de 5</h1></label>
+
+            <p>
+                <span class="glyphicon glyphicon-list-alt" style="font-size:2.5rem" type="button" data-toggle="collapse" data-target="#passo5" aria-expanded="false" aria-controls="collapseExample" title="Exibir/Ocultar informações">
+
+                </span>
+            </p>
+            <div class="collapse" id="passo5">
+                <div class="card card-body">
+                    <h2>Definição das contas redutoras.</h2>
+
+
+
+                    <p>O sistema listará todas contas para que o usuário defina no campo natureza conforme segue:</p>
+
+
+
+                    <p>AR – Ativo redutora;</p>
+
+
+
+                    <p>PR – Passivo redutora;</p>
+
+
+
+                    <p>LR – Patrimônio liquido redutora;</p>
+
+
+
+                    <p>RR – Resultado redutora;</p>
+
+
+
+                    <p> Recomendamos que o usuário utilize o filtro para acessar as contas desejadas de forma mais ágil. Quando as contas estiverem parametrizadas de acordo com o desejado o usuário pode seguir concluir o assistente.</p>
+                </div>
+
+
+            </div>
+
+
+
+            <div class='row'>
+
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid5"></dir-pagination-controls>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><span ng-click="ordenar()"> Conta Contábil </span></th>
+                            <th><span ng-click="ordenar()"> Localização DRE </span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:150" pagination-id="grid5">
+
+                            <td>{{item.ccds}}</td>
+                            <td>
+                                <div class='col-md-10 form-group'>
+                                    <select id="selecionar" class="form-control" ng-model="item.CategoriaGeral" ng-options="o.Value as o.Text for o in ListNaturezaContaTodos">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="grid5"></dir-pagination-controls>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                </div>
+                <div class='col-md-3 form-group'>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Back()"
+                                class="btn btn-default">
+                            &larr;	Anterior
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button"
+                                ng-click="Save()"
+                                class="btn btn-primary"
+                                ng-show="!modeDetail">
+                            <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid" ng-show="showManut6">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+
+
+            <div class='row'>
+
+                <h1> Aguarde processando</h1>
+
+               </div>       
+    </div>
+</div>
+
+
+

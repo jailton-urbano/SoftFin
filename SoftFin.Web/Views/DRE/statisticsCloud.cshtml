@@ -1,0 +1,76 @@
+﻿@model SoftFin.Web.Models.StatisticCloud
+@{
+    ViewBag.Title = "Estatisticas da Nuvem";
+}
+
+@using (Html.BeginForm())
+{
+  
+    <header></header>
+    <div class='container'>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+
+    $(document).ready(function () {
+        $('#indicator').show();
+
+                var data = new google.visualization.DataTable();
+
+                var empresas = '@Model.qtdEmpresa';
+                var estabelecimentos = '@Model.qtdEstabelecimento';
+                var usuarios = '@Model.qtdUsuario';
+                var unidadesNegocio = '@Model.qtdUnidadeNegocio';
+                var pessoas = '@Model.qtdPessoa';
+                var bancos = '@Model.qtdBanco';
+                var contratos = '@Model.qtdContrato';
+                var notasFiscais = '@Model.qtdNotaFiscal';
+                var movimentosBancarios = '@Model.qtdBancoMovimento';
+                var saldosBancarios = '@Model.qtdSaldoBancarioReal';
+                var projetos = '@Model.qtdProjeto';
+                var contasPagar = '@Model.qtdContasPagar';
+                var logMudanca = '@Model.qtdLogMudanca';
+
+                data.addColumn('string', 'Objeto');
+                data.addColumn('string', 'Quantidade');
+
+                data.addRow(['Empresas', empresas]);
+                data.addRow(['Estabelecimentos', estabelecimentos]);
+                data.addRow(['Usuários', usuarios]);              
+                data.addRow(['Unidades de Negócio', unidadesNegocio]);    
+                data.addRow(['Pessoas', pessoas]);             
+                data.addRow(['Bancos', bancos]);               
+                data.addRow(['Contratos', contratos]);               
+                data.addRow(['Notas Fiscais', notasFiscais]);           
+                data.addRow(['Movimentos Bancários', movimentosBancarios]);   
+                data.addRow(['Saldos Bancários', saldosBancarios]);       
+                data.addRow(['Projetos', projetos]);
+                data.addRow(['Contas a Pagar', contasPagar]);
+                data.addRow(['Log Usuários', logMudanca]);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, { showRowNumber: true });
+
+                $('#indicator').hide();
+            })
+</script>

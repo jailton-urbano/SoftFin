@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Criação - Lote de Despesa";
+}
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial" id="dataInicial" class = "form-control" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal" id="dataFinal"   class = "form-control" value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Tipo do Lote</label>
+                @Html.DropDownList("tipoLoteDespesa_id", (SelectList)ViewData["tipoLote"], new { @class = "form-control" })
+            </div>
+        </div>
+        <div class='row'>
+            <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+            <button class="btn btn-primary" type="submit" id="gerar" name="gerar">
+                <span class="glyphicon glyphicon-cog"></span> Gerar Lote</button>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+    <div id="Lista">
+    </div>
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $('#pesquisa').click(function () {
+        if ($("#tipoLoteDespesa_id").val() == "") {
+            alert("Selecione o Tipo do Lote");
+            $('#indicator').hide();
+            return;
+        }
+
+        $('#indicator').show();
+        $.ajax(
+            {
+                url: "../Pesquisa",
+                data: {
+                    'dataInicial': $("#dataInicial").val(),
+                    'dataFinal': $("#dataFinal").val(),
+                    'tipoLote': $("#tipoLoteDespesa_id").val(),
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    carregaListaDespesas(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+    function carregaListaDespesas(jsonData) {
+        var table = '<table width="600" cellpadding="5" class="table table-hover table-bordered"><thead><tr><th scope="col">Autorizar</th><th scope="col">Usuário</th><th scope="col">Data</th><th scope="col">Projeto</th><th scope="col">Tipo de Despesa</th><th scope="col">Descrição</th><th scope="col">Valor</th></tr></thead><tbody>';
+        $.each(jsonData, function (index, despesa) {
+            table += '<tr>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '"><input type="checkbox" name="despesaID' + despesa.id + '" value="checked" /></td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.usuario + '</td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.dataS + '</td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.projeto + '</td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.tipodespesa + '</td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.descricao + '</td>';
+            table += '<td class="edit" field="name" user_id="' + despesa.id + '">' + despesa.valorS + '</td>';
+
+            table += '</tr>';
+        });
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

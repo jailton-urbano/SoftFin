@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx?wsdl" docRef="https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx" xmlns:q1="http://www.prefeitura.sp.gov.br/nfe" binding="q1:LoteNFeSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://nfe.prefeitura.sp.gov.br/ws/lotenfe.asmx" xmlns:q2="http://www.prefeitura.sp.gov.br/nfe" binding="q2:LoteNFeSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

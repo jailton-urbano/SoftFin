@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Movimento Bancário Diário";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                Data Inicial: 
+                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                Data Final: 
+                <input type="text" name="dataFinal" class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-4 form-group'>
+                Banco/Conta: 
+                @Html.DropDownList("banco", (SelectList)ViewData["banco"], "---Selecione---", new { @class="form-control" })
+            </div>
+            @*<div class='col-md-2 form-group'>
+                <div class="checkbox">
+                    <label>Inclui Ordens de Venda</label>
+                    <input type="checkbox" name="ovs" id="ovs" value="" />
+                </div>
+            </div>*@
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-cog"></span> Executar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+<style>
+    .col-md-2 form-group
+    {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .text-right-bold
+    {
+        text-align: right !important;
+        font-weight: bold;
+    }
+
+    .text-right
+    {
+        text-align: right !important;
+    }
+        .text-right-red
+    {
+        text-align: right !important;
+        color: red;
+    }
+        .text-right-blue
+    {
+        text-align: right !important;
+        color: blue;
+    }
+    .text-center
+    {
+        text-align: center !important;
+    }
+
+    .result
+    {
+        background-color: lightgreen;
+    }
+
+    .receb
+    {
+        background-color: lightgreen;
+    }
+
+    .pagtos
+    {
+        background-color: lightsalmon;
+    }
+</style>
+
+<script>
+
+    $('#pesquisa').click(function () {
+        $('#indicator').show();
+
+            var ov = "false";
+       
+        $.ajax(
+            {
+                url: "geraMovimentoBancarioDiario",
+                data: {
+                    'DataInicial': $("#dataInicial").val(),
+                    'DataFinal': $("#dataFinal").val(),
+                    'banco': $("#banco").val(),
+                    'ov': ov
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    montaMovimentoBancarioDiario(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+    function montaMovimentoBancarioDiario(jsonData) {
+        var table = '<table width="600" cellpadding="5" class="table table-condensed table-bordered"><thead><tr><th scope="col" class="text-center">Data</th><th scope="col" class="text-center">Histórico</th><th scope="col" class="text-center">Movimento</th><th scope="col" class="text-center">Saldo Calculado</th><th scope="col" class="text-center">Saldo Extrato</th><th scope="col" class="text-center">Diferença</th></tr></thead><tbody>';
+
+        $.each(jsonData, function (index, mvto) {
+            console.log(mvto);
+            table += '<tr>';
+            table += '<td class="active">' + mvto.dataMovimento + '</td>';
+            table += '<td class="active">' + mvto.historicoMovimento + '</td>';
+            table += '<td class="text-right">' + mvto.valorMovimento + '</td>';
+            table += '<td class="text-right">' + mvto.saldoFinal + '</td>';
+            table += '<td class="text-right">' + mvto.saldoReal + '</td>';
+            if (mvto.diferenca != "0,00") {
+                table += '<td class="text-right-red">' + mvto.diferenca + '</td>';
+            }
+            else {
+                table += '<td class="text-right">' + mvto.diferenca + '</td>';
+            }
+            table += '</tr>';
+        });
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

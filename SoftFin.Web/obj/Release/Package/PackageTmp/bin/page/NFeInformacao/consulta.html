@@ -1,0 +1,98 @@
+﻿<div ng-show="!showDados" class='panel-body'>
+    <div class='panel-body'>
+        <form class="form-search">
+            <div class='container'>
+
+                <div class='col-md-3 form-group'>
+                    <label>Pesquisa : </label>
+                    <input type="text" class="form-control" ng-model="procurar" />
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridPaginado"></dir-pagination-controls>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                            ng-click="new()"
+                            class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span> Novo
+                    </button>
+                </th>
+                <th><span ng-click="order('descricao')"> Descrição </span> </th>
+                <th><span ng-click="order('informacaoComplementar')"> Informação Complementar </span></th>
+                <th><span ng-click="order('informacaoComplementarFisco')"> Informação Complementar Fisco </span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr dir-paginate="item in Lista|filter:procurar|itemsPerPage:5|orderBy:sortKey:reverse" pagination-id="gridPaginado">
+                <td style="width: 40px;">
+                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                            ng-click="edit(item)"
+                            class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span> Editar
+                    </button>
+                </td>
+                <td>
+                    {{item.descricao}}
+                </td>
+                <td>
+                    {{item.informacaoComplementar}}
+                </td>
+                <td>
+                    {{item.informacaoComplementarFisco}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridPaginado"></dir-pagination-controls>
+    <div class="modal-footer">
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+        <button class="btn btn-transparent" ng-click="cancel()">Voltar</button>
+    </div>
+</div>
+
+<div ng-show="showDados" class='panel-body'>
+    <div class="modal-body">
+        <div>
+            <div class='row'>
+                <div class='col-md-8 form-group'>
+                    <label>Descrição</label>
+                    <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.descricao" class="form-control" required maxlength="50"/>
+                </div>
+
+                <div class='col-md-12 form-group'>
+                    <label>Informação Complementares</label>
+                    <textarea ng-disabled="ModoConsulta" rows="8" cols="80" type="" ng-model="entidade.informacaoComplementar" class="form-control"></textarea>
+                </div>
+                <div class='col-md-12 form-group'>
+                    <label>Informação Complementares de interesse ao Fisco</label>
+                    <textarea ng-disabled="ModoConsulta" rows="8" cols="80" type="" ng-model="entidade.informacaoComplementarFisco" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+        <input class="btn btn-primary" type="button" ng-click="save()" value="Salvar">
+        <button class="btn btn-transparent" ng-click="cancel()">Voltar</button>
+    </div>
+</div>
+
+
+

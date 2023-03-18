@@ -1,0 +1,708 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/Pessoa/PessoaIndex.js"></script>
+<style>
+
+
+   
+
+
+
+
+</style>
+<div id="divLoadinit" class="loading">
+    Aguarde, carregando...
+    <div id="indicator" style="text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+</div>
+<script type="text/javascript">
+    setTimeout(
+		function () {
+		    document.getElementById("divLoadinit").style.display = "none";
+		    $("#DivTotal").fadeIn("slow");
+		}, 1000);
+
+</script>
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none" ng-cloak>
+    <div ng-controller="MestreEntidade">
+        <div id="loadGrid" style="text-align: center;" class="loading_img" ng-show="showloadGrid">
+            <img src="~/Content/images/loading_bar_animated.gif" />
+        </div>
+        
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir a Pessoa ?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.codigo}} - {{item.nome}} - {{item.razao}} - {{item.cnpj}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalAdicionarFoto.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo de imagem para upload</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="image/*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+
+                        </div>
+                        
+                        <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Carregar
+                        </button>
+                        <button class="btn btn-default" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalContato.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Contato</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class='row'>
+                            <div class='col-md-8 form-group'>
+                                <label>Nome</label>
+                                <input type="text" ng-model="contato.nome" class="form-control" ng-maxlength="75" required tabindex="1"/>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Cargo / Relacionamento</label>
+                                <input type="text" ng-model="contato.cargo" class="form-control" ng-maxlength="75" tabindex="2" />
+                            </div>
+                            <div class='col-md-8 form-group'>
+                                <label>Email</label>
+                                <input type="text" ng-model="contato.email" class="form-control" ng-maxlength="75" tabindex="3"/>
+                            </div>
+                            <div class='col-md-4'>
+                                
+                                <label>Recebe Cobrança</label>
+                                <select class="form-control" ng-model="contato.RecebeCobranca" ng-disabled='ModoConsulta'
+                                        ng-options="o.Value as o.Text for o in ListaSimNao">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-6 form-group'>
+                                <label>Telefone</label>
+                                <input type="text" ng-model="contato.telefone" class="form-control" ng-maxlength="75" tabindex="5"/>
+                            </div>
+                            <div class='col-md-6 form-group'>
+                                <label>Celular</label>
+                                <input type="text" ng-model="contato.celular" class="form-control" ng-maxlength="75" tabindex="6"/>
+                            </div>
+                            <div class='col-md-6 form-group'>
+                                <label>Observação</label>
+                                <input type="text" ng-model="contato.observacao" class="form-control" ng-maxlength="150"  tabindex="7"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()"  tabindex="8">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()"  tabindex="9">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+                        
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-show="showMostraTodos">
+
+
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="LoadListaPessoas()"
+                                    class="btn btn-warning"
+                                    title="Atualiza a lista na tela">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="Novo()"
+                                    ng-show="EditAccess"
+                                    title="Nova pessoa"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+                            <button type="button" style="margin-top: 4px; border-right-width: 0px; padding-right: 73px;"
+                                    ng-click="Excel()"
+                                    title="Gera um aquivo do Excel"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-file"></span> Excel
+                            </button>
+
+                            <button type="button" style="margin-top: 4px; border-right-width: 0px; padding-right: 31px;"
+                                    ng-click="Importar()"
+                                    title="Importar arquivo Excel/CSV"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-open-file"></span> Importação
+                            </button>
+                        </th>
+                        <th>Identificação</th>
+                        <th>Dados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaPessoas|filter:procurar|itemsPerPage:7|orderBy:sortKey:reverse" class="{{item.active}}">
+                        <td style="width: 40px;" ng-show="showMostraTodos">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detalhar(item)"
+                                    class="btn btn-primary"
+                                    title="Detalhes da pessoa">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Alterar(item)"
+                                    ng-show="EditAccess"
+                                    class="btn btn-primary"
+                                    title="Editar pessoa">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"
+                                    ng-show="EditAccess"
+                                    class="btn btn-danger"
+                                    title="Excluir pessoa">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+                            <button type="button" style="border-top-width: 0px; margin-top: 4px; padding-right: 77px;"
+                                    ng-click="AdicionarFoto(item)"
+                                    class="btn btn-warning"
+                                    title="Fazer upload da foto da pessoa">
+                                <span class="glyphicon glyphicon-user"></span> Foto
+                            </button>
+
+
+
+                        </td>
+
+                        <td ng-show="item.id == idSelecionado || showMostraTodos">
+                            <b>
+                                <span ng-click="ordenar('codigo')"> Código </span> / <span ng-click="ordenar('nome')">Nome </span>/ <span ng-click="ordenar('razao')">Razão Social: </span>
+</b>
+                            <br />
+                            {{item.codigo}} / {{item.nome}} / {{item.razao}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('cnpj')"> CNPJ/CPF: </span>
+</b>
+               
+                            {{item.cnpj}}
+                            <div ng-show="(item.Foto != null)">
+                                <br />
+                                <b>Foto</b>
+                                <br />
+                                <img src="{{item.Foto}}" style="height: 200px; width: 200px;" />
+                            </div>
+                        </td>
+                        <td ng-show="item.id == idSelecionado || showMostraTodos">
+                            <b>
+                                <span ng-click="ordenar('endereco')">Endereço</span>
+</b>
+                            <br />
+                            {{item.endereco}},{{item.numero}} {{item.complemento}} {{item.bairro}} {{item.cidade}} {{item.uf}} {{item.cep}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('eMail')">Email </span> / <span ng-click="ordenar('TelefoneFixo')">Telefone </span>/ <span ng-click="ordenar('Celular')">Celular </span>
+</b>
+                            <br />
+                            {{item.eMail}} / {{item.TelefoneFixo}} / {{item.Celular}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('bancoConta')">Banco </span> / <span ng-click="ordenar('agenciaConta')">Agência </span>/ <span ng-click="ordenar('agenciaConta')">Conta</span>
+                            </b>
+                            <br />
+                            {{item.bancoConta}} / {{item.agenciaConta}}-{{item.agenciaDigito}} / {{item.agenciaConta}}-{{item.digitoContaBancaria}}
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading" ng-show="pessoa.id == 0">Manutenção de Dados de Pessoa</div>
+                <div ng-form="frmpessoas">
+                    <div class="panel-body">
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon-ok"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="alert alert-info" ng-show="showOK">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+                            </div>
+
+
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Categoria Pessoa</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.CategoriaPessoa_ID" ng-options="o.Value as o.Text for o in ListaCategorias">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>CNPJ/CPF</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="pessoa.CategoriaPessoa_ID != 1" />
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="pessoa.CategoriaPessoa_ID == 1" />
+                                    <span class="input-group-btn">
+                                        <a ng-show="!ModoConsulta" ng-click="BuscaSefaz(pessoa.cnpj)" class="btn btn-default" role="button">Pesquisar</a>
+                                    </span>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Nome Pessoa</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.nome" class="form-control" required ng-maxlength="150" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Razão Social</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.razao" class="form-control" ng-maxlength="150" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+                                    <label>Tipo Pessoa</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoPessoa_ID" ng-options="o.Value as o.Text for o in ListaTipoPessoas">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Unidade de Negócio</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.UnidadeNegocio_ID" ng-options="o.Value as o.Text for o in ListaUnidades">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-3 form-group' title="Se deixar vazio o sistema cria um novo pra você">
+                                    <label>Código(Vazio gera automático)</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.codigo" class="form-control" ng-maxlength="20" title="Se deixar vazio o sistema cria um novo pra você" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+                                    <label>Telefone Fixo</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.TelefoneFixo" class="form-control" ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Celular</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.Celular" class="form-control" ng-maxlength="20" />
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Incrição Estadual</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.inscricao" class="form-control" ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>CCM</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.ccm" class="form-control" ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-7 form-group'>
+                                    <label>E-Mail</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.eMail" class="form-control" ng-maxlength="150" />
+                                </div>
+                            </div>
+
+
+                            <div id="tabs">
+                                <ul class="nav nav-tabs">
+                                    <li class="aba-endereco active">
+                                        <a href="#tabEndereco" data-toggle="tab">
+                                            Endereço
+                                            <span class="badge"></span>
+                                        </a>
+                                    </li>
+                                    <li class="aba-banco">
+                                        <a href="#tabBanco" data-toggle="tab">
+                                            Dados Bancários
+                                            <span class="badge"></span>
+                                        </a>
+                                    </li>
+                                    <li class="aba-contato">
+                                        <a href="#tabContato" data-toggle="tab">
+                                            Contatos
+                                            <span class="badge"></span>
+                                        </a>
+                                    </li>
+                                    <li class="aba-seguro">
+                                        <a href="#tabSeguro" data-toggle="tab">
+                                            Dados Seguro
+                                            <span class="badge"></span>
+                                        </a>
+                                    </li>
+                                    <li class="aba-config">
+                                        <a href="#tabconfig" data-toggle="tab">
+                                            Configuração Contabil
+                                            <span class="badge"></span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" id="tabEndereco">
+                                        <div class="panel panel-primary">
+                                            <div class='container-fluid'>
+
+                                                <div class='row'>
+
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>CEP</label>
+                                                        <span class="input-group-btn">
+                                                            <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.cep" class="form-control" ng-maxlength="14" ui-br-cep-mask />
+                                                            <a ng-show="!ModoConsulta" ng-click="BuscaCEP(pessoa.cep)" class="btn btn-default" role="button">Pesquisar</a>
+                                                        </span>
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Tipo Endereço</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoEndereco_ID" ng-options="o.Value as o.Text for o in ListaTipoEnderecos">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-7 form-group'>
+                                                        <label>Endereço</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.endereco" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Número</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.numero" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Complemento</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.complemento" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Bairro</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.bairro" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                    <div class='col-md-1 form-group'>
+                                                        <label>UF</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.uf" class="form-control" ng-maxlength="2" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Cidade</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.cidade" class="form-control" ng-maxlength="30" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                </div>
+                                    
+                                    <div class="tab-pane fade in" id="tabBanco" aria-expanded="false">
+                                        <div class="panel panel-primary">
+                                            <div class='container-fluid'>
+
+
+                                                <div class='row'>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Código Banco</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.bancoConta" class="form-control" ng-maxlength="3" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Agência</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.agenciaConta" class="form-control" ng-maxlength="10" />
+                                                    </div>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Digito</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.agenciaDigito" class="form-control" ng-maxlength="1" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Conta</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.contaBancaria" class="form-control" ng-maxlength="12" />
+                                                    </div>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Dígito Conta</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.digitoContaBancaria" class="form-control" ng-maxlength="1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="tab-pane fade" id="tabContato">
+                                        <div class="panel panel-primary">
+                                            <div class='container-fluid'>
+
+
+                                                <table class="table table-bordered" ng-show="ListaEstabelecimento.length != 0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <button ng-disabled="ModoConsulta" ng-click="ModalContato(null)" style="padding-right: 70px; margin-top: 4px; margin-left: 0px;"
+                                                                        class="btn btn-success">
+                                                                    <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+                                                                </button>
+                                                            </th>
+                                                            <th>Identificação</th>
+                                                            <th>Dados</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in pessoa.contatos" class="{{item.active}}">
+                                                            <td style="width: 40px;">
+                                                                <button ng-disabled="ModoConsulta" title="Alterar Contato" ng-click="ModalContato(item)" style="padding-right: 92px; margin-top: 4px;"
+                                                                        class="btn btn-primary">
+                                                                    <span class="glyphicon glyphicon-edit"></span> Editar
+                                                                </button>
+                                                                <button ng-disabled="ModoConsulta" title="Escluir Contato" ng-click="ExcluirContato(item)" style="padding-right: 88px; margin-top: 4px;"
+                                                                        class="btn btn-danger">
+                                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                                </button>
+                                                            </td>
+                                                            <td>{{item.nome}} / {{item.cargo}}</td>
+                                                            <td>{{item.email}} / {{item.telefone}} / {{item.celular}} / {{item.observacao}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="tabSeguro">
+                                        <div class="panel panel-primary">
+                                            <div class='container-fluid'>
+
+
+                                                <div class='row'>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Pessoa Segurada?</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.flgSegurado" ng-options="o.Value as o.Text for o in ListaSimNao">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-12 form-group'>
+                                                        <label>Perfil Pessoal</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.perfilPessoal" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+
+                                                    <div class='col-md-12 form-group'>
+                                                        <label>Perfil Profissional</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.perfilProfissional" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-12 form-group'>
+                                                        <label>Perfil Familiar</label>
+                                                        <input ng-disabled="ModoConsulta" type="text" ng-model="pessoa.perfilFamiliar" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade in" id="tabconfig" aria-expanded="true">
+                                        <div class="panel panel-primary">
+                                            <div id="Grid" class="container-fluid">
+                                                <div class="row">
+                                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado o lançamento de inclusão de Contas a pagar para a pessoa do registro no cadastro em exibição.">
+                                                        <label>Conta lançamento Titulo – Passivo (crédito)</label>
+                                                        <select class="form-control" ng-model="Config.contaContabilDespesaPadrao_id"
+                                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado o lançamento de baixa (pagamento) do Contas a pagar para a pessoa do registro no cadastro em exibição.">
+                                                        <label>Conta lançamento Pagamento – Passivo (débito)</label>
+                                                        <select class="form-control" ng-model="Config.contaContabilPagarPadrao_id"
+                                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de registro (faturamento) ou baixa (recebimento) do Contas a receber para a pessoa do registro no cadastro em exibição.">
+                                                        <label>Conta lançamento/baixa de recebimentos – Ativo (débito/crédito)</label>
+                                                        <select class="form-control" ng-model="Config.contaContabilReceberPadrao_id"
+                                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                       
+                                </div>
+                            </div>
+
+
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon-ok"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+</div>
+

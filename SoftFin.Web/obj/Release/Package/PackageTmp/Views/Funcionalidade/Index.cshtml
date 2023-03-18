@@ -1,0 +1,193 @@
+﻿@model SoftFin.Web.Models.Funcionalidade
+@{
+    ViewBag.Title = "Lista de Funcionalidade";
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                    Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.Descricao)
+                                @Html.TextBoxFor(x => x.Descricao, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.Descricao)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.NomeController)
+                                @Html.TextBoxFor(x => x.NomeController, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.NomeController)
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.NomeAction)
+                                @Html.TextBoxFor(x => x.NomeAction, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.NomeAction)
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar
+                    </button>
+                    @*<a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' />
+                    </a>*@
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="jqgFuncionalidades" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgFuncionalidadesOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+            
+        function carregagrid() {
+            var reftamanho = $("#titulopaginas").width();
+            var tamanhotela = ($("#titulopaginas").width() / 9) - 3;
+            captionBotoes = true;
+            if (reftamanho < 670)
+                captionBotoes = false;
+            var colunas = [];
+            colunasNomes = ['Código', 'Descrição', 'Controller', 'Action', 'Ordem', 'Ativo', 'Jarvis'];
+            colunas = [
+                    { name: 'Código', index: 'id', align: 'left', editable: false, width: tamanhotela * 1, hidden: false },
+                    {
+                        name: 'Descricao', index: 'Descricao', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 2
+                    },
+                    {
+                        name: 'Controller', index: 'NomeController', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 2
+                    },
+                    {
+                        name: 'Action', index: 'NomeAction', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 1
+                    },
+                    {
+                        name: 'Ordem', index: 'Ordem', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 1
+                    },
+                    {
+                        name: 'Ativo', index: 'Ativo', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 1
+                    },
+                    {
+                        name: 'Jarvis', index: 'Jarvis', align: 'left', editable: false, edittype: 'text',
+                          width: tamanhotela * 1
+                    }
+            ];
+
+
+            $('#jqgFuncionalidades').jqGrid({
+                //url from wich data should be requested
+                url: '@Url.Action("Listas")',
+                //type of data
+                datatype: 'json',
+                //url access method type
+                mtype: 'POST',
+                //columns names
+                colNames: colunasNomes,
+                //columns model
+                colModel: colunas,
+                //pager for grid
+                pager: $('#jqgFuncionalidadesOpc'),
+                //number of rows per page
+                rowNum: 12,
+                //initial sorting column
+                sortname: 'Descricao',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+            });
+
+            $('#jqgFuncionalidades').jqGrid('navGrid', '#jqgFuncionalidadesOpc',
+                { add: false, del: false, edit: false, search: false });
+
+            $('#jqgFuncionalidades').navButtonAdd('#jqgFuncionalidadesOpc', { // custom edit button
+                caption: "Novo",
+                buttonicon: "ui-icon ui-icon-plus",
+                onClickButton: function () {
+                    window.location = "Create/";
+                },
+                position: "Last"
+            });
+
+            $('#jqgFuncionalidades').navButtonAdd('#jqgFuncionalidadesOpc', { // custom edit button
+                caption: "Alterar",
+                buttonicon: "ui-icon ui-icon-pencil",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgFuncionalidades").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Edit/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+            $('#jqgFuncionalidades').navButtonAdd('#jqgFuncionalidadesOpc', { // custom edit button
+                caption: "Excluir",
+                buttonicon: "ui-icon ui-icon-trash",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgFuncionalidades").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Delete/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+        };
+        carregagrid();
+
+        $(window).resize(function () {
+            $("#jqgFuncionalidades").jqGrid("GridUnload")
+            $('#jqgFuncionalidades').trigger('reloadGrid');
+            carregagrid();
+
+
+        });
+
+
+        $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")';
+            caminho += '?Descricao=';
+            caminho += $('#Descricao').val();
+            caminho += '&NomeController=';
+            caminho += $('#NomeController').val();
+            caminho += '&NomeAction=';
+            caminho += $('#NomeAction').val();
+            jQuery("#jqgFuncionalidades").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+        });
+
+    });
+
+</script>
+

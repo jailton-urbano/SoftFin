@@ -1,0 +1,337 @@
+﻿@model SoftFin.Web.Models.FGTSVLW
+@{
+    ViewBag.Title = "FUNDO DE GARANTIA POR TEMPO DE SERVIÇO - FGTS"; 
+
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+      <h4 class='panel-title'>
+        <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+          Filtros:
+        </a>
+      </h4>
+    </div>
+        <div id='collapseOne' class='panel-collapse collapse out'>
+     <div class='panel-body'>
+       <form class='form-search'>
+      <div class='container'>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigoReceita)  <br />
+            @Html.TextBoxFor(x => x.codigoReceita)
+            @Html.ValidationMessageFor(x => x.codigoReceita)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.tipoInscricao)  <br />
+            @Html.TextBoxFor(x => x.tipoInscricao)
+            @Html.ValidationMessageFor(x => x.tipoInscricao)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.cnpj)  <br />
+            @Html.TextBoxFor(x => x.cnpj)
+            @Html.ValidationMessageFor(x => x.cnpj)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigoBarras)  <br />
+            @Html.TextBoxFor(x => x.codigoBarras)
+            @Html.ValidationMessageFor(x => x.codigoBarras)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.identificadorFgts)  <br />
+            @Html.TextBoxFor(x => x.identificadorFgts)
+            @Html.ValidationMessageFor(x => x.identificadorFgts)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.lacreConectividadeSocial)  <br />
+            @Html.TextBoxFor(x => x.lacreConectividadeSocial)
+            @Html.ValidationMessageFor(x => x.lacreConectividadeSocial)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.digitoLacre)  <br />
+            @Html.TextBoxFor(x => x.digitoLacre)
+            @Html.ValidationMessageFor(x => x.digitoLacre)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.nomeContribuinte)  <br />
+            @Html.TextBoxFor(x => x.nomeContribuinte)
+            @Html.ValidationMessageFor(x => x.nomeContribuinte)
+        </div>
+
+      </div>
+
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.dataPagamentoInicial)  <br />
+            <input type='text' id='dataPagamentoInicial' name='dataPagamentoInicial' class='text-box single-line'   />
+            @Html.ValidationMessageFor(x => x.dataPagamentoInicial)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.dataPagamentoFinal)  <br />
+            <input type='text' id='dataPagamentoFinal' name='dataPagamentoFinal' class='text-box single-line'  />
+            @Html.ValidationMessageFor(x => x.dataPagamentoFinal)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.valorPagamentoInicial)  <br />
+            @Html.TextBoxFor(x => x.valorPagamentoInicial)
+            @Html.ValidationMessageFor(x => x.valorPagamentoInicial)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.valorPagamentoFinal)  <br />
+            @Html.TextBoxFor(x => x.valorPagamentoFinal)
+            @Html.ValidationMessageFor(x => x.valorPagamentoFinal)
+        </div>
+      </div>
+      </div>
+</div>
+            </br>
+            <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+            <a href='@Url.Action("Excel")'>
+            <img src='~/Content/images/icoExcel.gif' /></a>
+        </form>
+      </div>
+    </div>
+</div>
+
+
+
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgObj').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesa
+            colNames: ['Codigo Receita', 'Tipo Inscricao', 'Cnpj', 'Codigo Barras', 'Identificador Fgts', 'Lacre Conectividade Social', 'Digito Lacre', 'Nome Contribuinte', 'Data Pagamento ', 'Valor Pagamento ' ],
+            colModel: [
+                        
+       {
+           name: 'colcodigoReceita', index: 'codigoReceita', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '40'
+       },
+       {
+           name: 'coltipoInscricao', index: 'tipoInscricao', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '20'
+       },
+       {
+           name: 'colcnpj', index: 'cnpj', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '100'
+       },
+       {
+           name: 'colcodigoBarras', index: 'codigoBarras', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '100'
+       },
+       {
+           name: 'colidentificadorFgts', index: 'identificadorFgts', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '150'
+       },
+       {
+           name: 'collacreConectividadeSocial', index: 'lacreConectividadeSocial', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '150'
+       },
+       {
+           name: 'coldigitoLacre', index: 'digitoLacre', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '30'
+       },
+       {
+           name: 'colnomeContribuinte', index: 'nomeContribuinte', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '150'
+       },
+       {
+           name: 'coldataPagamentoInicial', index: 'dataPagamento', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '100'
+       },
+       {
+           name: 'coldataPagamentoFinal', index: 'dataPagamento', align: 'left', editable: false, edittype: 'text',
+           editoptions: { maxlength: 50 }, editrules: { required: true }, width: '100'
+       },
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+
+
+    });
+
+
+
+    $("#competencia").datepicker({ dateFormat: "mm/yy" });
+
+
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")';
+
+        caminho += '?codigoPagamento=';
+        caminho += $('#codigoPagamento').val();
+        caminho += '&competencia=';
+        caminho += $('#competencia').val();
+        caminho += '&identificador=';
+        caminho += $('#identificador').val();
+        caminho += '&valorTributoInicial=';
+        caminho += $('#valorTributoInicial').val();
+        caminho += '&valorOutrasEntidadesInicial=';
+        caminho += $('#valorOutrasEntidadesInicial').val();
+        caminho += '&valorAtualizacaoMonetariaInicial=';
+        caminho += $('#valorAtualizacaoMonetariaInicial').val();
+        caminho += '&valorArrecadadoInicial=';
+        caminho += $('#valorArrecadadoInicial').val();
+        caminho += '&dataArrecadacaoInicial=';
+        caminho += $('#dataArrecadacaoInicial').val();
+        caminho += '&valorTributoFinal=';
+        caminho += $('#valorTributoFinal').val();
+        caminho += '&valorOutrasEntidadesFinal=';
+        caminho += $('#valorOutrasEntidadesFinal').val();
+        caminho += '&valorAtualizacaoMonetariaFinal=';
+        caminho += $('#valorAtualizacaoMonetariaFinal').val();
+        caminho += '&valorArrecadadoFinal=';
+        caminho += $('#valorArrecadadoFinal').val();
+        caminho += '&dataArrecadacaoFinal=';
+        caminho += $('#dataArrecadacaoFinal').val();
+        caminho += '&informacoesComplementares=';
+        caminho += $('#informacoesComplementares').val();
+        caminho += '&nomeContribuinte=';
+        caminho += $('#nomeContribuinte').val();
+
+
+
+        jQuery("#jqgObj").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    });
+
+    </script>
+
+<script>
+    $('#cnpj').attr('maxlength', '18');
+    $('#cnpj').attr('style', 'text-align:right');
+    $('#cnpj').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      });
+    $('#dataPagamentoInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valorPagamentoInicial').attr('maxlength', '18');
+    $('#valorPagamentoInicial').keyup(
+      function (event) {
+          $('#valorPagamentoInicial').val(filtraNumerosComVirgula($('#valorPagamentoInicial').val()));
+      });
+    $('#valorPagamentoInicial').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#dataPagamentoFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valorPagamentoFinal').attr('maxlength', '18');
+    $('#valorPagamentoFinal').keyup(
+      function (event) {
+          $('#valorPagamentoFinal').val(filtraNumerosComVirgula($('#valorPagamentoFinal').val()));
+      });
+    $('#valorPagamentoFinal').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>
+<style type='text/css'>
+<!--
+#codigoReceita {width:275.00px;}
+#tipoInscricao {width:275.00px;}
+#cnpj {width:275.00px;}
+#codigoBarras {width:275.00px;}
+#identificadorFgts {width:275.00px;}
+#lacreConectividadeSocial {width:275.00px;}
+#digitoLacre {width:275.00px;}
+#nomeContribuinte {width:275.00px;}
+#dataPagamentoInicial {width:275.00px;}
+#valorPagamentoInicial {width:275.00px;}
+#dataPagamentoFinal {width:275.00px;}
+#valorPagamentoFinal {width:275.00px;}
+-->
+</style>
+

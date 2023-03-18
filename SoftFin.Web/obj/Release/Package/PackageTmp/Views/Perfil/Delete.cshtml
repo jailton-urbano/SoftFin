@@ -1,0 +1,119 @@
+﻿@model SoftFin.Web.Models.Perfil
+
+@{
+    ViewBag.Title = "Perfil - Alteração";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 form-group"">
+                <div class="editor-label">
+                    Nome do Perfil:
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Descricao, null, new { @class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.Descricao)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-10 form-group"">
+                <div class="editor-label">
+                    Lista de Acessos:
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 form-group">
+                <div class='panel-group' >
+                    <div class='panel panel-default'>
+                        @foreach (var item in SoftFin.Web.Negocios.Acesso.RetornaFuncionalidadesPrincipais(SoftFin.Web.Negocios.Acesso.UsuarioLogado()))
+                        {
+
+                                    <div class='panel-heading'>
+                                        <h4 class='panel-title'>
+                                            <a data-toggle='collapse' data-parent='#accordion' href='#collapse_@item.Descricao.Replace(" ", "_")'>
+                                                @item.Descricao
+                                            </a>
+                                        </h4>
+                                    </div>
+
+                                    <div id='collapse_@item.Descricao.Replace(" ", "_")' class='panel-collapse collapse out'>
+                                        <div class='panel-body'>
+                                            <div class="container-fluid">
+                                                <div class='row'>
+
+                                            @foreach (var itemMenu in SoftFin.Web.Negocios.Acesso.RetornaFuncionalidadesFilhoPorPai(item.id, Model.id))
+                                            {
+
+                                                        if (!itemMenu.Funcionalidade.Descricao.Equals("-"))
+                                                        {
+                                                            <div class="col-md-5 form-group">
+
+                                                                <label>@itemMenu.Funcionalidade.Descricao</label>
+                                                                <select id="item.id$@itemMenu.Funcionalidade.id" name="item.id$@itemMenu.Funcionalidade.id" class="form-control">
+
+                                                                @if (itemMenu.flgTipoAcesso.Equals("N"))
+                                                                {
+                                                                    <option value="N" selected>Sem Acesso</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="N">Sem Acesso</option>
+                                                                }
+                                                                
+                                                                @if (itemMenu.flgTipoAcesso.Equals("C"))
+                                                                {
+                                                                    <option value="C" selected>Consulta</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="C">Consulta</option>
+                                                                }
+
+
+                                                                @if (itemMenu.flgTipoAcesso.Equals("T"))
+                                                                {
+                                                                    <option value="T" selected>Total</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="T">Total</option>
+                                                                }
+
+                                                                </select>
+                                                            </div>
+
+                                                        }
+                                            }
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+    
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

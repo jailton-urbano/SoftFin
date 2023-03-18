@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Performance de Caixa";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <div class="checkbox">
+                    <label>Consolidado</label>
+                    <input type="checkbox" name="consolidado" id="consolidado" value="" />
+                </div>
+            </div>
+            <div class='col-md-1 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <table>
+        <td style="width: 50%;">
+            <div id="table_div"></div>
+        </td>
+    </table>
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+
+        if (document.getElementById('consolidado').checked) {
+            var con = "true";
+        } else {
+            var con = "false";
+        }
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraPerformanceCaixa",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val(),
+                'Consolidado': con
+            },
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Conta');
+                data.addColumn('number', '% Custo');
+                data.addColumn('number', '% Mercado');
+                data.addColumn('number', '% Variação');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].conta,
+                                 tabledata[i].percRecebimentos,
+                                 tabledata[i].percMercado,
+                                 { v: tabledata[i].percVariacao, f: tabledata[i].percVariacaoS }]);
+                }
+
+                var formatter = new google.visualization.NumberFormat({ negativeColor: 'red', pattern: '#.##%' });
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+
+                var formatter2 = new google.visualization.TableArrowFormat();
+                formatter2.format(data, 3);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                data.sort({ column: 0, asc: true });
+
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+</script>

@@ -1,0 +1,109 @@
+﻿@model SoftFin.Web.Models.FGTS
+@{
+    ViewBag.Title = "FUNDO DE GARANTIA POR TEMPO DE SERVIÇO - FGTS - Consulta";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+         @Html.ActionLink("Voltar", "Index", "FGTS", null, new { @class = "btn btn-primary" })
+        <br /><br />
+           <div class='container'>
+            @Html.HiddenFor(x => x.ID)
+      <div class='row'>
+         <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.nomeContribuinte) 
+            @Html.TextBoxFor(x => x.nomeContribuinte)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.cnpj)  
+            @Html.TextBoxFor(x => x.cnpj)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigoReceita)  
+            @Html.TextBoxFor(x => x.codigoReceita)
+        </div>
+
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigoBarras) 
+            @Html.TextBoxFor(x => x.codigoBarras)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.identificadorFgts)  
+            @Html.TextBoxFor(x => x.identificadorFgts)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.lacreConectividadeSocial)  
+            @Html.TextBoxFor(x => x.lacreConectividadeSocial)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.digitoLacre)  
+            @Html.TextBoxFor(x => x.digitoLacre)
+        </div>
+
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.dataPagamento)  
+            <input type='text' id='dataPagamento' name='dataPagamento' class='text-box single-line'  value='@Model.dataPagamento.Date.ToString("dd/MM/yyyy")' />
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.tipoInscricao) 
+            @Html.TextBoxFor(x => x.tipoInscricao)
+        </div>
+
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.valorPagamento)  
+            @Html.TextBoxFor(x => x.valorPagamento)
+        </div>
+
+      </div>
+</div>
+         @Html.ActionLink("Voltar", "Index", "FGTS", null, new { @class = "btn btn-primary" })
+
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>
+
+
+<style type='text/css'>
+<!--
+#ID {width:275.00px;}
+#codigoReceita {width:275.00px;}
+#tipoInscricao {width:275.00px;}
+#cnpj {width:275.00px;}
+#codigoBarras {width:275.00px;}
+#identificadorFgts {width:275.00px;}
+#lacreConectividadeSocial {width:275.00px;}
+#digitoLacre {width:275.00px;}
+#nomeContribuinte {width:275.00px;}
+#dataPagamento {width:275.00px;}
+#valorPagamento {width:275.00px;}
+#estabelecimento_id {width:275.00px;}
+#Estabelecimento {width:275.00px;}
+-->
+</style>

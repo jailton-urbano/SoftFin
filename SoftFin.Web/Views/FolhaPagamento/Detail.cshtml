@@ -1,0 +1,89 @@
+﻿@model SoftFin.Web.Models.FolhaPagamento
+@{
+    ViewBag.Title = "Folha Pagamento - Detalhe";
+
+}
+
+
+<fieldset>
+
+    
+    <p>
+
+        <ul class="nav nav-pills">
+
+            <li class="active">
+                @Html.ActionLink("Voltar", "/Index")
+            </li>
+        </ul>
+    </p>
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.folhapagamentotipo_id)
+                    @Html.DropDownListFor(model => model.folhapagamentotipo_id, (SelectList)ViewData["folhapagamentotipo"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.folhapagamentotipo_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadenegocio_id)
+                    @Html.DropDownListFor(model => model.unidadenegocio_id, (SelectList)ViewData["unidadenegocio"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.unidadenegocio_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.funcionario_id)
+                    @Html.DropDownListFor(model => model.funcionario_id, (SelectList)ViewData["funcionario"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.funcionario_id)
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataBase)
+                    @Html.TextBoxFor(x => x.dataBase, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.dataBase)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataPagamento)
+                    @if (Model.DataPagamento == null)
+                    {
+                        <input type='text' id='DataPagamento' class="form-control" name='DataPagamento' />
+                    }
+                    else
+                    {
+                        <input type='text' id='DataPagamento' class="form-control" name='DataPagamento' value='@Model.DataPagamento.ToString("dd/MM/yyyy")' />
+                    }
+                    @Html.ValidationMessageFor(x => x.DataPagamento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+            </div>
+        </div>
+
+
+        <ul class="nav nav-pills">
+
+            <li class="active">
+                @Html.ActionLink("Voltar", "/Index")
+            </li>
+        </ul>
+    </p>
+
+</fieldset>
+<div class="alert alert-info">
+
+
+    @ViewBag.msg
+</div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input[type!=hidden]").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>
+

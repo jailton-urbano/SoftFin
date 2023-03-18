@@ -1,0 +1,86 @@
+﻿@model SoftFin.Web.Models.FuncionarioSalario
+
+@{
+    ViewBag.Title = "Funcionário Salário- Alteração";
+
+}
+
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.funcionario_id)
+                    @Html.DropDownListFor(model => model.funcionario_id, (SelectList)ViewData["funcionario"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.funcionario_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataInicial)
+                    @if (Model.dataInicial == null)
+                    {
+                        <input type='text' id='dataInicial' class = "form-control" name='dataInicial'  />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataInicial' class = "form-control" name='dataInicial' value='@Model.dataInicial.Value.ToString("dd/MM/yyyy")' />
+                    } 
+                    @Html.ValidationMessageFor(x => x.dataInicial)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorBruto)
+                    @Html.TextBoxFor(x => x.valorBruto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorBruto)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorAdiantamento)
+                    @Html.TextBoxFor(x => x.valorAdiantamento, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorAdiantamento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorComplemento)
+                    @Html.TextBoxFor(x => x.valorComplemento, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorComplemento)
+                </div>
+
+            </div>
+        </div>
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    </fieldset>
+}
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataInicial').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valorBruto,#valorComplemento,#valorAdiantamento').attr('maxlength', '18');
+    $('#valorBruto,#valorComplemento,#valorAdiantamento').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>

@@ -1,0 +1,460 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Views/TB/TBIndex.js"></script>
+<h1>Banco de Dados > Tabelas</h1>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade" block-ui="main">
+        <script type="text/ng-template" id="modalNovo.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Manutenção Campo</h3>
+                    {{item}}
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                <label>Campo</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.Campo" class="form-control" required ng-maxlength="250" />
+                            </div>
+                            <div class='col-md-8 form-group'>
+                                <label>Descrição</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.Descricao" class="form-control" required ng-maxlength="250" />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                <label>Ativo</label>
+                                <select class="form-control" ng-model="item.Ativo"
+                                        ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Chave Estrangeira</label>
+                                <select class="form-control" ng-model="item.IdChaveEstrageira"
+                                        ng-options="o.Value as o.Text for o in ListaTabelas" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Tipo Campo</label>
+                                <select class="form-control" ng-model="item.IdTipoCampo"
+                                        ng-options="o.Value as o.Text for o in ListaTipoCampos" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Obrigatório</label>
+                                <select class="form-control" ng-model="item.Obrigatorio"
+                                        ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                <label>Tamanho Campo</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.TamanhoCampo" class="form-control" required ng-maxlength="12" ui-number-mask="0"/>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Tamanho Coluna</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.TamanhoColuna" class="form-control" required ng-maxlength="12" ui-number-mask="0"/>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Precisão</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.Precisao" class="form-control" required ng-maxlength="12" ui-number-mask="0"/>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Ordem</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.Ordem" class="form-control" required ng-maxlength="12" ui-number-mask="0"/>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>Default SQL</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="item.SQLDefault" class="form-control" required ng-maxlength="500" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir a Tabela?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>
+                                    {{item.Nome}} /
+                                    {{item.Descricao}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalExcluirCampo.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Campo?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>
+                                    {{item.Campo}} /
+                                    {{item.Descricao}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="ObterTodos()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 71px;"
+                                    ng-click="Novo()"
+                                    title="Novo registro"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+                        </th>
+                        <th>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7" class="{{item.active}}">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 51px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Alterar(item)"
+                                    title="Edita o lançamento"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('Nome')"> Nome </span>
+                                / <span ng-click="ordenar('Descricao')"> Descrição </span>
+                                / <span ng-click="ordenar('Ativo')"> Ativo </span>
+                            </b>
+                            <br />
+                            <label>{{item.Nome}} / {{item.Descricao}} / {{item.Ativo |yesNo}} </label>
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('CadastroAuxiliar')"> Auxiliar </span>
+                                / <span ng-click="ordenar('OrdemCriacao')"> Ordem </span>
+
+                            </b>
+                            <br />
+                            <label>{{item.CadastroAuxiliar |yesNo}} / {{item.OrdemCriacao}}  </label>
+                            <br />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+            <div class="panel panel-primary">
+
+                <div ng-form="frmpessoas">
+                    <div class="panel-body">
+                        <div class='row'>
+                            <div class='col-md-9 form-group'>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            ng-click="Salvar()"
+                                            class="btn btn-primary"
+                                            ng-show="!ModoConsulta">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>Salvar
+                                    </button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            ng-click="Voltar()"
+                                            class="btn btn-default">
+                                        <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                <label>Nome</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="tabela.Nome" class="form-control" required ng-maxlength="250" />
+                            </div>
+                            <div class='col-md-8 form-group'>
+                                <label>Descrição</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="tabela.Descricao" class="form-control" required ng-maxlength="250" />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Ativo</label>
+                                <select class="form-control" ng-model="tabela.Ativo" ng-disabled="ModoConsulta"
+                                        ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Tabela Auxiliar</label>
+                                <select class="form-control" ng-model="tabela.CadastroAuxiliar" ng-disabled="ModoConsulta"
+                                        ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Ordem Criação</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="tabela.OrdemCriacao" class="form-control" required ui-number-mask="0" />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>SQL Tabela Auxiliar</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="tabela.SQLCadastroAuxiliar" class="form-control" required ng-maxlength="300" />
+                            </div>
+
+                        </div>
+
+                        <h3 ng-show="tabela.Id != 0">Campos</h3>
+                        <div class='row' ng-show="tabela.Id != 0">
+                            <div class='col-md-12 form-group'>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridSecundario"></dir-pagination-controls>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <button style="margin-top: 4px; padding-right: 71px;"
+                                                        ng-click="NovoCampo()"
+                                                        title="Novo registro"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                                </button>
+                                            </th>
+                                            <th>
+                                                Campo
+                                            </th>
+                                            <th>
+                                                Descrição
+                                            </th>
+                                            <th>
+                                                Campo Ativo
+                                            </th>
+
+                                            <th>
+                                                Tipo
+                                            </th>
+                                            <th>
+                                                Obrigatorio
+                                            </th>
+                                            <th>
+                                                Ordem
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr dir-paginate="item in tabela.TabelaCampos|orderBy:sortKey:reverseRec|filter:procurarRec|itemsPerPage:10" pagination-id="gridSecundario">
+                                            <td>
+                                                <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                        ng-click="EditarCampo(item)"
+                                                        title="Edita o lançamento"
+                                                        class="btn btn-primary">
+                                                    <span class="glyphicon glyphicon-edit"></span> Editar
+                                                </button>
+
+                                                <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                                        type="button"
+                                                        ng-click="ExcluirCampo(item)"
+                                                        title="Remove o lançamento"
+                                                        class="btn btn-danger">
+                                                    <span class="glyphicon glyphicon-remove"></span> Excluir
+                                                </button>
+                                            </td>
+                                            <td>{{item.Campo}}</td>
+                                            <td>{{item.Descricao}}</td>
+                                            <td>{{item.Ativo|yesNo}}</td>
+                                            <td>{{item.tipocampodesc}}</td>
+                                            <td>{{item.Obrigatorio|yesNo}}</td>
+                                            <td>{{item.Ordem}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridSecundario"></dir-pagination-controls>
+
+                            </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-9 form-group'>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            ng-click="Salvar()"
+                                            class="btn btn-primary"
+                                            ng-show="!ModoConsulta">
+                                        <span class="glyphicon glyphicon-floppy-disk"></span>Salvar
+                                    </button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            ng-click="Voltar()"
+                                            class="btn btn-default">
+                                        <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <iframe ng-show="showiframe" id="iframedin" frameBorder=0 style="width:100%; height:800px"
+                    src="{{urliframe}}"
+                    BORDERCOLOR="#FFFFFF" class="iframedin"></iframe>
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

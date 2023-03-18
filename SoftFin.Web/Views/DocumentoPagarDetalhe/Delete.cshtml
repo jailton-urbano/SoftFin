@@ -1,0 +1,64 @@
+﻿
+@model SoftFin.Web.Models.DocumentoPagarDetalhe
+@{
+    ViewBag.Title = "Documento Pagar Detalhe - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div>
+            @Html.LabelFor(x => x.planoDeConta_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.planoDeConta_id,(SelectList)ViewData["PlanoDeContas"],"--Selecione--")
+        </div>
+        <div>
+            @Html.LabelFor(x => x.historico)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.historico)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.unidadenegocio_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.unidadenegocio_id,(SelectList)ViewData["UnidadeDeNegocio"],"--Selecione--")
+        </div>
+        <div>
+            @Html.LabelFor(x => x.valor)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.valor)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.percentual)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.percentual)
+        </div>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+
+@section scripts{
+    
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

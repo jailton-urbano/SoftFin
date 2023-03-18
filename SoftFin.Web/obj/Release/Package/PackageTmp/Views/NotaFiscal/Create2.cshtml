@@ -1,0 +1,655 @@
+﻿@model SoftFin.Web.Models.NotaFiscalOrdemVenda
+@{
+    ViewBag.Title = "Nota Fiscal - Novo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205621079-Emiss%C3%A3o-NFS-manual-outros-sistemas";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />
+
+        <div class="panel panel-primary">
+
+            <div class='container'>
+                @Html.HiddenFor(x => x.id)
+                @Html.HiddenFor(x => x.tabelaPreco_ID)
+
+
+                <h4>Ordem de Venda</h4>
+
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.descricao)
+
+                        @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.descricao)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.valor)
+
+                        @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valor)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.data)
+
+                        <input type='text' id='data' name='data' class='form-control' value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+                        @Html.ValidationMessageFor(x => x.data)
+                    </div>
+                </div>
+                <div class='row'>
+
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.statusParcela_ID)
+                        @Html.DropDownListFor(x => x.statusParcela_ID, (SelectList)ViewData["statusParcela"], new { @class = "form-control" })
+
+                        @Html.ValidationMessageFor(x => x.statusParcela_ID)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.itemProdutoServico_ID)
+                        @Html.DropDownListFor(x => x.itemProdutoServico_ID, (SelectList)ViewData["item"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.itemProdutoServico_ID)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Tabela de Preço</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="@ViewData["tabela"]" id="tabela_texto" disabled>
+                            <span class="input-group-addon" data-toggle="modal" data-target="#Modal" data-whatever="@@mdo"><i class="glyphicon glyphicon-refresh"></i></span>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.tabelaPreco_ID)
+                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal" data-whatever="@@mdo">Lista de Preços</button>*@
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.unidadeNegocio_ID)
+                        @Html.DropDownListFor(x => x.unidadeNegocio_ID, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" })
+
+                        @Html.ValidationMessageFor(x => x.unidadeNegocio_ID)
+                    </div>
+                    <div class='col-md-6 form-group'>
+                        @Html.LabelFor(x => x.pessoas_ID)
+                        @Html.DropDownListFor(x => x.pessoas_ID, (SelectList)ViewData["pessoas"], "---Selecione---", new { @class = "form-control" })
+
+                        @Html.ValidationMessageFor(x => x.pessoas_ID)
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+
+            <div class='container'>
+
+                <h4>Nota Fiscal</h4>
+
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.situacaoPrefeitura_id)
+
+                        @Html.DropDownListFor(model => model.situacaoPrefeitura_id, (SelectList)ViewData["situacaoPrefeitura"], new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.situacaoPrefeitura_id)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.codigoServico_id)
+
+                   
+                             @Html.DropDownListFor(model => model.codigoServico_id, (SelectList)ViewData["codigoServico"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.codigoServico_id)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.banco_id)
+
+                        @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.banco_id)
+                    </div>
+
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.numeroNfse)
+
+                        @Html.TextBoxFor(x => x.numeroNfse, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.numeroNfse)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.dataVencimentoNfse)
+
+                        <input type='text' id='dataVencimentoNfse' name='dataVencimentoNfse' class='form-control' value='' />
+                        @Html.ValidationMessageFor(x => x.dataVencimentoNfse)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.operacao_id)
+
+                        @Html.DropDownListFor(model => model.operacao_id, (SelectList)ViewData["operacao"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.operacao_id)
+
+                    </div>
+                </div>
+
+                <div class='row'>
+
+                    <div class='col-md-2 form-group'>
+                        <a href="#" name="PreencheDados" id="PreencheDados" class="btn btn-primary">Calcula Nota</a>
+                    </div>
+
+                    <div class='col-md-7 form-group'>
+                        @Html.LabelFor(x => x.discriminacaoServico)
+
+                        @Html.TextAreaFor(x => x.discriminacaoServico, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.discriminacaoServico)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+
+            <div class='container'>
+
+                <h4>RPS</h4>
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.tipoRps)
+                        @Html.HiddenFor(x => x.tipoRps)
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.serieRps)
+
+                        @Html.TextBoxFor(x => x.serieRps, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.serieRps)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.numeroRps)
+
+                        @Html.TextBoxFor(x => x.numeroRps, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.numeroRps)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataEmissaoRps)
+
+                        <input type='text' id='dataEmissaoRps' name='dataEmissaoRps' class='form-control' value='@Model.dataEmissaoRps.Date.ToString("dd/MM/yyyy")' />
+                        @Html.ValidationMessageFor(x => x.dataEmissaoRps)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.situacaoRps)
+
+                        @Html.TextBoxFor(x => x.situacaoRps, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.situacaoRps)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+
+            <div class='container'>
+
+                <h4>Tomador</h4>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.razaoTomador)
+
+                        @Html.TextBoxFor(x => x.razaoTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.razaoTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.indicadorCnpjCpf)
+                        @{ List<SelectListItem> dict = new List<SelectListItem>();
+                         dict.Add(new SelectListItem() { Text = "CPF", Value = "1" });
+                         dict.Add(new SelectListItem() { Text = "CNPJ", Value = "2" });
+                         SelectList indicadorCnpjCpf = new SelectList(dict, "Value", "Text");
+                        }
+                        @Html.DropDownListFor(model => model.indicadorCnpjCpf, indicadorCnpjCpf, "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.indicadorCnpjCpf)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.cnpjCpf)
+
+                        @Html.TextBoxFor(x => x.cnpjCpf, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.cnpjCpf)
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.inscricaoMunicipal)
+
+                        @Html.TextBoxFor(x => x.inscricaoMunicipal, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.inscricaoMunicipal)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.inscricaoEstadual)
+
+                        @Html.TextBoxFor(x => x.inscricaoEstadual, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.inscricaoEstadual)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.tipoEndereco)
+
+                        @Html.TextBoxFor(x => x.tipoEndereco, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.tipoEndereco)
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.enderecoTomador)
+
+                        @Html.TextBoxFor(x => x.enderecoTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.enderecoTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.numeroTomador)
+
+                        @Html.TextBoxFor(x => x.numeroTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.numeroTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.complementoTomador)
+
+                        @Html.TextBoxFor(x => x.complementoTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.complementoTomador)
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.bairroTomador)
+
+                        @Html.TextBoxFor(x => x.bairroTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.bairroTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.cidadeTomador)
+
+                        @Html.TextBoxFor(x => x.cidadeTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.cidadeTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.ufTomador)
+
+                        @Html.TextBoxFor(x => x.ufTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.ufTomador)
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.cepTomador)
+
+                        @Html.TextBoxFor(x => x.cepTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.cepTomador)
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.emailTomador)
+
+                        @Html.TextBoxFor(x => x.emailTomador, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.emailTomador)
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+
+            <div class='container'>
+
+                <h4>Impostos</h4>
+
+                <div class='row'>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.basedeCalculo)
+
+                        @Html.TextBoxFor(x => x.basedeCalculo, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.basedeCalculo)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.aliquotaISS)
+
+                        @Html.TextBoxFor(x => x.aliquotaISS, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.aliquotaISS)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorISS)
+
+                        @Html.TextBoxFor(x => x.valorISS, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valorISS)
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorINSS)
+
+                        @Html.TextBoxFor(x => x.valorINSS, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valorINSS)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorINSS)
+
+                        @Html.TextBoxFor(x => x.valorINSS, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valorINSS)
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.irrf)
+
+                        @Html.TextBoxFor(x => x.irrf, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.irrf)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.pisRetido)
+
+                        @Html.TextBoxFor(x => x.pisRetido, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.pisRetido)
+                    </div>
+
+
+
+                </div>
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.cofinsRetida)
+
+                        @Html.TextBoxFor(x => x.cofinsRetida, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.cofinsRetida)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.csllRetida)
+
+                        @Html.TextBoxFor(x => x.csllRetida, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.csllRetida)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.creditoImposto)
+
+                        @Html.TextBoxFor(x => x.creditoImposto, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.creditoImposto)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorDeducoes)
+
+                        @Html.TextBoxFor(x => x.valorDeducoes, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valorDeducoes)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorLiquido)
+
+                        @Html.TextBoxFor(x => x.valorLiquido, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.valorLiquido)
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+</fieldset>
+}
+
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="ModalLabel">Selecione um Preço</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Descriçao</th>
+                                <th>Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody id="GridColunas">
+                            @*<tr>
+                                    <td><input type="radio" name="items" value="1"></td>
+                                    <td>Nono no nononnoo</td>
+                                    <td>Nono no nononnoo</td>
+                                    <td>200,99</td>
+                                </tr>*@
+
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnSeleciona">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("#itemProdutoServico_ID").change(function () {
+
+        $.get('/OrdemVenda/getList?item_id=' + $("#itemProdutoServico_ID").val(), function (data) {
+            listPreco = data;
+
+            $("#GridColunas").html("");
+            for (i = 0; i < data.length; i++) {
+                var item = data[i];
+                var html = "";
+                html += "<tr>";
+                html += "<td><input type='radio' name='items' value='" + item.id + "'></td>";
+                html += "<td>" + item.descricao + "</td>";
+                html += "<td>" + item.preco + "</td>";
+                html += "</tr>";
+                $("#GridColunas").append(html);
+            }
+
+            $(":radio[name=items]").change(function () {
+                $(".table tr.active").removeClass("active"); //remove previous active class
+                $(this).closest("tr").addClass("active"); //add active to radio selected tr
+            });
+        });
+    });
+
+
+
+    $.get('/OrdemVenda/getList?item_id=' + $("#itemProdutoServico_ID").val(), function (data) {
+        var listPreco = data;
+
+        for (i = 0; i < data.length; i++) {
+            var item = data[i];
+            var html = "";
+            html += "<tr>";
+            html += "<td><input type='radio' name='items' value='" + item.id + "'></td>";
+            html += "<td>" + item.descricao + "</td>";
+            html += "<td>" + item.preco + "</td>";
+            html += "</tr>";
+            $("#GridColunas").append(html);
+        }
+
+        $(":radio[name=items]").change(function () {
+            $(".table tr.active").removeClass("active"); //remove previous active class
+            $(this).closest("tr").addClass("active"); //add active to radio selected tr
+        });
+    });
+
+
+    $("#btnSeleciona").click(function () {
+        $('input[name="items"]:checked').each(function () {
+            for (i = 0; i < listPreco.length; i++) {
+                if (this.value == listPreco[i].id) {
+                    $("#valor").val(listPreco[i].preco);
+                    $("#tabelaPreco_ID").val(listPreco[i].tabela_id);
+                    document.getElementById("tabela_texto").value = listPreco[i].descricao;
+                }
+            }
+
+        });
+    });
+
+    $("#PreencheDados").click(function () {
+        var strCodigoServicoID = $('#codigoServico_id').val();
+        var strdata = $('#data').val();
+        var stridBanco =  $('#banco_id').val();
+        var stridOperacao = $('#operacao_id').val();
+        var strvalor =  $('#valor').val();
+        var strunidadeNegocio = $('#unidadeNegocio_ID').val();
+        var strpessoa = $('#pessoas_ID').val();
+
+        strvalor = strvalor.replace(".", "").replace(",", ".");
+
+        $.ajax({
+            url: "../../NotaFiscal/CalculaNotaTela",
+            data: {
+                "strCodigoServicoID" : strCodigoServicoID,
+                "strdata": strdata,
+                "stridBanco": stridBanco,
+                "stridOperacao": stridOperacao,
+                "strvalor": strvalor,
+                "strunidadeNegocio": strunidadeNegocio,
+                "strpessoa": strpessoa
+            },
+            dataType: "json",
+            type: 'POST',
+            success: function (data) {
+                $('#tipoRps').val(data.tipoRps);
+                $('#serieRps').val(data.serieRps);
+                $('#numeroRps').val(data.numeroRps);
+                $('#dataEmissaoRps').val($('#data').val());
+                $('#situacaoRps').val(data.situacaoRps);
+                $('#razaoTomador').val(data.razaoTomador);
+                $('#indicadorCnpjCpf').val(data.indicadorCnpjCpf);
+                $('#cnpjCpf').val(data.cnpjCpf);
+                $('#inscricaoMunicipal').val(data.inscricaoMunicipal);
+                $('#inscricaoEstadual').val(data.inscricaoEstadual);
+                $('#tipoEndereco').val(data.tipoEndereco);
+                $('#bairroTomador').val(data.bairroTomador);
+                $('#cidadeTomador').val(data.cidadeTomador);
+                $('#ufTomador').val(data.ufTomador);
+                $('#cepTomador').val(data.cepTomador);
+                $('#emailTomador').val(data.emailTomador);
+                $('#valorDeducoes').val(data.valorDeducoes);
+                $('#basedeCalculo').val(data.basedeCalculo);
+                $('#aliquotaISS').val(data.aliquotaISS);
+                $('#valorISS').val(data.valorISS);
+                $('#creditoImposto').val(data.creditoImposto);
+                $('#irrf').val(data.irrf);
+                $('#pisRetido').val(data.pisRetido);
+                $('#cofinsRetida').val(data.cofinsRetida);
+                $('#csllRetida').val(data.csllRetida);
+                $('#creditoImposto').val(data.creditoImposto);
+                $('#irrf').val(data.irrf);
+                $('#discriminacaoServico').val(data.irrf);
+                $('#enderecoTomador').val(data.enderecoTomador);
+                $('#numeroTomador').val(data.numeroTomador);
+                $('#complementoTomador').val(data.complementoTomador);
+                $('#discriminacaoServico').val(data.discriminacaoServico);
+                $('#valorLiquido').val(data.valorLiquido);
+                
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    });
+
+    $('#dataEmissaoRps').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoRps').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#data').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#dataEmissaoNfse').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoNfse').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#dataVencimentoNfse').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimentoNfse').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+    $('#valorNfse').attr('maxlength', '18');
+    $('#valorNfse').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorDeducoes').attr('maxlength', '18');
+    $('#valorDeducoes').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#basedeCalculo').attr('maxlength', '18');
+    $('#basedeCalculo').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#aliquotaISS').attr('maxlength', '18');
+    $('#aliquotaISS').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorISS').attr('maxlength', '18');
+    $('#valorISS').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#creditoImposto').attr('maxlength', '18');
+    $('#creditoImposto').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#irrf').attr('maxlength', '18');
+    $('#irrf').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#pisRetido').attr('maxlength', '18');
+    $('#pisRetido').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#cofinsRetida').attr('maxlength', '18');
+    $('#cofinsRetida').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#csllRetida').attr('maxlength', '18');
+    $('#csllRetida').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorLiquido').attr('maxlength', '18');
+    $('#valorLiquido').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#aliquotaIrrf').attr('maxlength', '18');
+    $('#aliquotaIrrf').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#aliquotaIrrf').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>

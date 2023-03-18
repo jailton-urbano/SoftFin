@@ -1,0 +1,2383 @@
+﻿
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+
+
+<div id="divLoadinit" class="loading">
+    Aguarde, carregando...
+    <div id="indicator" style="text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+</div>
+<script type="text/javascript">
+    setTimeout(
+        function () {
+            document.getElementById("divLoadinit").style.display = "none";
+            $("#DivTotal").fadeIn("slow");
+        }, 1000);
+
+</script>
+
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none">
+    <div ng-controller="MestreEntidade">
+
+        <script type="text/ng-template" id="modalContent.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo para upload</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-12 form-group'>
+                                <label> Descrição </label>
+                                <input type="text" maxlength="50" ng-model="descricao" id="DescricaoArquivo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                        @*<div class="row">
+                                <div class='col-md-3 form-group'>
+                                <label>ou</label>
+                                </div>
+                            </div>*@
+                        @*<div class="row">
+                                <div class='col-md-12 form-group'>
+
+                                    <div class="asset-upload" dropzone="openFolder">
+                                        Upload into: ****
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+                        </div>
+                        <input class="btn btn-primary" type="button" ng-click="ok()" value="upload">
+                        <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalContentArquivos.html">
+
+            <div class="modal-header">
+                <h3>Arquivos Relacionados</h3>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Opção</th>
+                            <th>Visualização</th>
+                            <th>Informação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ListaArquivosProposta">
+                            <td>
+
+                                <button ng-show="!ModoConsulta"
+                                        type="button"
+                                        ng-click="Excluir(item)"
+                                        class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                </button>
+
+                                <a href='{{item.arquivoReal}}' class="btn btn-success" target="_blank" style="margin-top: 4px; padding-right: 26px;">
+                                    <span class="glyphicon glyphicon-open-file"></span> Abrir
+                                </a>
+                            </td>
+                            <td>
+                                <a prettyp href="{{item.arquivoReal}}" rel="prettyPhoto[main]" title="{{item.Descricao}}">
+                                    <img src="{{item.arquivoReal}}" width="80" height="80" alt="{{item.Descricao}}" />
+                                </a>
+                            </td>
+                            <td>
+                                <b>Nome Arquivo:</b>{{item.arquivoOriginal}} <br />
+                                <b>Descrição:</b>{{item.Descricao}} <br />
+                                <b>Extensão:</b>{{item.arquivoExtensao}} <br />
+                                <b>Data inclusao:</b>{{item.DataInclucao}}
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+
+
+
+        </script>
+
+
+        <script type="text/ng-template" id="modalHistorico.html">
+
+            <div class="modal-header">
+                <h3>Historico de Mudanças</h3>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ListaHistorico">
+                            <td>{{item.usuario}}</td>
+                            <td>{{item.DataHora}}</td>
+                            <td>{{item.historico}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+
+
+
+        </script>
+
+
+        <div id="DivFiltro">
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search' id="frmfiltro">
+                                <div class='container'>
+                                    <div class='row'>
+                                        <div class='col-md-6 form-group'>
+                                            <label>Cliente</label>
+                                            <input type="text" ng-model="FILTRO.param$seguradoprincipal" typeahead="o.Text as o.Text for o in ListaPessoas | filter:$viewValue | limitTo:8" class="form-control" />
+                                        </div>
+                                        <div class='col-md-6 form-group'>
+                                            <label>
+                                                Seguradora
+                                            </label>
+                                            <input type="text" ng-model="FILTRO.param$seguradora_id" typeahead="o.Text as o.Text for o in ListaSeguradora | filter:$viewValue | limitTo:8" class="form-control" />
+                                        </div>
+
+
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group'>
+                                            <label>
+                                                Região
+                                            </label>
+                                            <select class="form-control" ng-model="FILTRO.param$regiao_id"
+                                                    ng-options="o.Value as o.Text for o in ListaRegiao">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>
+                                                Sucursal
+                                            </label>
+                                            <select class="form-control" ng-model="FILTRO.param$sucursal_id"
+                                                    ng-options="o.Value as o.Text for o in ListaSucursal">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>
+                                                Representante/Corretor
+                                            </label>
+                                            <select class="form-control" ng-model="FILTRO.param$representante_id"
+                                                    ng-options="o.Value as o.Text for o in ListaRepresentante">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>
+                                                Número Proposta
+                                            </label>
+                                            <input class="form-control" ng-model="FILTRO.param$numeroProposta" />
+
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>
+                                                Número Apolice
+                                            </label>
+                                            <input class="form-control" ng-model="FILTRO.param$numeroApolice" />
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+
+                                        @*<div class='col-md-2 form-group'>
+                                                <label>Data Proposta Inicial</label>
+                                                <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" data-ng-model="FILTRO.dataProposta1" ui-date-mask>
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Data Proposta Final</label>
+                                                <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" data-ng-model="FILTRO.dataProposta2" ui-date-mask>
+                                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                    </div>
+                                                </a>
+                                            </div>*@
+                                        <div class='col-md-2 form-group' datetimez ng-model="FILTRO.param$dataVigenciaInicio01">
+                                            <label>Data Proposta Inicio</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="FILTRO.param$dataVigenciaInicio01" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="FILTRO.param$dataVigenciaInicio02">
+                                            <label>Data Proposta Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="FILTRO.param$dataVigenciaInicio02" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="FILTRO.param$dataVigenciaFim01">
+                                            <label>Data Vigência Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="FILTRO.param$dataVigenciaFim01" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="FILTRO.param$dataVigenciaFim02">
+                                            <label>Data Vigência Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="FILTRO.param$dataVigenciaFim02" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisa()">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+                                <a href='@Url.Action("Excel")'>
+                                    <img src='~/Content/images/icoExcel.gif' />
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='row' id="DivGrid">
+            <div class='col-md-3 form-group'>
+                <table id="jqgEntidade" cellpadding="0" cellspacing="0"></table>
+                <div id="jqgEntidadeOpc" style="text-align:center;"></div>
+            </div>
+        </div>
+
+        <div id="MestreEntidade" class="container-fluid">
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+            <div id="tabs">
+                <ul class="nav nav-tabs">
+                    <li class="aba-proposta active">
+                        <a href="#tabProposta" data-toggle="tab" ng-click="tabSelecionada='Proposta'">
+                            Proposta/Apólice
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-parcelas" ng-show="showApolice">
+                        <a href="#tabParcelas" data-toggle="tab" ng-click="tabSelecionada='Parcela' && entidade.id != 0">
+                            Parcelas
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-endosso" ng-show="showApolice">
+                        <a href="#tabEndosso" data-toggle="tab" ng-click="tabSelecionada='Endosso'  && entidade.id != 0">
+                            Endosso
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-sinistro" ng-show="showApolice">
+                        <a href="#tabSinistros" data-toggle="tab" ng-click="tabSelecionada='Sinistro' && entidade.id != 0">
+                            Sinistros
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tabProposta">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Dados da proposta. Atenção! proposta passa a ser apólice após sua aprovação</div>
+                            <form name="frmEntidade">
+                                <div class='container-fluid'>
+                                    <div class='row'>
+                                        <div class='col-md-9 form-group'>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="OK()"
+                                                        class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-plus"></span> Salvar
+                                                </button>
+                                            </span>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="Voltar()"
+                                                        class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Código Registro</label>
+                                            <input type="text" ng-model="entidade.codigo" class="form-control" ng-disabled="true">
+                                        </div>
+
+                                        <div class='col-md-2 form-group'>
+                                            <label>Número Proposta</label>
+                                            <input type="text" ng-model="entidade.numeroProposta" class="form-control">
+                                        </div>
+
+                                        <div class='col-md-2 form-group'>
+
+                                            <label>Tipo Proposta Seguro</label>
+                                            <select class="form-control" ng-model="entidade.tipoPropostaSeguro_id"
+                                                    ng-options="o.Value as o.Text for o in ListaTipoPropostaSeguro" required>
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Comissão Corretora</label>
+                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="entidade.comissaoCorretora" ui-number-mask="2">
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Comissão Representante</label>
+                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="entidade.comissaoRepresentante" ui-number-mask="2">
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Bem como Garantia</label><br />
+                                            <input type="checkbox" ng-model="entidade.bemGarantia" class="form-control" required />
+                                        </div>
+
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Número Oportunidade</label>
+                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="entidade.numeroOportunidade" ui-number-mask="0">
+                                        </div>
+                                        <div class='col-md-2 form-group' ng-model="entidade.dataRegistro">
+                                            <label>Data Registro</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataRegistro" ui-date-mask ng-readonly="true" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Status Proposta</label>
+                                            <select class="form-control" ng-model="entidade.tipoStatusPropostaSeguro_id" required ng-change="ValidaStatus(true)"
+                                                    ng-options="o.Value as o.Text for o in ListaStatuPropostaSeguro">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="entidade.dataEfetivacaoProposta">
+                                            <label>Data Efetivação</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataEfetivacaoProposta" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Número Apólice</label>
+                                            <input type="text" ng-model="entidade.numeroApolice" class="form-control" ng-disabled="entidade.tipoStatusPropostaSeguro_id != 3">
+                                        </div>
+
+                                    </div>
+                                    <div class='row'>
+
+                                        <div class='col-md-2 form-group' datetimez ng-model="entidade.dataProposta">
+                                            <label>Data Proposta</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataProposta" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="entidade.dataVigenciaInicio">
+                                            <label>Data Vigência Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataVigenciaInicio" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="entidade.dataVigenciaFim">
+                                            <label>Data Vigência Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataVigenciaFim" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-6 form-group'>
+                                            <label>
+                                                Seguradora
+                                            </label>
+                                            <input type="text" ng-model="entidade.seguradora_descr" typeahead="o.Text as o.Text for o in ListaSeguradora | filter:$viewValue | limitTo:8" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+
+
+
+                                        <div class='col-md-6 form-group'>
+                                            <label>Segurado Principal</label>
+                                            <div class="input-group">
+                                                <input type="text" ng-focus="LoadListaPessoas()" ng-model="entidade.Segurado_Principal_Nome" typeahead="o.Text as o.Text for o in ListaPessoas | filter:$viewValue | limitTo:8" class="form-control" required />
+                                                <span class="input-group-addon" onclick="window.open('../../Pessoa/Create', '_blank')" data-toggle="modal" data-target="#Modal"><i class="glyphicon glyphicon-plus-sign"></i></span>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-3 form-group'>
+                                            <label>Região</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.regiao_id"
+                                                    ng-options="o.Value as o.Text for o in ListaRegiao">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Sucursal</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.sucursal_id"
+                                                    ng-options="o.Value as o.Text for o in ListaSucursal">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Representante/Corretor</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.representante_id"
+                                                    ng-options="o.Value as o.Text for o in ListaRepresentante" ng-required="entidade.tipoStatusPropostaSeguro_id == 3">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Tipo Condição Pagamento Premio</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tipoCondicaoPagamentoPremio_id"
+                                                    ng-options="o.Value as o.Text for o in ListaTipoCondicaoPagamentoPremio" ng-required="entidade.tipoStatusPropostaSeguro_id == 3">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Ramo</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.grupoRamoSeguro_id" ng-change="LoadListaRamoSeguro()"
+                                                    ng-options="o.Value as o.Text for o in ListaGrupoRamo" ng-required="true">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-6 form-group'>
+                                            <label>Observações</label>
+                                            <input type="text" ng-model="entidade.observacoes" class="form-control" required />
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Upload de Arquivo</label>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="showModal()"
+                                                        class="btn btn-success"
+                                                        ng-disabled="entidade.id == 0">
+                                                    <span class="glyphicon glyphicon-plus"></span> Upload
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Lista de Arquivos</label>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="showModalArquivos()"
+                                                        class="btn btn-success"
+                                                        ng-disabled="entidade.id == 0">
+                                                    <span class="glyphicon glyphicon-file"></span> Lista Arquivos
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Ramos</div>
+                                        <div class="panel-body">
+                                            <form id="frmItem">
+                                                <div class='container-fluid'>
+                                                    <div class='row'>
+
+                                                        <div class='col-md-4 form-group'>
+                                                            <label>Cobertura</label>
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="ITEM.ramo" ng-options="o.Text for o in ListaRamoSeguro track by o.Value">
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <label>Valor</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="ITEM.premio" ui-number-mask="2">
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class='col-md-10 form-group'>
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <span class="input-group-btn">
+                                                                <button ng-show="!ModoConsulta" type="button"
+                                                                        ng-click="fcAdiciona(ITEM)"
+                                                                        name="btnAdicione" id="btnAdicione"
+                                                                        class="btn btn-success">
+                                                                    <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                                                {{MsgDivValidacao}}
+                                            </div>
+                                        </div>
+                                        <div class='container-fluid'>
+                                            <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                                            <div id="Repositorio">
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Número</th>
+                                                            <th>Ramo</th>
+                                                            <th>Premio</th>
+                                                            <th>Opção</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in ITEMS">
+                                                            <td>{{$index+1}}</td>
+                                                            <td>{{item.ramo.Text}}</td>
+                                                            <td>{{item.premio | number:2}}</td>
+                                                            <td>
+
+                                                                <button ng-show="!ModoConsulta"
+                                                                        type="button"
+                                                                        ng-click="fcExcluir($index)"
+                                                                        class="btn btn-danger">
+                                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>Premio Total</td>
+                                                            <td>{{premioTotal | number:2}}</td>
+                                                            <td></td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class='row'>
+                                        <div class='col-md-9 form-group'>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="OK()"
+                                                        class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-plus"></span> Salvar
+                                                </button>
+                                            </span>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="Voltar()"
+                                                        class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabParcelas" aria-expanded="false">
+                        <div class="panel panel-primary">
+                            <form name="frmEntidadeApolice">
+                                <div class='container-fluid'>
+                                    <div class='row'>
+                                        <div class='col-md-1 form-group'>
+                                            <label>Número</label>
+                                            <input type="text" ng-model="entidadeParcela.numero" class="form-control" required />
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>histórico</label>
+                                            <input type="text" ng-model="entidadeParcela.historico" class="form-control" required />
+                                            <label>Ex: Vencto {DV} - Parcela {NU} de {NP}  </label>
+
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="entidadeParcela.dataOriginalVencto">
+                                            <label>Data Vencto</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidadeParcela.dataOriginalVencto" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Receber</label>
+                                            <input type="text" ng-model="entidadeParcela.valorReceber" class="form-control" required ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-1 form-group'>
+                                            <label>Repetir</label>
+                                            <input type="text" ng-model="entidadeParcela.numeroParcelas" class="form-control" required ui-number-mask="0" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <br />
+                                            <button type="button"
+                                                    ng-click="AdicionarParcela()"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;"></th>
+                                        <th>Número</th>
+                                        <th>Histórico</th>
+                                        <th>Valor</th>
+                                        <th>Data Vencimento</th>
+                                        <th>Data Pagamento</th>
+                                        <th>Conciliado</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaParcelas">
+                                        <td>
+                                            <button ng-show="!ModoConsulta"
+                                                    type="button"
+                                                    ng-click="ExcluirParcela(item.id)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-minus"></span> Excluir
+                                            </button>
+                                        </td>
+                                        <td>{{item.numero}}</td>
+                                        <td>{{item.historico}}</td>
+                                        <td>{{item.valorReceber}}</td>
+                                        <td>{{item.dataOriginalVencto | date:'dd-MM-yyyy'}}</td>
+                                        <td>{{item.dataPagamento}}</td>
+                                        <td>{{item.conciliado}}</td>
+
+
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="tab-pane fade in" id="tabEndosso" aria-expanded="false">
+                        <div class="panel panel-primary">
+                            <form name="frmEntidadeApolice">
+                                <div class='container-fluid'>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group'>
+                                            <br />
+                                            <button type="button" style="padding-right: 55px;"
+                                                    ng-click="AdicionarEndosso()"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> {{btnstatusendossos}}
+                                            </button>
+
+                                            <button type="button" ng-show="btnstatusendossos == statusAlterar" style="margin-left: 0px; border-right-width: 1px; margin-top: 4px; padding-right: 41px;"
+                                                    ng-click="CancelarEndosso(endosso)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-backward"></span> Cancelar
+                                            </button>
+                                        </div>
+                                        <div class='col-md-1 form-group'>
+                                            <label>Número</label>
+                                            <input type="text" ng-model="endosso.numero" class="form-control" required />
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Descrição</label>
+                                            <input type="text" ng-model="endosso.descricao" class="form-control" required />
+                                            @*<label>Ex: Vencto {DV} - Endosso {NU} de {NP}  </label>*@
+
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="endosso.data">
+                                            <label>Data</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="endosso.data" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Endosso</label>
+                                            <input type="text" ng-model="endosso.valor" class="form-control" required ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Status</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="endosso.status"
+                                                    ng-options="o.Text as o.Text for o in ListaStatusEndosso " required>
+                                                <option value="">--Selecione--</option>
+                                            </select>
+
+                                        </div>
+
+                                        @*<div class='col-md-1 form-group'>
+                                                <label>Repetir</label>
+                                                <input type="text" ng-model="endosso.numeroParcelas" class="form-control" required ui-number-mask="0" />
+                                            </div>*@
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td style="width: 40px;"></td>
+                                        <th>Número</th>
+                                        <th>Histórico</th>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaEndossos">
+                                        <td>
+                                            <button ng-show="btnstatusendossos != statusAlterar" style="border-right-width: 0px; padding-right: 63px;"
+                                                    type="button"
+                                                    ng-click="ExcluirEndosso(item.id)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-minus"></span> Excluir
+                                            </button>
+                                            <button type="button" ng-show="btnstatusendossos != statusAlterar" style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                    ng-click="AlterarEndosso(item)"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                            <button type="button" style="border-top-width: 0px; margin-top: 4px; padding-right: 60px;"
+                                                    ng-click="showModalEndosso(item)"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> Upload
+                                            </button>
+                                            <button type="button" style="margin-top: 4px;"
+                                                    ng-click="showModalArquivosEndosso(item)"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-file"></span> Lista Arquivos
+                                            </button>
+                                        </td>
+                                        <td>{{item.numero}}</td>
+                                        <td>{{item.descricao}}</td>
+                                        <td>{{item.data | date:'dd-MM-yyyy'}}</td>
+                                        <td>{{item.valor}}</td>
+                                        <td>{{item.status}}</td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="tab-pane fade in" id="tabSinistros" aria-expanded="false">
+                        <div class="panel panel-primary">
+                            <form name="frmSinistro">
+                                <div class='container-fluid'>
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="sinistro.dataOcorrencia">
+                                            <label>Data Ocorrência</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sinistro.dataOcorrencia" ui-date-mask required />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="sinistro.dataAviso">
+                                            <label>Data Aviso</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sinistro.dataAviso" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="sinistro.dataLiquidacao">
+                                            <label>Data Liquidação</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sinistro.dataLiquidacao" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="sinistro.dataVistoria">
+                                            <label>Data Vistoria</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sinistro.dataVistoria" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-3 form-group'>
+                                            <label>Número Processo</label>
+                                            <input type="text" ng-model="sinistro.numeroProcesso" class="form-control" required />
+                                        </div>
+
+                                        <div class='col-md-3 form-group'>
+                                            <label>Valor</label>
+                                            <input type="text" ng-model="sinistro.valor" class="form-control" required ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-6 form-group'>
+                                            <label>Descrição</label>
+                                            <input type="text" ng-model="sinistro.descricao" class="form-control" required />
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-6 form-group'>
+                                            <label>Histórico</label>
+                                            <input type="text" ng-model="sinistro.historico" class="form-control" required />
+                                        </div>
+
+                                        <div class='col-md-3 form-group'>
+
+                                            <label>Status</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="sinistro.statusSeguro"
+                                                    ng-options="o.Value as o.Text for o in ListaStatusSeguro" required>
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class='col-md-3 form-group'>
+
+                                            <label>Tipo Seguro</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="sinistro.tipodeSinistro"
+                                                    ng-options="o.Value as o.Text for o in ListaTipodeSeguro" required>
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class='col-md-3 form-group'>
+                                            <br />
+
+                                            <button type="button"
+                                                    ng-click="AdicionarSinistro()"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> {{btnstatussinistros}}
+                                            </button>
+
+                                            <button type="button" ng-show="btnstatussinistros == statusAlterar"
+                                                    ng-click="CancelarSinistro(sinistro)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-backward"></span> Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;"></th>
+                                        <th>Data </th>
+                                        <th>Detalhe</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaSinistros" class="{{item.active}}" style="width: 40px;">
+                                        <td>
+                                            <button ng-show="btnstatussinistros != statusAlterar" style="border-right-width: 0px; padding-right: 63px;"
+                                                    type="button"
+                                                    ng-click="ExcluirSinistro(item.id)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-minus"></span> Excluir
+                                            </button>
+                                            <button type="button" ng-show="btnstatussinistros != statusAlterar" style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                    ng-click="AlterarSinistro(item)"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                            <button type="button" style="margin-top: 4px;border-right-width: 0px; padding-right: 60px;"
+                                                    ng-click="showModalSinistro(item)"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> Upload
+                                            </button>
+                                            <button type="button" style="margin-top: 4px;"
+                                                    ng-click=" showModalArquivosSinistro(item)"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-file"></span> Lista Arquivos
+                                            </button>
+
+                                            <button type="button" style="border-top-width: 0px; margin-top: 4px; border-right-width: 33px;"
+                                                    ng-click="HistoricoSinistro(item)"
+                                                    class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus"></span> Histórico
+                                            </button>
+
+                                        </td>
+                                        <td>
+                                            <b>
+                                                Ocorrência:
+                                            </b>{{item.dataOcorrencia | date:'dd-MM-yyyy'}}<br />
+                                            <b>
+                                                Aviso:
+                                            </b> {{item.dataAviso | date:'dd-MM-yyyy'}}<br />
+                                            <b>
+                                                Liquidação:
+                                            </b>{{item.dataLiquidacao| date:'dd-MM-yyyy'}}<br />
+                                            <b>
+                                                Vistoria:
+                                            </b>{{item.dataVistoria| date:'dd-MM-yyyy'}}<br />
+                                        </td>
+                                        <td>
+                                            <b>Número:</b> {{item.numeroProcesso}}<br />
+                                            <b>
+                                                Tipo Status / Tipo Sinistro
+                                            </b>
+                                            {{item.statusSeguro}} / {{item.tipodeSinistro}}<br />
+                                            <b> Valor: </b>
+                                            {{item.valor | number:2}}<br />
+                                            <b>
+                                                Descrição:
+                                            </b>
+                                            {{item.descricao}}<br />
+                                            <b>
+                                                Histórico:
+                                            </b>
+                                            {{item.historico}}
+                                        </td>
+
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var key = 0;
+    $(document).ready(function () {
+        $('#MestreEntidade').hide();
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+        $('#jqgEntidade').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: [//'Cliente', 'CPF ou CNPJ',
+                'Número Proposta', 'Data Proposta', 'Cliente', 'Número Apólice', 'Vigência Inicial', 'Vigência Final', 'Prêmio Total', 'Seguradora'],
+            //columns model
+            colModel: [
+                { name: 'param$numeroProposta', index: 'param$numeroProposta', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$dataProposta', index: 'param$dataProposta', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$Segurado_Principal$nome', index: 'param$Segurado_Principal$nome', align: 'left', editable: false, hidden: false, width: screen.width / 6 },
+                { name: 'param$numeroApolice', index: 'param$numeroApolice', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$dataVigenciaInicio', index: 'param$dataVigenciaInicio', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$dataVigenciaFim', index: 'param$dataVigenciaFim', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$premio', index: 'param$premio', align: 'left', editable: false, hidden: false, width: screen.width / 12 },
+                { name: 'param$seguradora_id', index: 'param$seguradora_id', align: 'left', editable: false, hidden: false, width: screen.width / 12 }
+            ],
+            //pager for grid
+            pager: $('#jqgEntidadeOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'param$numeroProposta',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+
+        $('#jqgEntidade').jqGrid('navGrid', '#jqgEntidadeOpc',
+        { add: false, del: false, edit: false, search: false });
+
+        $('#jqgEntidade').navButtonAdd('#jqgEntidadeOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                key = 0;
+                $('#MestreEntidade').fadeIn("slow");
+                $("#DivFiltro").hide();
+                angular.element('#MestreEntidade').scope().fshowCadastro("Novo");
+                angular.element('#MestreEntidade').scope().$apply();
+
+            },
+            position: "Last"
+        });
+
+        $('#jqgEntidade').navButtonAdd('#jqgEntidadeOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                key = jQuery("#jqgEntidade").jqGrid('getGridParam', 'selrow');
+                if (key != null) {
+                    $('#MestreEntidade').fadeIn("slow");
+                    $("#DivFiltro").hide();
+                    angular.element('#MestreEntidade').scope().fshowCadastro("Alterar");
+                    angular.element('#MestreEntidade').scope().$apply()
+                }
+                else {
+                    alert("Selecione 1 registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        //$('#jqgEntidade').navButtonAdd('#jqgEntidadeOpc', { // custom edit button
+        //    caption: "Excluir",
+        //    buttonicon: "ui-icon ui-icon-trash",
+        //    onClickButton: function (habilita) {
+        //        key = jQuery("#jqgEntidade").jqGrid('getGridParam', 'selrow');
+        //        if (key != null) {
+        //            $('#MestreEntidade').fadeIn("slow");
+        //            $("#DivFiltro").hide();
+        //            angular.element('#MestreEntidade').scope().fshowCadastro("Excluir");
+        //            angular.element('#MestreEntidade').scope().$apply()
+        //        }
+        //        else {
+        //            alert("Selecione 1 registro.");
+        //        };
+        //    },
+        //    position: "Last"
+        //});
+
+
+    });
+
+
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks']);
+
+    app.directive('datetimez', function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModelCtrl) {
+
+                element.datetimepicker({
+                    dateFormat: 'dd/MM/yyyy',
+                    language: 'ptbr',
+                    pickTime: false,
+                    startDate: '01-11-2013',      // set a minimum date
+                    endDate: '01-11-2030'          // set a maximum date
+                }).on('changeDate', function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.localDate).format());
+                    scope.$apply();
+                });
+            }
+        };
+    });
+
+
+    //app.directive('dropzone', function () {
+    //    return {
+    //        restrict: 'A',
+    //        scope: {
+    //            dropzone: '='
+    //        },
+    //        link: function (scope, element, attrs) {
+    //            scope.$watch('dropzone', function (n, o) {
+    //                console.log("changed url");
+    //                alert("ok");
+    //            });
+    //        }
+    //    };
+    //});
+
+
+    app.directive('prettyp', function () {
+        return function (scope, element, attrs) {
+            $("[rel^='prettyPhoto']").prettyPhoto({ deeplinking: false, social_tools: false });
+        }
+    })
+
+    app.controller('MestreEntidade', [
+        '$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', function ($scope, $http, $location, $anchorScroll, $timeout, $modal) {
+            $('#MestreEntidade').hide();
+            $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+            $scope.ListaStatusEndosso = [
+                { Value: "Enviada", Text: "Enviada" }
+                , { Value: "Emitida Apólice", Text: "Emitida Apólice" }
+                , { Value: "Cancelada", Text: "Cancelada" }
+                , { Value: "Recusada", Text: "Recusada" }
+                , { Value: "Com pendência", Text: "Com pendência" }
+                , { Value: "Aguardando Vistoria", Text: "Aguardando Vistoria" }
+            ];
+
+            
+            $scope.ListaStatusSeguro = [{ Value: "Avisado", Text: "Avisado" }
+                , { Value: "Rejeitado", Text: "Rejeitado" }
+                , { Value: "A liquidar", Text: "A liquidar" }
+                , { Value: "Liquidado", Text: "Liquidado" }];
+
+            $scope.ListaTipodeSeguro = [{ Value: "Roubo", Text: "Roubo" }
+                , { Value: "Furto", Text: "Furto" }
+			    , { Value: "Danos titular", Text: "Danos titular" }
+		        , { Value: "Danos terceiros", Text: "Danos terceiros" }
+		        , { Value: "Danos Tit/Terc", Text: "Danos Tit/Terc" }
+		        , { Value: "Perda total", Text: "Perda total" }];
+
+
+            $scope.statusAdicionar = "Adicionar";
+            $scope.statusAlterar = "Alterar";
+            $scope.btnstatussinistros = $scope.statusAdicionar;
+            $scope.btnstatusendossos = $scope.statusAdicionar;
+            $scope.showDivTotal = false;
+            $scope.showApolice = false;
+            $scope.showCadastro = false;
+            $scope.showOK = false;
+            $scope.showNOK = false;
+            $scope.msgOK = "";
+            $scope.msgNOK = "";
+            $scope.titulo = "";
+            $scope.titulobtn = "";
+            $scope.timeoutview = "";
+            $scope.Manutencao = false;
+            $scope.tabSelecionada = "Proposta";
+            $scope.FILTRO = {
+                param$seguradoprincipal: "",
+                param$numeroProposta: "",
+                param$numeroApolice: "",
+                param$seguradora_id: "",
+                param$regiao_id: "",
+                param$sucursal_id: "",
+                param$representante_id: "",
+                param$dataVigenciaInicio01: "",
+                param$dataVigenciaInicio02: "",
+                param$dataVigenciaFim01: "",
+                param$dataVigenciaFim02: ""
+
+            };
+
+
+                $scope.showModal = function () {
+                    $scope.codigo = $scope.entidade.codigo;
+                    $scope.opts = {
+                        size: 'lg',
+                        animation: true,
+                        backdrop: true,
+                        backdropClick: true,
+                        dialogFade: false,
+                        keyboard: true,
+                        templateUrl: 'modalContent.html',
+                        controller: ModalInstanceCtrl,
+                        resolve: {} // empty storage,
+                    };
+
+
+                    $scope.opts.resolve.item = function () {
+                        return angular.copy({ codigo: $scope.codigo }); // pass name to Dialog
+                    }
+
+                    var modalInstance = $modal.open($scope.opts);
+
+                    modalInstance.result.then(function (value) {
+
+
+                        //console.log("Modal OK");
+                    }, function () {
+                        //on cancel button press
+                        //console.log("Modal Closed");
+                    });
+                };
+
+
+                $scope.showModalArquivos = function () {
+                    $scope.codigo = $scope.entidade.codigo;
+                    $scope.opts = {
+                        size: 'lg',
+                        animation: true,
+                        backdrop: true,
+                        backdropClick: true,
+                        dialogFade: false,
+                        keyboard: true,
+                        templateUrl: 'modalContentArquivos.html',
+                        controller: ModalInstanceCtrlArquivos,
+                        resolve: {} // empty storage
+                    };
+
+
+                    $scope.opts.resolve.item = function () {
+                        return angular.copy({ codigo: $scope.entidade.codigo }); // pass name to Dialog
+                    }
+
+                    var modalInstance = $modal.open($scope.opts);
+
+                    modalInstance.result.then(function (value) {
+
+
+                        //console.log("Modal OK");
+                    }, function () {
+                        //on cancel button press
+                        //console.log("Modal Closed");
+                    });
+                };
+
+            $scope.showModalEndosso = function (item) {
+                $scope.codigo = item.id;
+                $scope.opts = {
+                    size: 'lg',
+                    animation: true,
+                    backdrop: true,
+                    backdropClick: true,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalContent.html',
+                    controller: ModalInstanceCtrlEndosso,
+                    resolve: {} // empty storage
+                };
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ codigo: $scope.codigo }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+
+
+                    //console.log("Modal OK");
+                }, function () {
+                    //on cancel button press
+                    //console.log("Modal Closed");
+                });
+            };
+
+
+            $scope.showModalArquivosEndosso = function (item) {
+                $scope.codigo = item.id;
+                $scope.opts = {
+                    animation: true,
+                    backdrop: true,
+                    backdropClick: true,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalContentArquivos.html',
+                    controller: ModalInstanceCtrlArquivosEndosso,
+                    resolve: {} // empty storage
+                };
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ codigo: $scope.codigo }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+
+
+                    //console.log("Modal OK");
+                }, function () {
+                    //on cancel button press
+                    //console.log("Modal Closed");
+                });
+            };
+
+            $scope.HistoricoSinistro = function (item) {
+
+
+
+                $scope.opts = {
+                    size: 'lg',
+                    animation: true,
+                    backdrop: false,
+                    backdropClick: false,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalHistorico.html',
+                    controller: ModalInstanceCtrlHistorico,
+                    resolve: {}
+                };
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ id: item.id }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+
+
+                    //console.log("Modal OK");
+                }, function () {
+                    //on cancel button press
+                    //console.log("Modal Closed");
+                });
+            };
+
+
+
+            $scope.ValidaStatus = function (Default) {
+
+                $scope.showApolice = false;
+                if ($scope.entidade.tipoStatusPropostaSeguro_id == 3) {
+                    if (Default == true)
+                        $scope.entidade.dataEfetivacaoProposta = $scope.entidade.DataAtual;
+
+                    $scope.showApolice = true;
+                }
+            }
+
+            $scope.OK = function () {
+
+                if ($scope.tabSelecionada == "Proposta") {
+                    $("#divLoadinit").show();
+                    $scope.entidade.PropostaApoliceRamoItems = [];
+                    var contador = 1;
+                    angular.forEach($scope.ITEMS, function (value) {
+
+                        $scope.entidade.PropostaApoliceRamoItems.push(
+                            {
+                                "ramoseguro_id": value.ramo.Value,
+                                "premio": value.premio,
+                                "PropostaApolice_id": $scope.entidade.id,
+                                "NumeroItem": contador,
+                                "id": value.id
+
+                            }
+                        );
+                        contador += 1;
+                    });
+
+
+
+                    $http.post("../../PropostaSeguro/SalvaProposta", $scope.entidade)
+                        .success(function (data) {
+
+                            if (data.CDStatus == "OK") {
+                                $scope.entidade.id = data.entidade.id;
+                                $scope.MsgSucesso("Salvo com sucesso");
+                            } else {
+                                $scope.MsgError(data.Exception);
+                            }
+                            $("#divLoadinit").hide();
+                        }).error(function (data) {
+                            $scope.MsgError("Sistema indisponivel");
+                            $("#divLoadinit").hide();
+                        });
+                }
+
+            }
+
+            $scope.fcAdiciona = function (obj) {
+                $scope.ShowDivValidacao = false;
+
+
+                if ($scope.ITEM.ramo == null) {
+                    $scope.MsgDivValidacao = "Informe o ramo.";
+                    $scope.ShowDivValidacao = true;
+                    return;
+                }
+
+                if ($scope.ITEM.premio == null) {
+                    $scope.MsgDivValidacao = "Informe o premio.";
+                    $scope.ShowDivValidacao = true;
+                    return;
+                }
+                if ($scope.ITEM.premio <= 0) {
+                    $scope.MsgDivValidacao = "Informe o premio.";
+                    $scope.ShowDivValidacao = true;
+                    return;
+                }
+
+                $scope.objAux = {};
+                angular.copy(obj, $scope.objAux);
+                if ($scope.ITEMS == null)
+                    $scope.ITEMS = [];
+
+                $scope.ITEMS.push($scope.objAux);
+
+                $scope.SomaTotal();
+
+
+            }
+
+            $scope.fcExcluir = function (id) {
+                $scope.ITEMS.splice(id, 1);
+                $scope.SomaTotal();
+            }
+
+            $scope.SomaTotal = function () {
+
+                $scope.premioTotal = 0;
+
+                angular.forEach($scope.ITEMS, function (value) {
+                    $scope.premioTotal += value.premio;
+                    $scope.entidade.premioTotal = $scope.premioTotal;
+                });
+            }
+
+
+
+            $scope.AdicionarSinistro = function () {
+                $scope.sinistro.PropostaApolice_id = $scope.entidade.id;
+                $http.post("../../PropostaSeguro/AdicionarSinistro", $scope.sinistro)
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaSinistros = data.sinistros;
+                        $scope.MsgSucesso("Salvo com sucesso");
+                        $scope.btnstatussinistros = $scope.statusAdicionar;
+                        $scope.NovoSinistro();
+
+                    } else {
+                        $scope.MsgError(data.Exception);
+                    }
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.CancelarSinistro = function (obj) {
+                obj.active = "";
+                $scope.NovoSinistro();
+                $scope.btnstatussinistros = $scope.statusAdicionar;
+                $scope.MsgSucesso("Cancelado a edição do Sinistro");
+            }
+
+            $scope.CancelarEndosso = function (obj) {
+                obj.active = "";
+                $scope.NovoEndosso();
+                $scope.btnstatusendossos = $scope.statusAdicionar;
+                $scope.MsgSucesso("Cancelado a edição do Endosso");
+            }
+
+            $scope.ExcluirSinistro = function (value) {
+                $http.post("../../PropostaSeguro/ExcluirSinistro", "{id: '" + value + "'}")
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaSinistros = data.sinistros;;
+                        $scope.MsgSucesso("Sinistro excluido com sucesso");
+                    } else {
+                        $scope.MsgError(data);
+                    }
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.AdicionarEndosso = function () {
+                $scope.endosso.PropostaApolice_id = $scope.entidade.id;
+                $http.post("../../PropostaSeguro/AdicionarEndosso", $scope.endosso)
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaEndossos = data.Endossos;
+                        $scope.MsgSucesso("Salvo com sucesso");
+                        $scope.btnstatusendossos = $scope.statusAdicionar;
+                        $scope.NovoEndosso();
+
+                    } else {
+                        $scope.MsgError(data);
+                    }
+
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.ExcluirEndosso = function (value) {
+                $http.post("../../PropostaSeguro/ExcluirEndosso", "{id: '" + value + "'}")
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaEndossos = data.Endossos;;
+                        $scope.MsgSucesso("Endosso excluido com sucesso");
+                    } else {
+                        $scope.MsgError(data);
+                    }
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.AdicionarParcela = function () {
+                $scope.entidadeParcela.PropostaApolice_id = $scope.entidade.id;
+                $http.post("../../PropostaSeguro/AdicionarParcela", $scope.entidadeParcela)
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaParcelas = data.parcelas;
+                        $scope.MsgSucesso("Salvo com sucesso");
+                    } else {
+                        $scope.MsgError(data);
+                    }
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.ExcluirParcela = function (value) {
+                $http.post("../../PropostaSeguro/ExcluirParcela", "{id: '" + value + "'}")
+                .success(function (data) {
+                    ;
+                    if (data.CDStatus == "OK") {
+                        $scope.ListaParcelas = data.parcelas;
+                        $scope.MsgSucesso("Salvo com sucesso");
+                    } else {
+                        $scope.MsgError(data);
+                    }
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                });
+            }
+
+            $scope.ObterPorID = function () {
+                $scope.entidade = null;
+                $("#divLoadinit").show();
+                $("#DivTotal").hide();
+                $http.get("../../PropostaSeguro/ObterPropostaPorId?id=" + key)
+
+                    .success(function (data) {
+
+                        $scope.entidade = data.entidade;
+                        $scope.ITEMS = [];
+
+                        angular.forEach($scope.entidade.PropostaApoliceRamoItems, function (value) {
+                            $scope.ITEMS.push(
+                                {
+                                    "ramo": { "Value": value.ramoseguro_id, "Text": value.ramoseguro_descr },
+                                    "premio": value.premio,
+                                    "PropostaApolice_id": $scope.entidade.id,
+                                    "id": value.id
+
+                                }
+                            )
+                        });
+                        $scope.ValidaStatus();
+                        $scope.SomaTotal();
+                        $scope.LoadListaParcelas();
+                        $scope.LoadListaSinistros();
+                        $scope.LoadListaEndossos();
+                        $scope.NovoSinistro();
+                        $scope.NovoEndosso();
+
+                        $("#divLoadinit").hide();
+                        $("#DivTotal").fadeIn("slow");
+                    }).error(function (data) {
+                        $("#divLoadinit").hide();
+                        $scope.MsgError("Sistema indisponivel");
+                        $("#DivTotal").fadeIn("slow");
+                    });
+            }
+
+            $scope.Voltar = function (msg) {
+                $scope.Pesquisa();
+                $('#MestreEntidade').hide();
+                $('#DivGrid').fadeIn("slow");
+                $("#DivFiltro").fadeIn("slow");
+                $('#MigralhaC').html("Lista");
+            }
+
+            $scope.MsgError = function (data) {
+                $scope.msgNOK = data.DSMessage;
+                $scope.Erros = data.Erros;
+                $scope.showNOK = true;
+                $scope.showOK = false;
+                //$scope.timeoutview = $timeout($scope.LimpaMensagens(), 50000);
+            }
+
+            $scope.MsgSucesso = function (msg) {
+                $scope.msgOK = msg;
+                $scope.showOK = true;
+                $scope.showNOK = false;
+                //$scope.timeoutview = $timeout($scope.LimpaMensagens(), 50000);
+            }
+
+            $scope.LimpaMensagens = function () {
+
+                $scope.showOK = false;
+                $scope.showNOK = false;
+                $scope.msgOK = "";
+                $scope.msgNOK = "";
+                $timeout.cancel($scope.timeoutview);
+            }
+
+            $scope.fshowCadastro = function (tipo) {
+                $('#MigralhaC').html(tipo);
+                $('#DivGrid').hide();
+                $scope.ObterPorID();
+                if (tipo == "Novo") {
+                    $scope.titulo = "Novo";
+                    $scope.titulobtn = "Salvar";
+                }
+                if (tipo == "Alterar") {
+                    $scope.titulo = "Alterar";
+                    $scope.titulobtn = "Salvar";
+                }
+                if (tipo == "Excluir") {
+                    $scope.titulo = "Excluir";
+                    $scope.titulobtn = "Confirmar";
+                }
+                $scope.LimpaMensagens();
+                $scope.GotoCadastro();
+            }
+            $scope.fhideCadastro = function () {
+                $scope.showCadastro = false;
+            }
+            $scope.GotoCadastro = function () {
+                $scope.timeoutview = $timeout($scope.GotoCadastroImplementation, 10);
+            }
+            $scope.GotoCadastroImplementation = function () {
+                $timeout.cancel($scope.timeoutview);
+            }
+
+            $scope.Pesquisa = function () {
+
+                var caminho = '../../PropostaSeguro/Listas';
+                caminho += '?param$numeroProposta=';
+                caminho += $scope.FILTRO.param$numeroProposta;
+                caminho += '&param$Segurado_Principal$nome=';
+                caminho += $scope.FILTRO.param$seguradoprincipal;
+                caminho += '&param$numeroApolice=';
+                caminho += $scope.FILTRO.param$numeroApolice;
+                caminho += '&param$seguradora_id=';
+                caminho += $scope.FILTRO.param$seguradora_id;
+                caminho += '&param$regiao_id=';
+                caminho += $scope.FILTRO.param$regiao_id;
+                caminho += '&param$sucursal_id=';
+                caminho += $scope.FILTRO.param$sucursal_id;
+                caminho += '&param$representante_id=';
+                caminho += $scope.FILTRO.param$representante_id;
+                caminho += '&param$dataVigenciaInicio01=';
+                caminho += $scope.FILTRO.param$dataVigenciaInicio01;
+                caminho += '&param$dataVigenciaInicio02=';
+                caminho += $scope.FILTRO.param$dataVigenciaInicio02;
+                caminho += '&param$dataVigenciaFim01=';
+                caminho += $scope.FILTRO.param$dataVigenciaFim01;
+                caminho += '&param$dataVigenciaFim02=';
+                caminho += $scope.FILTRO.param$dataVigenciaFim02;
+                jQuery("#jqgEntidade").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+            }
+
+            $scope.LoadListaTipoDocumento = function () {
+                $http.post("../../PropostaSeguro/ListaStatuPropostaSeguro")
+                    .success(function (data) {
+                        $scope.ListaStatuPropostaSeguro = data;
+                    });
+            }
+
+            $scope.LoadListaTipoPropostaSeguro = function () {
+                $http.post("../../PropostaSeguro/ListaTipoPropostaSeguro")
+                    .success(function (data) {
+                        $scope.ListaTipoPropostaSeguro = data;
+                    });
+            }
+
+            $scope.LoadListaProdutoSeguradora = function () {
+                $http.post("../../PropostaSeguro/ListaProdutoSeguradora")
+                    .success(function (data) {
+                        $scope.ListaProdutoSeguradora = data;
+                    });
+            }
+
+            $scope.LoadListaRegiao = function () {
+                $http.post("../../PropostaSeguro/ListaRegiao")
+                    .success(function (data) {
+                        $scope.ListaRegiao = data;
+                    });
+            }
+
+            $scope.LoadListaSucursal = function () {
+                $http.post("../../PropostaSeguro/ListaSucursal")
+                    .success(function (data) {
+                        $scope.ListaSucursal = data;
+                    });
+            }
+
+            $scope.LoadListaRepresentante = function () {
+                $http.post("../../PropostaSeguro/ListaRepresentante")
+                    .success(function (data) {
+                        $scope.ListaRepresentante = data;
+                    });
+            }
+
+            $scope.LoadListaRamoSeguro = function () {
+                $scope.ITEMS = [];
+                $http.get("../../PropostaSeguro/ListaRamoSeguro/" + $scope.entidade.grupoRamoSeguro_id)
+                .success(function (data) {
+                    $scope.ListaRamoSeguro = data;
+                });
+            }
+            //$scope.LoadListaComissaoSeguro = function () {
+            //    $http.post("../../PropostaSeguro/ListaComissaoSeguro")
+            //        .success(function (data) {
+            //            $scope.ListaComissaoSeguro = data;
+            //        });
+            //}
+            $scope.LoadListaTipoCondicaoPagamento = function () {
+                $http.post("../../PropostaSeguro/ListaTipoCondicaoPagamento")
+                    .success(function (data) {
+                        $scope.ListaTipoCondicaoPagamento = data;
+                    });
+            }
+
+            $scope.LoadListaPessoas = function () {
+                $http.post("../../CPAG/ListaPessoas")
+                    .success(function (data) {
+                        $scope.ListaPessoas = data;
+                    });
+            }
+
+
+            $scope.LoadListaSeguradora = function () {
+                $http.get("../../PropostaSeguro/ListaSeguradoras")
+                    .success(function (data) {
+                        $scope.ListaSeguradora = data;
+                    });
+            }
+
+            //$scope.LoadListaProdutoSeguradora = function () {
+            //    $http.get("../../PropostaSeguro/ListaProdutoSeguradora")
+            //        .success(function (data) {
+            //            $scope.ListaProdutosSeguradora = data;
+            //        });
+            //}
+
+            $scope.LoadListaRegiao = function () {
+                $http.get("../../PropostaSeguro/ListaRegiao")
+                    .success(function (data) {
+                        $scope.ListaRegiao = data;
+                    });
+            }
+
+            $scope.LoadListaGrupoRamo = function () {
+                $http.get("../../PropostaSeguro/ListaGrupoRamoSeguro")
+                    .success(function (data) {
+                        $scope.ListaGrupoRamo = data;
+                    });
+            }
+
+
+            $scope.LoadListaTipoCondicaoPagamentoPremio = function () {
+                $http.get("../../PropostaSeguro/ListaTipoCondicaoPagamentoPremio")
+                    .success(function (data) {
+                        $scope.ListaTipoCondicaoPagamentoPremio = data;
+                    });
+            }
+
+            $scope.LoadListaComissaoSeguro = function () {
+                $http.get("../../PropostaSeguro/ListaComissaoSeguro")
+                    .success(function (data) {
+                        $scope.ListaComissaoSeguro = data;
+                    });
+            }
+
+            $scope.LoadListaSinistros = function () {
+                $http.get("../../PropostaSeguro/ObterSinistros?id=" + $scope.entidade.id)
+                    .success(function (data) {
+                        $scope.ListaSinistros = data.sinistros;
+                    });
+            }
+
+            $scope.LoadListaEndossos = function () {
+                $http.get("../../PropostaSeguro/ObterEndossos?id=" + $scope.entidade.id)
+                    .success(function (data) {
+                        $scope.ListaEndossos = data.Endossos;
+                    });
+            }
+
+            $scope.LoadListaParcelas = function () {
+                $http.get("../../PropostaSeguro/ObterParcelas?id=" + $scope.entidade.id)
+                    .success(function (data) {
+                        $scope.ListaParcelas = data.parcelas;
+                    });
+            }
+
+            $scope.LoadListaTipoSituacaoSinistro = function () {
+                $http.get("../../PropostaSeguro/ListaTipoSituacaoSinistro")
+                    .success(function (data) {
+                        $scope.ListaTipoSituacaoSinistro = data;
+                    });
+            }
+
+            $scope.NovoSinistro = function () {
+                $http.get("../../PropostaSeguro/NovoSinistro")
+                    .success(function (data) {
+                        $scope.sinistro = data.sinistros[0];
+                    });
+            }
+
+            $scope.NovoEndosso = function () {
+                $http.get("../../PropostaSeguro/NovoEndosso")
+                    .success(function (data) {
+                        $scope.endosso = data.Endossos[0];
+                    });
+            }
+
+            $scope.AlterarSinistro = function (item) {
+                item.active = "active";
+                $scope.sinistro = item;
+                $scope.btnstatussinistros = $scope.statusAlterar
+            }
+
+            $scope.AlterarEndosso = function (item) {
+                item.active = "active";
+                $scope.endosso = item;
+                $scope.btnstatusendossos = $scope.statusAlterar
+            }
+
+            $scope.showModalSinistro = function (item) {
+                $scope.codigo = item.id;
+                $scope.opts = {
+                    size: 'lg',
+                    animation: true,
+                    backdrop: true,
+                    backdropClick: true,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalContent.html',
+                    controller: ModalInstanceCtrlSinistro,
+                    resolve: {} // empty storage
+                };
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ codigo: $scope.codigo }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+
+
+                    //console.log("Modal OK");
+                }, function () {
+                    //on cancel button press
+                    //console.log("Modal Closed");
+                });
+            };
+
+
+            $scope.showModalArquivosSinistro = function (item) {
+                $scope.codigo = item.id;
+                $scope.opts = {
+                    animation: true,
+                    backdrop: true,
+                    backdropClick: true,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalContentArquivos.html',
+                    controller: ModalInstanceCtrlArquivosSinistro,
+                    resolve: {} // empty storage
+                };
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ codigo: $scope.codigo }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+
+
+                    //console.log("Modal OK");
+                }, function () {
+                    //on cancel button press
+                    //console.log("Modal Closed");
+                });
+            };
+
+
+
+
+            $scope.LoadListaTipoDocumento();
+            $scope.LoadListaTipoPropostaSeguro();
+            //$scope.LoadListaProdutoSeguradora();
+            $scope.LoadListaRegiao();
+            $scope.LoadListaSucursal();
+            $scope.LoadListaRepresentante();
+            $scope.LoadListaGrupoRamo();
+            //$scope.LoadListaComissaoSeguro();
+            $scope.LoadListaTipoCondicaoPagamento();
+            $scope.LoadListaPessoas();
+            $scope.LoadListaSeguradora();
+            $scope.LoadListaRegiao();
+            $scope.LoadListaTipoCondicaoPagamentoPremio();
+            $scope.LoadListaComissaoSeguro();
+            $scope.LoadListaTipoSituacaoSinistro();
+            $scope.showDivTotal = true;
+
+        }
+    ]);
+
+
+    var ModalInstanceCtrl = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+        $scope.arquivo = "";
+
+        $scope.someMsg = function () {
+            $scope.showNOK = false;
+            $scope.showOK = false;
+        };
+
+        $scope.ok = function () {
+            var descricao = document.getElementById('DescricaoArquivo').value;
+            var f = document.getElementById('newPhotos').files[0];
+            var fd = new FormData();
+            fd.append("file", f);
+            fd.append("codigo", $scope.item.codigo);
+
+            fd.append("descricao", descricao);
+
+
+            $http.post("../../../PropostaSeguro/ApoliceArquivo", fd, {
+                withCredentials: true,
+                headers: { 'Content-Type': undefined },
+                transformRequest: angular.identity
+            }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+    var ModalInstanceCtrlArquivos = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+
+        $http.post("../../../PropostaSeguro/ListaApoliceArquivo", { codigo: $scope.item.codigo }).success(function (data) {
+            if (data.CDStatus == "OK") {
+
+                $scope.ListaArquivosProposta = data.ArquivosProposta;
+                $scope.showOK = true;
+                $scope.msgOK = data.DSMessage;
+            } else {
+                $scope.showNOK = true;
+                $scope.msgNOK = data.DSMessage;
+            };
+
+            $timeout(
+                function () {
+                    $scope.showNOK = false;
+                    $scope.showOK = false;
+
+                }, 8000);
+
+            //$modalInstance.close(value);
+        }).error(function (data) {
+            $scope.showNOK = true;
+            $scope.msgNOK = "Sistema indisponivel";
+        });
+
+        $scope.Excluir = function (item) {
+            $http.post("../../../PropostaSeguro/ExcluirApoliceArquivo", { codigo: $scope.item.codigo, id: item.id }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.ListaArquivosProposta = data.ArquivosProposta;
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+
+
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+    var ModalInstanceCtrlEndosso = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+        $scope.arquivo = "";
+
+        $scope.someMsg = function () {
+            $scope.showNOK = false;
+            $scope.showOK = false;
+        };
+
+        $scope.ok = function () {
+            var descricao = document.getElementById('DescricaoArquivo').value;
+            var f = document.getElementById('newPhotos').files[0];
+            var fd = new FormData();
+            fd.append("file", f);
+            fd.append("codigo", $scope.item.codigo);
+            fd.append("descricao", descricao);
+
+            $http.post("../../../PropostaSeguro/EndossoArquivo", fd, {
+                withCredentials: true,
+                headers: { 'Content-Type': undefined },
+                transformRequest: angular.identity
+            }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+    var ModalInstanceCtrlArquivosEndosso = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+
+        $http.post("../../../PropostaSeguro/ListaEndossoArquivo", { codigo: $scope.item.codigo }).success(function (data) {
+            if (data.CDStatus == "OK") {
+
+                $scope.ListaArquivosProposta = data.ArquivosProposta;
+                $scope.showOK = true;
+                $scope.msgOK = data.DSMessage;
+            } else {
+                $scope.showNOK = true;
+                $scope.msgNOK = data.DSMessage;
+            };
+
+            $timeout(
+                function () {
+                    $scope.showNOK = false;
+                    $scope.showOK = false;
+
+                }, 8000);
+
+            //$modalInstance.close(value);
+        }).error(function (data) {
+            $scope.showNOK = true;
+            $scope.msgNOK = "Sistema indisponivel";
+        });
+
+        $scope.Excluir = function (item) {
+            $http.post("../../../PropostaSeguro/ExcluirEndossoArquivo", { codigo: $scope.item.codigo, id: item.id }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.ListaArquivosProposta = data.ArquivosProposta;
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+
+
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+
+    var ModalInstanceCtrlArquivosSinistro = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+
+        $http.post("../../../PropostaSeguro/ListaSinistroArquivo", { codigo: $scope.item.codigo }).success(function (data) {
+            if (data.CDStatus == "OK") {
+
+                $scope.ListaArquivosProposta = data.ListaArquivosSinistro;
+                $scope.showOK = true;
+                $scope.msgOK = data.DSMessage;
+            } else {
+                $scope.showNOK = true;
+                $scope.msgNOK = data.DSMessage;
+            };
+
+            $timeout(
+                function () {
+                    $scope.showNOK = false;
+                    $scope.showOK = false;
+
+                }, 8000);
+
+            //$modalInstance.close(value);
+        }).error(function (data) {
+            $scope.showNOK = true;
+            $scope.msgNOK = "Sistema indisponivel";
+        });
+
+        $scope.Excluir = function (item) {
+            $http.post("../../../PropostaSeguro/ExcluirEndossoArquivo", { codigo: $scope.item.codigo, id: item.id }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.ListaArquivosProposta = data.ListaArquivosSinistro;
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+
+
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+    var ModalInstanceCtrlSinistro = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        $scope.item = item;
+        $scope.arquivo = "";
+
+        $scope.someMsg = function () {
+            $scope.showNOK = false;
+            $scope.showOK = false;
+        };
+
+        $scope.ok = function () {
+            var descricao = document.getElementById('DescricaoArquivo').value;
+            var f = document.getElementById('newPhotos').files[0];
+            var fd = new FormData();
+            fd.append("file", f);
+            fd.append("codigo", $scope.item.codigo);
+            fd.append("descricao", descricao);
+
+            $http.post("../../../PropostaSeguro/SinistroArquivo", fd, {
+                withCredentials: true,
+                headers: { 'Content-Type': undefined },
+                transformRequest: angular.identity
+            }).success(function (data) {
+                if (data.CDStatus == "OK") {
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+                //$modalInstance.close(value);
+            }).error(function (data) {
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+
+    var ModalInstanceCtrlHistorico = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+        console.log(item);
+        $http.post("../../../PropostaSeguro/HistoricoSinistro", { id: item.id}).success(function (data) {
+            $scope.ListaHistorico = data.lista;
+
+            $timeout(
+                function () {
+                    $scope.showNOK = false;
+                    $scope.showOK = false;
+
+                }, 8000);
+
+        }).error(function (data) {
+            $scope.showNOK = true;
+            $scope.msgNOK = "Sistema indisponivel";
+        });
+   
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+</script>

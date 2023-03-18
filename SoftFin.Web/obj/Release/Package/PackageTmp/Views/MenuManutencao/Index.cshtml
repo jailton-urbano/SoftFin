@@ -1,0 +1,60 @@
+﻿@model List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>
+@{
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205097615-Antes-de-utilizar";
+    ViewBag.MigalhaA = "Processos";
+    ViewBag.MigalhaB = "Manutenção";
+    ViewBag.MigalhaC = "";
+    ViewBag.MigalhaD = "";
+}
+<html>
+<body>
+
+    <div class="container-fluid" id="DivFuncionalidades">
+
+
+        <div class="row">
+        @foreach (SoftFin.GestorProcessos.Comum.DTO.DTOComum item in (List<SoftFin.GestorProcessos.Comum.DTO.DTOComum>)ViewData["Processos"])
+        {
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue-ebonyclay">
+                        <div class="visual">
+                            <i class="fa ui-state-default"></i>
+                        </div>
+                        <div class="details">
+                            <div class="desc">@item.Descricao</div>
+                        </div>
+                        <a class="more lksf" href="../../PaginaDinamica/Manut?tabela=@item.Codigo">
+                            @item.Descricao
+                            <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+        }
+
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+        //$('.selectpicker').selectpicker({
+        //    style: 'btn-default',
+        //    size: false
+        //});
+    });
+
+
+</script>
+

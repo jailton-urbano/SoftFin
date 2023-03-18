@@ -1,0 +1,808 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-body">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Dados Nota</h2>
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        <label>Lote</label>
+                        <input ng-disabled="true" type="text" ng-model="nf.loteNfe" class="form-control"  />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Número</label>
+                        <input type="text" ng-model="nf.numeroNfe" class="form-control" ng-disabled="true" />
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        <label>Serie</label>
+                        <input type="text" ng-model="nf.serieNfe" class="form-control" ng-disabled="true" />
+                    </div>
+
+
+                    <div class='col-md-2 form-group' datetimez ng-model="nf.dataEmissaoNfse" ng-disabled="true">
+                        <label>Data Emissão</label>
+                        <input ng-disabled="true" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataEmissaoNfse" ui-date-mask  />
+                        <!--<span class="add-on" ng-hide="ModoConsulta">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-disabled="true"></i>
+                        </span>-->
+                    </div>
+
+                    <div class='col-md-2 form-group' datetimez ng-model="nf.dataVencimentoNfse" ng-disabled="true">
+                        <label>Vencimento</label>
+                        <input ng-disabled="true" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataVencimentoNfse" ui-date-mask  />
+                        <!--<span class="add-on" ng-hide="ModoConsulta">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-hide="true"></i>
+                        </span>-->
+                    </div>
+
+                    <div class='col-md-3 form-group' datetimey ng-model="nfe.dataHoraSaida" ng-disabled="true">
+
+                        <label>
+                            Data e Hora Saída
+                        </label>
+                        <input ng-disabled="true" data-format="dd/MM/yyyy hh:mm" type="text" class="form-control" ng-model="nfe.dataHoraSaida" ui-date-time-mask  />
+                        <!--<span class="add-on" ng-hide="ModoConsulta">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar" ng-disabled="true"></i>
+                        </span>-->
+                    </div>
+
+
+                </div>
+                <div class='row'>
+                    <div class='col-md-6 form-group'>
+                        <label>Chave de acesso</label>
+                        <input type="text" ng-model="nfe.chaveAcesso" class="form-control" ng-disabled="true" />
+                    </div>
+
+                    <div class='col-md-6 form-group'>
+                        <label>Descrição</label>
+                        <input ng-disabled="true" type="text" ng-model="ov.descricao" class="form-control" />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-12 form-group'>
+                        <label>CFOP</label>
+                        <select ng-disabled="true" class="form-control" ng-model="nfe.CFOP" ng-options="o.Value as o.Text for o in ListaCFOP" >
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Tipo</label>
+                        <select ng-disabled="true" class="form-control" ng-model="nf.tipoNfe" ng-options="o.Value as o.Text for o in ListaTipoNFe" >
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Banco</label>
+                        <select ng-disabled="true" class="form-control" ng-model="nf.banco_id" ng-options="o.Value as o.Text for o in ListaBancos" >
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-4 form-group'>
+                        <label>Unidade de Negócio</label>
+                        <select class="form-control" ng-model="ov.unidadeNegocio_ID" ng-disabled="true"
+                                ng-options="o.Value as o.Text for o in ListaUnidadeNegocios" >
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Tomador</h2>
+                <div class='row'>
+                    <div class='col-md-8 form-group'>
+                        <label>Razão</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.razao" class="form-control" ng-maxlength="150"  />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Fone</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.fone" class="form-control" ng-maxlength="15"  />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        <label>Tipo de Endereço</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.tipoEndereco" class="form-control" ng-maxlength="35"  />
+                    </div>
+                    <div class='col-md-5 form-group'>
+                        <label>Endereço</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.endereco" class="form-control" ng-maxlength="35"  />
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Número</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.numero" class="form-control" ng-maxlength="15"  />
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Complemento</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.complemento" class="form-control" ng-maxlength="20" />
+                    </div>
+
+                    <div class='col-md-3 form-group'>
+                        <label>Bairro</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.bairro" class="form-control" ng-maxlength="60"  />
+
+                    </div>
+                    <div class='col-md-5 form-group'>
+                        <label>Cidade</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.cidade" class="form-control" ng-maxlength="60"  />
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>UF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="NotaFiscalPessoaTomador.uf" ng-options="o.Sigla as o.Sigla for o in Estados" >
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>CEP</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.cep" class="form-control" ng-maxlength="10"  />
+                    </div>
+                </div>
+                <div class='row'>
+
+                    <div class='col-md-6 form-group'>
+                        <label>Email</label>
+                        <input ng-disabled="true" type="email" ng-model="NotaFiscalPessoaTomador.email" class="form-control" ng-maxlength="300"  />
+                    </div>
+                    <div class='col-md-3 form-group'>
+
+                        <label>Indicador de CNPJ/CPF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="NotaFiscalPessoaTomador.indicadorCnpjCpf"  ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                            <option value="">--Selecione--</option>
+                        </select>
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>CPF/CNPJ</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="NotaFiscalPessoaTomador.indicadorCnpjCpf != 1"  />
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="NotaFiscalPessoaTomador.indicadorCnpjCpf == 1"  />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Incrição Estadual</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.inscricaoEstadual" class="form-control" ng-maxlength="20" />
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Inscrição Municipal</label>
+                        <input type="text" ng-disabled="true" ng-model="NotaFiscalPessoaTomador.inscricaoMunicipal" class="form-control" ng-maxlength="20" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Itens da Nota</h2>
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                                <th>Impostos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in nfeItems|orderBy:sortKey:reverse|itemsPerPage:7" pagination-id="griditem">
+
+
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarItem('nomeProduto')"> Produto </span> /
+                                        <span ng-click="ordenarItem('operacao')"> Operação </span> /
+                                        <span ng-click="ordenarItem('valorUnitario')"> Valor Unitário </span> /
+                                        <span ng-click="ordenarItem('quantidade')">Quantidade</span> /
+                                        <span ng-click="ordenarItem('desconto')">Desconto</span> /
+                                        <span ng-click="ordenarItem('valor')">Valor</span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.nomeProduto}} / {{item.operacao}} / {{item.valorUnitario}} / {{item.quantidade}} / {{item.desconto | number:2}} / {{item.valor | number:2}}</label>
+                                    <br />
+
+                                </td>
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarItem('CFOP')"> CFOP </span> /
+                                        <span ng-click="ordenarItem('CSOSN')"> CSOSN </span> /
+                                        <span ng-click="ordenarItem('NCM')">NCM</span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.CFOP}} / {{item.CSOSN}} / {{item.NCM}}</label>
+                                    <br />
+                                    <b>
+                                        <span ng-click="ordenarItem('valorICMS')"> ICMS </span> /
+                                        <span ng-click="ordenarItem('valorIPI')"> IPI </span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.ICMS}} / {{item.valorIPI}}</label>
+                                    <br />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="griditem"></dir-pagination-controls>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+
+                <h2>Impostos</h2>
+                <div class='row'>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Total     Produto </label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorProduto" class="form-control" ui-number-mask="2" readonly>
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Frete</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorFrete" class="form-control" ui-number-mask="2"  ng-blur="RecalcularNota()" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Seguro</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorSeguro" class="form-control" ui-number-mask="2"  ng-blur="RecalcularNota()" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Outros</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorOutro" class="form-control" ui-number-mask="2"  ng-blur="RecalcularNota()" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Base ICMS</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.baseICMS" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>ICMS</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorICMS" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Base ICMS ST</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.baseICMSST" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>ICMS ST</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorICMSST" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Pis</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorPIS" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor CONFINS</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorCONFINS" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor CSLL</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorCSLL" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor II</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorII" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Desconto</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valorDesconto" class="form-control" ui-number-mask="2" readonly />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor da Nota</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.valor" class="form-control" ui-number-mask="2" readonly>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Forma de Pagamento</h2>
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridFP"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                                <th>Cartão ou Cartão de Débito</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaFormaPagamento|itemsPerPage:7" pagination-id="gridFP">
+
+
+                                <td>
+
+                                    <b> Forma de Pagamento: </b> {{item.indPag}} - {{item.indPag |filtroindPag}}  <br />
+                                    <b> Meio de pagamento: </b> {{item.tPag}} - {{item.tPag |filtrotPag}}  <br />
+                                    <b> Valor do Pagamento:</b> {{item.vPag | number:2}}
+
+
+                                </td>
+                                <td>
+
+                                    <b> Tipo de Integração para pagamento: </b>
+                                    {{item.tpIntegra}} - {{item.tpIntegra |filtrotpIntegra}}  <br />
+                                    <b>
+                                        CNPJ da Credenciadora:
+                                    </b>
+                                    {{item.CNPJ}}  <br />
+                                    <b>
+                                        Bandeira da operadora:
+                                    </b>
+                                    {{item.tBand}} - {{item.tBand |filtrotBand}}  <br />
+                                    <b>
+                                        Número de autorização:
+                                    </b>
+                                    {{item.cAut}}  <br />
+                                    <b>
+                                        Valor do troco:
+                                    </b>
+                                    {{item.vTroco | number:2}}
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridFP"></dir-pagination-controls>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Transporte</h2>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Modalidade Frete</label>
+                        <select ng-disabled="true" class="form-control" ng-model="transp.modalidadeFrete" ng-options="o.Value as o.Text for o in ListaModalidadeFrete">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-8 form-group'>
+                        <label>Nome ou Razão</label>
+                        <input type="text" ng-model="transp.nomeRazao" class="form-control" ng-disabled="true" ng-maxlength="150" maxlength="150" />
+
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        <label>Indicador de CNPJ/CPF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="transp.indicadorCnpjCpf" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>CPF/CNPJ</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="transp.indicadorCnpjCpf != 1" />
+                        <input type="text" ng-disabled="true" ng-model="transp.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="transp.indicadorCnpjCpf == 1" />
+                    </div>
+
+                    <div class='col-md-6 form-group'>
+                        <label>Endereço Completo</label>
+                        <input type="text" ng-model="transp.EnderecoCompleto" class="form-control" ng-disabled="true" ng-maxlength="60" maxlength="60" />
+                    </div>
+                    <div class='col-md-6 form-group'>
+                        <label>Cidade</label>
+                        <input type="text" ng-model="transp.cidade" class="form-control" ng-disabled="true" ng-maxlength="60" maxlength="60" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>UF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="transp.uf" ng-options="o.Sigla as o.Sigla for o in Estados">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-3 form-group'>
+                        <label>Incrição Estadual</label>
+                        <input type="text" ng-model="transp.IE" class="form-control" ng-disabled="true" ng-maxlength="14" maxlength="14" />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Placa</label>
+                        <input type="text" ng-model="transp.placa" class="form-control" ng-disabled="true" ng-maxlength="7" maxlength="7" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>UF da Placa</label>
+                        <select ng-disabled="true" class="form-control" ng-model="transp.ufplaca" ng-options="o.Sigla as o.Sigla for o in Estados">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>RNTC</label>
+                        <input type="text" ng-model="transp.RNTC" class="form-control" ng-disabled="true" ng-maxlength="25" maxlength="25" />
+                    </div>
+                </div>
+
+                <h3>Transporte Retenção ICMS</h3>
+
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Serviço</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.valorServico" class="form-control" ui-number-mask="2" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Base ICMS</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.baseCalculo" class="form-control" ui-number-mask="2" />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Aliquota ICMS</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.aliquota" class="form-control" ui-number-mask="2" />
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        <label>Valor ICMS</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.ICMSRetido" class="form-control" ui-number-mask="2" />
+                    </div>
+
+                    <div class='col-md-4 form-group'>
+                        <label>Municipio de Ocorrência(Código IBGE)</label>
+                        <input type="text" ng-disabled="true" ng-model="transp.codigoMunicipioOcorrencia" class="form-control" ng-maxlength="7" maxlength="7" />
+                    </div>
+
+                    <div class='col-md-12 form-group'>
+                        <label>CFOP</label>
+                        <select ng-disabled="true" class="form-control" ng-model="transp.CFOP" ng-options="o.Value as o.Text for o in ListaCFOP">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+
+                </div>
+
+                <h3>Volumes</h3>
+
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaVolumes|orderBy:sortKey:reverseVolumes|itemsPerPage:7" class="{{item.active}}">
+
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarVolumes('qtde')"> Quantidade </span> /
+                                        <span ng-click="ordenarVolumes('especie')"> Especie </span> /
+                                        <span ng-click="ordenarVolumes('marca')"> Marca</span> /
+                                        <span ng-click="ordenarVolumes('numeracao')"> Numeração</span> /
+                                        <span ng-click="ordenarVolumes('pesoLiquido')"> Peso Liquido</span> /
+                                        <span ng-click="ordenarVolumes('pesoBruto')"> Peso Bruto</span> /
+                                        <span ng-click="ordenarVolumes('lacres')"> Lacres</span>
+                                    </b>
+                                    <br />
+                                    <label>
+                                        {{item.qtde}} /
+                                        {{item.especie}} /
+                                        {{item.marca}} /
+                                        {{item.numeracao}} /
+                                        {{item.pesoLiquido | number:2}} /
+                                        {{item.pesoBruto | number:2}} /
+                                        {{item.lacres}}
+                                    </label>
+                                    <br />
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                </div>
+
+
+                <h3>Reboques</h3>
+
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaReboques|orderBy:sortKey:reverseReboques|itemsPerPage:7" class="{{item.active}}">
+
+
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarReboques('placa')"> Placa </span> /
+                                        <span ng-click="ordenarReboques('ufplaca')"> UF </span> /
+                                        <span ng-click="ordenarReboques('RNTC')"> RNTC</span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.placa}} / {{item.ufplaca}} / {{item.RNTC}}</label>
+                                    <br />
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                </div>
+
+                <h3>Retirada</h3>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+
+                        <label>Indicador de CNPJ/CPF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="retirada.indicadorCnpjCpf"  ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                            <option value="">--Selecione--</option>
+                        </select>
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>CPF/CNPJ</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="retirada.indicadorCnpjCpf != 1" />
+                        <input type="text" ng-disabled="true" ng-model="retirada.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="retirada.indicadorCnpjCpf == 1" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Endereço</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.endereco" class="form-control" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Número</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.numero" class="form-control" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Complemento</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.complemento" class="form-control" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Bairro</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.bairro" class="form-control" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Cidade</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.cidade" class="form-control" />
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Código IBGE</label>
+                        <input type="text" ng-disabled="true" ng-model="retirada.codMunicipio" class="form-control" />
+                    </div>
+                </div>
+
+                <h3>Local Entrega</h3>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+
+                        <label>Indicador de CNPJ/CPF</label>
+                        <select ng-disabled="true" class="form-control" ng-model="entrega.indicadorCnpjCpf"  ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                            <option value="">--Selecione--</option>
+                        </select>
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>CPF/CNPJ</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="entrega.indicadorCnpjCpf != 1" />
+                        <input type="text" ng-disabled="true" ng-model="entrega.cnpjCPF" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="entrega.indicadorCnpjCpf == 1" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Endereço</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.endereco" class="form-control" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Número</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.numero" class="form-control" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Complemento</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.complemento" class="form-control" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Bairro</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.bairro" class="form-control" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Cidade</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.cidade" class="form-control" />
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Código IBGE</label>
+                        <input type="text" ng-disabled="true" ng-model="entrega.codMunicipio" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Fatura</h2>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Forma de Pagamento</label>
+                        <select ng-disabled="true" class="form-control" ng-model="nfe.faturaFormaPgto" ng-options="o.Value as o.Text for o in ListafaturaFormaPgto"  ng-change="ObterProdutos()">
+                            <option value="">--Selecione--</option>
+                        </select>
+
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Número</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.faturaNumero" class="form-control" ui-number-mask="0" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Original</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.faturaValorOriginal" class="form-control" ui-number-mask="2" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Desconto</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.faturaValorDesconto" class="form-control" ui-number-mask="2" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor Liquido</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.faturaValorLiquido" class="form-control" ui-number-mask="2" />
+                    </div>
+
+                </div>
+
+                <h2>Duplicatas</h2>
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaDuplicatas|orderBy:sortKey:reverseDuplicatas|itemsPerPage:7" class="{{item.active}}">
+      
+
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarDuplicatas('numero')"> Número </span> /
+                                        <span ng-click="ordenarDuplicatas('vencto')"> Vencimento </span> /
+                                        <span ng-click="ordenarDuplicatas('valor')"> Valor</span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.numero}} / {{item.vencto | date:'dd/MM/yyyy'}} / {{item.valor | number:2}}</label>
+                                    <br />
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <h2>Informações</h2>
+                <div class='row'>
+                    <div class='col-md-12 form-group'>
+                        <label>Informação Complementares</label>
+                        <textarea ng-disabled="true" rows="8" cols="80" type="" ng-model="nfe.informacaoComplementar" class="form-control"></textarea>
+                    </div>
+                    <div class='col-md-12 form-group'>
+                        <label>Informação Complementares de interesse ao Fisco</label>
+                        <textarea ng-disabled="true" rows="8" cols="80" type="" ng-model="nfe.informacaoComplementarFisco" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Indicador de Presença de Comprador</label>
+                        <select ng-disabled="true" class="form-control" ng-model="nfe.indicadorPresencaComprador" ng-options="o.Value as o.Text for o in ListaIndicadorPresencaComprador">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Email Destinátario</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.emailDestinatario" class="form-control" />
+                    </div>
+                </div>
+                <h3>Exportação - Embarque</h3>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Local Embarque Exportação</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.localEmbarqueExportacao" class="form-control" ng-maxlength="30" maxlength="30" />
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        <label>UF</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.ufEmbarqueExportacao" class="form-control" ng-maxlength="2" maxlength="2" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Identificação Comprador Extrangeiro</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.identificacaoCompradorExtrangeiro" class="form-control" ng-maxlength="60" maxlength="30" />
+                    </div>
+
+                </div>
+                <h3>Exportação - Compras</h3>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Informação Pedido Compra</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.informacaoPedidoCompra" class="form-control" ng-maxlength="60" maxlength="60" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Informação Contato</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.informacaoContato" class="form-control" ng-maxlength="60" maxlength="60" />
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Informação de Nota de empenho de compras publicas</label>
+                        <input type="text" ng-disabled="true" ng-model="nfe.informacaoNotaEmpenhoCompras" class="form-control" ng-maxlength="60" maxlength="60" />
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+
+                <h2>Notas Fiscais Referenciadas</h2>
+                <div class='row'>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+
+                                <th>Dados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaNFReferenciada|orderBy:sortKey:reversenfereferenciadas|itemsPerPage:7" class="{{item.active}}">
+
+
+                                <td>
+                                    <b>
+                                        <span ng-click="ordenarRefereciada('NFe')"> NFe </span> /
+                                        <span ng-click="ordenarRefereciada('CTe')"> CTe </span> /
+                                        <span ng-click="ordenarRefereciada('nfserie')">Serie</span> /
+                                        <span ng-click="ordenarRefereciada('nfuf')">UF</span>
+                                    </b>
+                                    <br />
+                                    <label>{{item.NFe}} / {{item.CTe}} / {{item.nfserie}} / {{item.nfuf}}</label>
+                                    <br />
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

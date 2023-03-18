@@ -1,0 +1,450 @@
+﻿@{
+    Layout = "_LayoutSemMenu.cshtml";
+    ViewBag.MigalhaA = "Processos";
+    ViewBag.MigalhaB = "Customizado";
+    ViewBag.MigalhaC = ViewData["tituloprocesso"];
+    ViewBag.MigalhaD = ViewData["titulo"];
+}
+
+
+
+
+<div ng-cloak ng-app="SOFTFIN" id="DivTotal" ng-controller="MestreEntidade">
+
+
+
+
+    <md-progress-linear md-mode="indeterminate" ng-show="!Carregando"></md-progress-linear>
+
+    <div ng-show="ShowProcesso">
+        <md-toolbar md-scroll-shrink="">
+            <div class="md-toolbar-tools"> @ViewData["tituloprocesso"] [ @ViewData["titulo"] ]  Protocolo: @ViewData["NumeroProtocolo"]</div>
+        </md-toolbar>
+
+        <div layout="row">
+            <p>
+                Número de Protocolo: {{NumeroProtocolo}}, salvo com sucesso
+            </p>
+
+
+
+        </div>
+    </div>
+
+
+    <div ng-show="!ShowProcesso">
+        <md-toolbar md-scroll-shrink="">
+            <div class="md-toolbar-tools"> @ViewData["tituloprocesso"] [ @ViewData["titulo"] ] Protocolo: @ViewData["NumeroProtocolo"] </div>
+        </md-toolbar>
+
+        <md-content style="height: 600px;" md-theme="altTheme">
+            <div class='modal-body'>
+                <div ng-cloak>
+                    <md-content>
+                        <md-tabs md-dynamic-height md-border-bottom>
+
+
+                            @Html.Raw(ViewData["tabs"])
+
+                            <md-tab label='Arquivos'>
+                                <md-content class='md-padding'>
+                                    <h1 class='md-display-Arquivos'>Arquivos</h1>
+                                    <form name='frmArquivos'>
+                                        <md-input-container>
+                                            <label>Descrição</label>
+                                            <input type="text" ng-model="DescricaoArquivo">
+                                        </md-input-container>
+                                        <md-input-container>
+                                            <input type="file" ng-model="ArquivoTag" id="ArquivoTag">
+                                        </md-input-container>
+                                        <md-button class="md-primary" ng-click="Upload()" ng-disabled="!Carregando">Adicionar</md-button>
+                                    </form>
+                                    <md-table-container>
+                                        <table md-table>
+                                            <thead md-head md-order="queryAnotacao.order">
+                                                <tr md-row>
+                                                    <th md-column>
+
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Data</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Usuário</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Descrição</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Arquivo</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row md-select='item' md-select-id='Id' md-auto-select ng-repeat='item in ListaArquivos'>
+                                                    <td md-cell>
+
+                                                        <md-button ng-disabled="!Carregando" class="md-raised md-warn" ng-click="ExcluirArquivo(item)">Excluir</md-button>
+                                                    </td>
+                                                    <td md-cell>{{item.DataInclucao |date:"dd/MM/yyyy h:mma"}}</td>
+                                                    <td md-cell>{{item.Usuario}}</td>
+                                                    <td md-cell>{{item.Descricao}}</td>
+                                                    <td md-cell> <a href="{{item.ArquivoReal}}">{{item.ArquivoOriginal}}</a></td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </md-table-container>
+                                </md-content>
+
+                            </md-tab>
+
+                            <md-tab label='Anotação'>
+                                <md-content class='md-padding'>
+                                    <h1 class='md-display-Anotacao'>Anotação</h1>
+                                    <form name='frm$Anotacao'>
+                                        <md-input-container>
+                                            <label>Anotação</label>
+                                            <input type="text" ng-model="Anotacao">
+                                        </md-input-container>
+                                        <md-button class="md-primary" ng-click="AdicionaAnotacao()" ng-disabled="!Carregando">Adicionar</md-button>
+                                    </form>
+                                    <md-table-container>
+
+                                        <table md-table>
+                                            <thead md-head md-order="queryAnotacao.order">
+                                                <tr md-row>
+                                                    <th md-column>
+                                                        <span>Data</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Usuário</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Descrição</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row md-select='item' md-select-id='name' md-auto-select ng-repeat='item in ListaAnotacao'>
+                                                    <td md-cell>{{item.DataInclusao |date:"dd/MM/yyyy h:mma"}}</td>
+                                                    <td md-cell>{{item.Usuario}}</td>
+                                                    <td md-cell>{{item.Descricao}}</td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </md-table-container>
+                                </md-content>
+                            </md-tab>
+
+
+                        </md-tabs>
+                        <md-input-container class="md-block" flex="80"> <label>Motivo</label> <input #requerido ng-model='Motivo' name="Motivo" /> </md-input-container>
+                    </md-content>
+
+                    
+                    
+
+                    <section layout="row" layout-sm="column" layout-align="right right" layout-wrap>
+                        <md-button ng-disabled="!Carregando" class="md-raised md-primary" ng-click="showConfirmOK()">Aprovar</md-button>
+                        <md-button ng-disabled="!Carregando" class="md-raised md-primary" ng-click="showConfirmNOK()">Reprovar</md-button>
+
+                    </section>
+                </div>
+            </div>
+        </md-content>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+    var app = angular.module('SOFTFIN',
+        ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination', 'ngAnimate', 'ngSanitize', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+        .config(function ($mdDateLocaleProvider) {
+
+            $mdDateLocaleProvider.shortMonths = ['Jan', 'Fev', 'Mar', 'Abril', 'Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            $mdDateLocaleProvider.Months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $mdDateLocaleProvider.days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'];
+            $mdDateLocaleProvider.shortDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            $mdDateLocaleProvider.weekNumberFormatter = function (weekNumber) {
+                return 'Semana ' + weekNumber;
+            };
+            $mdDateLocaleProvider.formatDate = function (date) {
+                var m = moment(date);
+                return m.isValid() ? m.format("DD/MM/YYYY") : '';
+            };
+            $mdDateLocaleProvider.msgCalendar = 'Calendario';
+            $mdDateLocaleProvider.msgOpenCalendar = 'Abrir calendario';
+
+        }).config(function ($mdThemingProvider) {
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('blue-grey');;
+        });
+
+
+
+
+        app.filter('yesNo', function () {
+            return function (input) {
+                return input == "True" ? 'Sim' : 'Não';
+            }
+        })
+
+        app.controller('MestreEntidade', [
+            '$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', '$mdDialog', '$mdToast',
+            function ($scope, $http, $location, $anchorScroll, $timeout, $modal, $mdDialog, $mdToast) {
+
+                $scope.ShowProcesso = false;
+                $scope.ListaSimNao = [{ Value: 0, Text: "Não" }, { Value: 1, Text: "Sim" }];
+                $scope.Anotacao = "";
+                $scope.ModoConsulta = true;
+                $scope.DescricaoArquivo = "";
+                $scope.entidadeJson = @Html.Raw(ViewData["entidadeJson"]);
+                @Html.Raw(ViewData["variaveis"]);
+                $scope.showProtocolo = false;
+                $scope.MostraProximaAtividade = false;
+                $scope.paramProcesso = @Html.Raw(ViewData["paramProcesso"]);
+                $scope.NumeroProtocolo = "@Html.Raw(ViewData["NumeroProtocolo"])";
+
+                @Html.Raw(ViewData["AngulajsInput"]);
+                @Html.Raw(ViewData["JSScript"]);
+
+
+
+                $scope.ok = function (opt) {
+                    $scope.InicialCarregando();
+                    $scope.paramProcesso.Resultado = opt;
+                    $scope.paramProcesso.Motivo = $scope.Motivo;
+                    @Html.Raw(ViewData["jsonEnvio"]);
+                    $http.post("../Dinamico/Salvar", { "paramProcesso": $scope.paramProcesso, "json": JSON.stringify($scope.jsonEnvio), "nomeView": "Question"})
+                        .success(function (data) {
+
+                            if (data.CDStatus == "OK") {
+                                $scope.showSimpleToast("Salvo com sucesso!");
+                                $scope.ShowProcesso = true;
+                                $scope.CodigoProximaAtividade = data.CodigoProximaAtividade;
+                                $scope.MostraProximaAtividade = data.MostraProximaAtividade;
+                            } else {
+                                $scope.showSimpleToast(data.DSMessage);
+
+                            }
+
+
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Sistema indisponivel");
+
+
+                        });
+                }
+                $scope.fcProximaAtividade = function () {
+
+                    var iframeAux = $("iframedin");
+                    iframeAux.prevObject.context.location = iframeAux.prevObject.context.location;
+                };
+
+
+                $scope.showConfirmOK = function (ev) {
+                    // Appending dialog to document.body to cover sidenav in docs app
+                    var confirm = $mdDialog.confirm()
+                        .title('Sim eu confirmo?')
+                        .textContent('')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .ok('OK')
+                        .cancel('Cancelar');
+
+                    $mdDialog.show(confirm).then(function () {
+                        $scope.ok("SIM");
+                    }, function () {
+
+                    });
+                };
+                $scope.showConfirmNOK = function (ev) {
+                    // Appending dialog to document.body to cover sidenav in docs app
+                    var confirm = $mdDialog.confirm()
+                        .title('Não confirmo?')
+                        .textContent('')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .ok('OK')
+                        .cancel('Cancelar');
+
+                    $mdDialog.show(confirm).then(function () {
+                        $scope.ok("NÃO");
+                    }, function () {
+
+                    });
+                };
+
+                var last = {
+                    bottom: false,
+                    top: true,
+                    left: false,
+                    right: true
+                };
+
+                $scope.toastPosition = angular.extend({}, last);
+
+                $scope.getToastPosition = function () {
+                    sanitizePosition();
+
+                    return Object.keys($scope.toastPosition)
+                        .filter(function (pos) { return $scope.toastPosition[pos]; })
+                        .join(' ');
+                };
+
+                function sanitizePosition() {
+                    var current = $scope.toastPosition;
+
+                    if (current.bottom && last.top) current.top = false;
+                    if (current.top && last.bottom) current.bottom = false;
+                    if (current.right && last.left) current.left = false;
+                    if (current.left && last.right) current.right = false;
+
+                    last = angular.extend({}, current);
+                }
+
+                $scope.showSimpleToast = function (msg) {
+                    var pinTo = $scope.getToastPosition();
+
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent(msg)
+                            .position(pinTo)
+                            .hideDelay(13000)
+                    );
+                };
+
+
+                $scope.Upload = function () {
+                    $scope.InicialCarregando();
+
+                    var f = document.getElementById('ArquivoTag').files[0];
+                    var fd = new FormData();
+                    fd.append("file", f);
+
+                    fd.append("processo", $scope.paramProcesso.CodigoProcessoAtual);
+                    fd.append("descricao", $scope.DescricaoArquivo);
+                    fd.append("usuario", $scope.paramProcesso.CodigoUsuario);
+                    fd.append("empresa", $scope.paramProcesso.CodigoEmpresa);
+                    $http.post("../../../Dinamico/Upload", fd, {
+                        withCredentials: true,
+                        headers: { 'Content-Type': undefined },
+                        transformRequest: angular.identity
+                    }).success(function (data) {
+                        $scope.FimCarregando();
+                        if (data.CDStatus == "OK") {
+                            $scope.DescricaoArquivo = "";
+                            $scope.ListaArquivos = data.Objs;
+                            $scope.showSimpleToast("Salvo com sucesso!");
+                        } else {
+                            $scope.showSimpleToast(data.DSMessage);
+                        };
+
+
+
+
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                        $scope.showSimpleToast("Sistema indisponivel");
+                    });
+                };
+
+
+
+
+                $scope.ExcluirArquivo = function (item) {
+                    $scope.InicialCarregando();
+                    $http.post("../Dinamico/ExcluirArquivo", { "paramProcesso": $scope.paramProcesso, "id": item.Id })
+                        .success(function (data) {
+                            $scope.FimCarregando();
+                            if (data.CDStatus == "OK") {
+                                $scope.ListaArquivos = data.Objs;
+
+                            } else {
+                                $scope.showSimpleToast(data.DSMessage);
+                            }
+
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                }
+
+
+                $scope.AdicionaAnotacao = function () {
+                    $scope.InicialCarregando();
+                    $http.post("../Dinamico/AdicionaAnotacao", { "paramProcesso": $scope.paramProcesso, "anotacao": $scope.Anotacao})
+                        .success(function (data) {
+                            $scope.FimCarregando();
+                            if (data.CDStatus == "OK") {
+                                $scope.ListaAnotacao = data.Objs;
+                                $scope.Anotacao = "";
+                                $scope.showSimpleToast("Adicionado com sucesso!");
+                            } else {
+                                $scope.showSimpleToast("Erro ao adicionar, tente novamente");
+                            }
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Erro ao adicionar, tente novamente");
+
+                        });
+                }
+                $scope.ObterAnotacao = function () {
+                    $scope.InicialCarregando();
+                    $http.post("../Dinamico/ObterAnotacao", { "paramProcesso": $scope.paramProcesso})
+                        .success(function (data) {
+                            $scope.FimCarregando();
+                            if (data.CDStatus == "OK") {
+                                $scope.ListaAnotacao = data.Objs;
+
+                            } else {
+                                $scope.showSimpleToast("Erro ao carrregar Anotações(1)");
+                            }
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Erro ao carrregar Anotações(2)");
+
+                        });
+                }
+
+                $scope.ObterArquivos = function () {
+                    $scope.InicialCarregando();
+                    $http.post("../Dinamico/ObterArquivos", { "processo": $scope.paramProcesso.CodigoProcessoAtual, "empresa": $scope.paramProcesso.CodigoEmpresa})
+                        .success(function (data) {
+                            $scope.FimCarregando();
+                            if (data.CDStatus == "OK") {
+                                $scope.ListaArquivos = data.Objs;
+
+                            } else {
+                                $scope.showSimpleToast("Erro ao carrregar Arquivos(1)");
+                            }
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Erro ao carrregar Arquivos(2)");
+
+                        });
+                }
+
+                $scope.FimCarregando = function () {
+                    $scope.Carregando = true;
+                }
+                $scope.InicialCarregando = function () {
+                    $scope.Carregando = false;
+                }
+
+                $scope.ObterAnotacao();
+                $scope.ObterArquivos();
+            }
+        ]);
+
+</script>
+
+

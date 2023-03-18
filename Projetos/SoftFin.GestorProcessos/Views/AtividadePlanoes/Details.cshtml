@@ -1,0 +1,58 @@
+﻿@model SoftFin.GestorProcessos.Models.AtividadePlano
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>AtividadePlano</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Atividade.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Atividade.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AtividadeEntrada.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AtividadeEntrada.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Processo.Codigo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Processo.Codigo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Versao.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Versao.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CondicaoEntrada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CondicaoEntrada)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

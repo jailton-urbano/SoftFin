@@ -1,0 +1,51 @@
+﻿@model IEnumerable<SoftFin.Web.Models.CategoriaItemProdutoServico>
+@{
+    ViewBag.Title = "Categoria Item Produto/Serviço";
+
+}
+
+
+<table id="jqgCategoriaItem" cellpadding="0" cellspacing="0"></table>
+<div id="jqgCategoriaItemOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#jqgCategoriaItem').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Descrição'],
+            //columns model
+            colModel: [
+                        { name: 'txtDescricao', index: 'Descricao', align: 'left', editable: false, width: '400', hidden: false },
+
+
+
+            ],
+            //pager for grid
+            pager: $('#jqgCategoriaItemOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Descricao',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgCategoriaItem').jqGrid('navGrid', '#jqgCategoriaItemOpc',
+            { add: false, del: false, edit: false, search: false });
+
+    });
+
+</script>

@@ -1,0 +1,57 @@
+﻿@model SoftFin.Web.Models.PrecoItemProdutoServico
+
+@{
+    ViewBag.Title = "Preço - Excluir";
+
+}
+
+
+<fieldset>
+
+    
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+            <fieldset>
+        <div class="container-fluid">
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.TabelaPrecoItemProdutoServico_ID)
+                    @Html.DropDownListFor(model => model.TabelaPrecoItemProdutoServico_ID, (SelectList)ViewData["Tabela"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.TabelaPrecoItemProdutoServico_ID)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.ItemProdutoServico_ID)
+                    @Html.DropDownListFor(model => model.ItemProdutoServico_ID, (SelectList)ViewData["Item"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.ItemProdutoServico_ID)
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col-md-4 form-group">
+                    @Html.Label("Descrição:")
+                    @Html.TextBox("descricao", null, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.Label("Preço:")
+                    @Html.TextBox("preco", null, new { @class = "form-control" })
+                </div>
+            </div>
+         </div>
+    </fieldset>
+
+		 
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+</fieldset>
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+</script>
+

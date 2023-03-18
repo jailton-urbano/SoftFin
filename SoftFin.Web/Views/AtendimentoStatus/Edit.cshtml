@@ -1,0 +1,50 @@
+﻿@model SoftFin.Web.Models.AtendimentoStatus
+@{
+    ViewBag.Title = "Atendimento Status - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.estabelecimento_id)
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.codigo)
+                    @Html.TextBoxFor(x => x.codigo)
+                    @Html.ValidationMessageFor(x => x.codigo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao)
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.usuario)
+                    @Html.ValueFor(x => x.usuario)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+

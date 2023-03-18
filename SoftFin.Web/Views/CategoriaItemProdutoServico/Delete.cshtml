@@ -1,0 +1,48 @@
+﻿@model SoftFin.Web.Models.CategoriaItemProdutoServico
+@{
+    ViewBag.Title = "Categoria - Exclusão";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+        @Html.ValidationSummary(true)
+    <fieldset>
+        
+        <div>
+            ID:@Html.ValueFor(x => x.id)<br />
+        </div>
+        <div>
+            Tipo:
+        </div>
+        <div>
+            <input type="text" name="tipo" value="@Model.descricao" readonly="readonly" />
+        </div>
+        <ul class="nav nav-pills">
+            <li>
+                <button class="btn" type="submit">Deletar</button> 
+            </li>
+            <li> </li>
+            <li class="active">
+                @Html.ActionLink("Voltar", "Index")
+            </li>
+        </ul>
+
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

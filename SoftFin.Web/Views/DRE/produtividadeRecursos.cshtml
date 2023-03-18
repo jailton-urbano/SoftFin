@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Produtividade dos Recursos";
+}
+
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" style="margin-top:25px" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraProdutividadeRecursos",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (tabledata) {
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Recurso');
+                data.addColumn('number', 'Horas Disponíveis');
+                data.addColumn('number', 'Horas Apontadas');
+                data.addColumn('number', 'Produtividade');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([
+                                 tabledata[i].recurso,
+                                 tabledata[i].horasDisponiveis,
+                                 tabledata[i].horasApontadas,
+                                 tabledata[i].produtividade,
+                    ]);
+                }
+
+                var formatter = new google.visualization.TableBarFormat({ base: 0, showValue: true, min: 0, max: 100, width: 120 });
+
+                formatter.format(data, 3); //Aplica formatação na quarta coluna
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, { allowHtml: true, showRowNumber: true });
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+</script>
+

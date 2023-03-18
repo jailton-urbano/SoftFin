@@ -1,0 +1,46 @@
+﻿@model SoftFin.Web.Models.FolhaPagamentoTipo
+@{
+    ViewBag.Title = "Tipo de Folha de Pagamento - Edição";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.empresa_id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+        </div>
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+

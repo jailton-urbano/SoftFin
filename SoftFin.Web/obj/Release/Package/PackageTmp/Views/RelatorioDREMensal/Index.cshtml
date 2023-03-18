@@ -1,0 +1,319 @@
+﻿@{
+   // ViewBag.Title = "Demonstração do Resultado";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Ano</label>
+                <input type="text" name="ano"  class="form-control" id="ano"  value="2016" />
+            </div>
+
+            <div class='col-md-2 form-group'>
+                <div class="checkbox">
+                    <input type="checkbox" name="consolidado" id="consolidado" value="" />
+                    <label>Consolidado</label>
+                    
+                </div>
+            </div>
+            <div class='col-md-3 form-group'>
+                <div class="checkbox">
+                    
+                    
+                    <input type="checkbox" name="ovs" id="ovs" value="" />
+                    <label>Inclui Ordens de Venda</label>
+                    
+                </div>
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+                    <span class="glyphicon glyphicon-cog"></span> Gerar DRE</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <table>
+        <tr>
+            <th>Resultado</th>
+        </tr>
+        <tr>
+            <td style="width: 100%; ">
+                <div id="table_div"></div>
+            </td>
+        </tr>
+    </table>
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Detalhamento</h4>
+                </div>
+                <div class="modal-body">
+                    <div class=''>
+                        <div id="chart_div" style="height:500px;width:500px;">
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnSeleciona">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    
+    google.load("visualization", "1", { packages: ["table", "corechart"]});
+
+    $('#gerar').click(function () {
+        
+        $('#indicator').show();
+        $('#table_div').html("");
+
+        if (document.getElementById('consolidado').checked) {
+            var con = "true";
+        } else {
+            var con = "false";
+        }
+        if (document.getElementById('ovs').checked) {
+            var ov = "true";
+        } else {
+            var ov = "false";
+        }
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "../RelatorioDREMensal/geraDRE2",
+            data: {
+                'ano': $("#ano").val(),
+                'Consolidado': con,
+                'ov': ov
+            },
+            success: function (dataobj) {
+
+                if (dataobj.CDStatus == "NOK") {
+                    alert(dataobj.DSMessage);
+                    return
+                }
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Conta');
+                data.addColumn('string', 'Tipo');
+                data.addColumn('string', 'Descrição');
+
+                data.addColumn('number', 'Janeiro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Fevereiro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Março');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Abril');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Maio');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Junho');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Julho');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Agosto');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Setembro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Outubro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Novembro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Dezembro');
+                //data.addColumn('number', '%');
+
+                data.addColumn('number', 'Total');
+                //data.addColumn('number', '%');
+                //for (var e = 0; e <= 15; e++) {
+                //    data.setProperty(0, e, 'style', 'font-weight: bold; text-align:center');
+                //}
+
+                var tabledata = dataobj.List;
+
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].codigoConta,
+                                 tabledata[i].tipoConta,
+                                 tabledata[i].descricaoConta,
+                                 tabledata[i].valor[0],
+                                 //tabledata[i].percentual[0],
+                                 tabledata[i].valor[1],
+                                 //tabledata[i].percentual[1],
+                                 tabledata[i].valor[2],
+                                 //tabledata[i].percentual[2],
+                                 tabledata[i].valor[3],
+                                 //tabledata[i].percentual[3],
+                                 tabledata[i].valor[4],
+                                 //tabledata[i].percentual[4],
+                                 tabledata[i].valor[5],
+                                 //tabledata[i].percentual[5],
+                                 tabledata[i].valor[6],
+                                 //tabledata[i].percentual[6],
+                                 tabledata[i].valor[7],
+                                 //tabledata[i].percentual[7],
+                                 tabledata[i].valor[8],
+                                 //tabledata[i].percentual[8],
+                                 tabledata[i].valor[9],
+                                 //tabledata[i].percentual[9],
+                                 tabledata[i].valor[10],
+                                 //tabledata[i].percentual[10],
+                                 tabledata[i].valor[11],
+                                 //tabledata[i].percentual[11],
+                                 tabledata[i].valor[12]
+                                 //tabledata[i].percentual[12]
+
+                    ]);
+
+                    if (tabledata[i].tipoConta == 'S') {
+                        for (var e = 0; e <= 15; e++) {
+                            data.setProperty(i, e, 'style', 'font-weight: bold;');
+                        }
+                    }
+                }
+
+                for (var i = 3; i <= 15; i++) {
+                    var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                    formatter.format(data, i);
+                    //i += 1;
+                    //var formatter2 = new google.visualization.NumberFormat({ negativeColor: 'red', pattern: '#.##%' });
+                    //formatter2.format(data, i);
+                }
+
+
+
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                data.sort({ column: 0, asc: true });
+
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                $('#indicator').hide();
+
+                // Add our selection handler.
+                google.visualization.events.addListener(table, 'select', function () {
+                    var row = table.getSelection()[0].row;
+                    console.log(data.Nf[row].c);
+                    DrillDown(data.Nf[row].c);
+                });
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+    function DrillDown(conta) {
+        $('#indicator').show();
+        drawChart(conta);
+
+    }
+
+    
+
+    function drawChart(conta) {
+        
+        
+
+        var data = google.visualization.arrayToDataTable([
+            ['Mês', 'Valor']
+            , ['Jan', conta[3].v]
+            , ['Fev', conta[4].v]
+            , ['Mar', conta[5].v]
+            , ['Abr', conta[6].v]
+            , ['Mai', conta[7].v]
+            , ['Jun', conta[8].v]
+            , ['Jul', conta[9].v]
+            , ['Ago', conta[10].v]
+            , ['Set', conta[11].v]
+            , ['Nov', conta[12].v]
+            , ['Dez', conta[13].v]
+        ]);
+
+
+
+        var options = {
+            legend: 'none',
+            title: conta[2].v,
+            bars: 'horizontal', // Required for Material Bar Charts.
+            series: {
+                0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+                1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+            },
+            axes: {
+                x: {
+                    distance: { label: 'parsecs' }, // Bottom x-axis.
+                    brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
+                }
+            },
+            width: '870',
+            height: '400',
+            is3D: true,
+            bar: { groupWidth: "100%" },
+            animation: {
+                duration: 1000,
+                easing: 'linear',
+                "startup": true
+            }
+        };
+
+        console.log(options);
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+   
+        $('#Modal').modal('show');
+        $('#indicator').hide();
+
+    }
+
+</script>

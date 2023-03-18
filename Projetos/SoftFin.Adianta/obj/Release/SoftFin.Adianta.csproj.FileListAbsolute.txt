@@ -1,0 +1,17 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\SoftFin.Adianta.dll.config
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\SoftFin.Adianta.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\SoftFin.Adianta.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\Newtonsoft.Json.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Extensions.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Formatting.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Primitives.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\Newtonsoft.Json.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Extensions.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Formatting.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\bin\Release\System.Net.Http.Primitives.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.csproj.App.config
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.csproj.CopyComplete
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Adianta\obj\Release\SoftFin.Adianta.pdb

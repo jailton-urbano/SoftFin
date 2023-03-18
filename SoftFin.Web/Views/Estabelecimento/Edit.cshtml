@@ -1,0 +1,140 @@
+﻿@model SoftFin.Web.Models.Estabelecimento
+@{
+    ViewBag.Title = "Estabelecimento - Alteração";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        <div class="container-fluid">
+            @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.Logo)
+            @if (!string.IsNullOrEmpty(Model.Logo))
+            {
+                <div class='row'>
+                    <div class='col-md-8 form-group'>
+                        <label>Logo</label>
+                        <img src='@Model.Logo' />
+                    </div>
+                </div>
+            }
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.Codigo)
+                    @Html.TextBoxFor(x => x.Codigo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Codigo)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.Apelido)
+                    @Html.TextBoxFor(x => x.Apelido, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Apelido)
+                </div>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.NomeCompleto)
+                    @Html.TextBoxFor(x => x.NomeCompleto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.NomeCompleto)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.CEP)
+                    @Html.TextBoxFor(x => x.CEP, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.CEP)
+                </div>
+
+            </div>
+            <div class='row'>
+
+
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.Logradouro)
+                    @Html.TextBoxFor(x => x.Logradouro, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Logradouro)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.NumeroLogradouro)
+                    @Html.TextBoxFor(x => x.NumeroLogradouro, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.NumeroLogradouro)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.Complemento)
+                    @Html.TextBoxFor(x => x.Complemento, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Complemento)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.BAIRRO)
+                    @Html.TextBoxFor(x => x.BAIRRO, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.BAIRRO)
+                </div>
+
+            </div>
+            <div class='row'>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Municipio_id)
+                    @Html.DropDownListFor(model => model.Municipio_id, (SelectList)ViewData["Municipio"], "---Selecione---",  new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Municipio_id)
+                </div>
+
+                <div class='col-md-1 form-group'>
+                    @Html.LabelFor(x => x.UF)
+                    @Html.TextBoxFor(x => x.UF, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.UF)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.Empresa_id)
+                    @Html.DropDownListFor(model => model.Empresa_id, (SelectList)ViewData["Empresa"], "---Selecione---",  new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Empresa_id)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.CNPJ)
+                    @Html.TextBoxFor(x => x.CNPJ, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.CNPJ)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.InscricaoEstadual)
+                    @Html.TextBoxFor(x => x.InscricaoEstadual, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.InscricaoEstadual)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.InscricaoMunicipal)
+                    @Html.TextBoxFor(x => x.InscricaoMunicipal, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.InscricaoMunicipal)
+                </div>
+            </div>
+            
+            @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+
+        </div>
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#CEP').attr('maxlength', '9');
+    $('#CEP').attr('style', 'text-align:right');
+    $('#CEP').keydown(
+      function (event) {
+          formataCEP(this, event);
+      });
+    $('#CNPJ').attr('maxlength', '18');
+    $('#CNPJ').attr('style', 'text-align:right');
+    $('#CNPJ').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      });
+</script>
+<style type='text/css'></style>
+
+

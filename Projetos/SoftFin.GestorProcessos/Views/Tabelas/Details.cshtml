@@ -1,0 +1,66 @@
+﻿@model SoftFin.GestorProcessos.Models.Tabela
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tabela</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoEmpresa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoEmpresa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CadastroAuxiliar)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CadastroAuxiliar)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SQLCadastroAuxiliar)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SQLCadastroAuxiliar)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,118 @@
+﻿@model IEnumerable<SoftFin.Web.Models.ParcelasView>
+@{
+    ViewBag.Title = "Previsão de Faturamento";
+
+}
+
+        <div class="container-fluid">
+            <div class="row" >
+                <div class="col-md-3 form-group">
+                     Ano: @Html.DropDownList("AnoID", (SelectList)ViewData["Ano"], "Todos", new { @class = "form-control" })
+                </div>
+                <div class="col-md-3 form-group">
+                     Mês: @Html.DropDownList("MesID", (SelectList)ViewData["Mes"], "Todos", new { @class = "form-control" })
+                </div>
+                <div class="col-md-3 form-group">
+                    UN : @Html.DropDownList("UnidadeID", (SelectList)ViewData["UnidadeNegocio"], "Todos", new { @class = "form-control" })
+                </div>
+                <div class="col-md-3 form-group">
+                     <button name="pesquisa" id="pesquisa" class="btn btn-primary">
+                         <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+@*<div class="container">
+
+    @grid.GetHtml(
+        tableStyle: "gridTable",
+        headerStyle: "gridHead",
+        footerStyle: "gridFooter",
+        rowStyle: "gridRow",
+        alternatingRowStyle: "gridAltRow",
+
+        mode: WebGridPagerModes.All,
+        firstText: "<< Primeiro",
+        previousText: "< Anterior", nextText: "Próximo >",
+        lastText: "Último >>",
+
+
+        columns: new[]  {
+        grid.Column("ano", "Ano"),
+        grid.Column("mes", "Mês"),
+        grid.Column("unidade", "UN"),
+        grid.Column("valor", "Valor",format: (item) => string.Format("{0:C}", item.valor))
+        }
+
+        )
+</div>*@
+
+<table id="jqgEstabelecimentos" cellpadding="0" cellspacing="0"></table>
+
+<div   id="jqgEstabelecimentosOpc" style="text-align:center;"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            QuickSidebar.init(); // init quick sidebar
+
+            $('#jqgEstabelecimentos').jqGrid({
+                //url from wich data should be requested
+                url: '@Url.Action("Listas")',
+                //type of data
+                datatype: 'json',
+                //url access method type
+                mtype: 'POST',
+                //columns names
+                colNames: ['Ano', 'Mes','Unidade', 'Valor'], 
+                //columns model
+                colModel: [
+                            { name: 'txtAno', index: 'Ano', align: 'left', editable: false, width: '100', hidden: false },
+                            { name: 'txtMes', index: 'Mes', align: 'left', editable: false, width: '100', hidden: false },
+                            { name: 'txtUnidade', index: 'Unidade', align: 'left', editable: false, width: '500', hidden: false },
+                            { name: 'txtValor', index: 'Valor', align: 'right', editable: false, width: '220', hidden: false }
+
+                ],
+                //pager for grid
+                pager: $('#jqgEstabelecimentosOpc'),
+                //number of rows per page
+                rowNum: 20,
+                //initial sorting column
+                sortname: 'Ano',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%',
+                caption: "@ViewBag.Title"
+
+
+            });
+
+            $('#jqgEstabelecimentos').jqGrid('navGrid', '#jqgEstabelecimentosOpc',
+                { add: false, del: false, edit: false, search: false },
+                { width: 'auto', url: 'www.google.com' },
+                { width: 'auto', url: '@Url.Action("Insert")' },
+                { width: 'auto', url: '@Url.Action("Delete")' });
+
+            $('#pesquisa').click(function () {
+                var caminho = '@Url.Action("Listas")';
+                            caminho += '?AnoID=';
+                            caminho += $("#AnoID").val();
+                            caminho += '&MesID=';
+                            caminho += $("#MesID").val();
+                            caminho += '&UnidadeID=';
+                            caminho += $("#UnidadeID").val();
+                            console.log(caminho);   
+                            jQuery("#jqgEstabelecimentos").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+                        });
+
+        });
+
+    </script>
+

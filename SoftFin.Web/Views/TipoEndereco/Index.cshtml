@@ -1,0 +1,95 @@
+﻿@model IEnumerable<SoftFin.Web.Models.TipoEndereco>
+@{
+    ViewBag.Title = "Tipo Endereço";
+
+}
+
+
+
+<table id="jqgTipoEndereco" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgTipoEnderecoOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgTipoEndereco').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Tipo'],
+            //columns model
+            colModel: [
+                        { name: 'txtTipo', index: 'Tipo', align: 'left', editable: false, width: '925', hidden: false },
+
+
+
+            ],
+            //pager for grid
+            pager: $('#jqgTipoEnderecoOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgTipoEndereco').jqGrid('navGrid', '#jqgTipoEnderecoOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgTipoEndereco').navButtonAdd('#jqgTipoEnderecoOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgTipoEndereco').navButtonAdd('#jqgTipoEnderecoOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgTipoEndereco").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgTipoEndereco').navButtonAdd('#jqgTipoEnderecoOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgTipoEndereco").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    </script>
+
+

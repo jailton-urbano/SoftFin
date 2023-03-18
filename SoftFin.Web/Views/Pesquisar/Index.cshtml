@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Pesquisar";
+    ViewBag.MigalhaA = "Principal";
+    ViewBag.MigalhaB = "Pesquisar";
+}
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<div ng-app="SOFTFIN">
+    <div ng-controller="MestrePesquisa">
+        <!-- END PAGE HEADER-->
+        <div class="search-page search-content-2">
+            <div class="search-bar ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Pesquisar..."  ng-model="Texto" >
+                           
+
+                            <span class="input-group-btn">
+                                <button class="btn blue uppercase bold" ng-click="Pesquisar()" type="button">OK</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="search-container ">
+                        <ul class="search-container">
+                            
+                            <li class="search-item clearfix" ng-repeat="obj in objs">
+                                <div class="search-content text-left">
+                                    <h2 class="search-title">
+                                        <a href="../../{{obj.NomeController}}/{{obj.NomeAction}}">{{obj.Descricao}}</a>
+                                    </h2>
+                                    <p class="search-desc"> {{obj.Comentario}}</p>
+                                </div>
+                            </li>
+
+                            <li class="search-item clearfix" ng-if="objs.length == 0">
+                                <div class="search-content text-left">
+                                    <h2 class="search-title">
+                                        <a href="">Não foram encontrados resultados</a>
+                                    </h2>
+                                    <p class="search-desc"></p>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- END CONTENT BODY -->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks']);
+    //"$scope", "$http", "$location", "ancoraScroll", "$modal"
+    app.controller('MestrePesquisa', [
+        '$scope', '$http', '$location', function ($scope, $http, $location) {
+            $scope.Texto = "@Html.Raw(HttpUtility.UrlDecode(ViewData["txtPesquisar"].ToString()))";
+
+
+            $scope.Pesquisar = function () {
+                Metronic.blockUI({
+                    boxed: true
+                });
+                $http.post("../../Pesquisar/Pesquisar", "{texto:'" + $scope.Texto + "'}")
+
+                    .success(function (data) {
+                        Metronic.unblockUI();
+                        $scope.objs = data;
+                    }).error(function (data) {
+                        Metronic.unblockUI();
+                    });
+            }
+
+            if ($scope.Texto != "")
+                $scope.Pesquisar();
+
+        }
+    ]);
+
+
+
+</script>

@@ -1,0 +1,610 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+
+
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none">
+    <div ng-controller="MestreEntidade">
+
+
+
+        <div class='row'>
+            <div class="col-xs-3 col-md-9">
+            </div>
+            <div class="col-xs-3 col-md-3">
+                <img src="http://www.softfin.com.br/Content/images/nota01.png" alt="SoftFin" style="width: 120px; height: 100px;">
+
+            </div>
+        </div>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Pesquisa()"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+                        </th>
+                        <th>Identificação</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-show="ListaOV.length == 0">
+                        <td colspan="2">{{MsgPesquisa}}</td>
+                    </tr>
+                    <tr dir-paginate="item in ListaOV|filter:procurar|itemsPerPage:7|orderBy:sortKey:reverse" pagination-id="gridOV" class="{{item.active}}">
+                        <td style="width: 40px;">
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 32px;"
+                                    ng-click="GerarNota(item)"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-check"></span> Emitir Nota
+                            </button>
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('Numero')">Ordem</span>
+                                / <span ng-click="ordenar('contrato')"> Contrato </span> 
+                                / <span ng-click="ordenar('descricaocontrato')">Descrição </span> 
+                                / <span ng-click="ordenar('nome')">Nome </span>
+                            </b>
+                            <br />
+                            {{item.Numero}} /
+                            {{item.contrato}} / 
+                            {{item.descricaocontrato}} 
+                            / {{item.nome}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('data')">Data </span> 
+                                / <span ng-click="ordenar('numeroparcela')">Parcela </span>  
+                                / <span ng-click="ordenar('valor')">Valor Total </span>
+                                
+
+                            </b>
+                            <br />
+                            {{item.data | date:'dd/MM/yyyy'}} / {{item.numeroparcela}} / {{item.valor | number:2}}  
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('unidade')">Unidade </span> / <span ng-click="ordenar('banco')">Banco </span>  / <span ng-click="ordenar('operacao')">Operação</span>
+                            </b>
+                            <br />
+                            {{item.unidade}} / {{item.banco}} / {{item.operacao}}
+                            <br />
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+                <br /><label ng-show="ErrosPrefeitura.length > 0">Erros</label><br />
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+                <br /><label ng-show="AlertasPrefeitura.length > 0">Alertas</label><br />
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="!showGrid">
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+                <br /><label ng-show="ErrosPrefeitura.length > 0">Erros</label><br />
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+                <br /><label ng-show="AlertasPrefeitura.length > 0">Alertas</label><br />
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <h4>Configuração Calculo Nota</h4>
+                    <div class='row'>
+                        <div class='col-md-9 form-group'>
+                            <label>Código Serviço</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="filtro.codigoservico" ng-options="o.Value as o.Text for o in ListaCodigoServicos">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Operação</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="filtro.operacaoid" ng-options="o.Value as o.Text for o in ListaOperacoes">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group' datetimez ng-model="filtro.data">
+                            <label>Data</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.data" ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-6 form-group'>
+                            <label>Banco</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="filtro.banco_id" ng-options="o.Value as o.Text for o in ListaBancos" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <button ng-show="!ModoConsulta" type="button"
+                                    ng-click="CalculaNota()"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-check"></span> Calcular Nota
+                            </button>
+                        </div>
+                    </div>
+
+                    <div ng-show="showCalcular">
+
+                        <h4>Impostos</h4>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor da Nota Fiscal: </label>
+                                <input type="text" ng-model="nf.valorNfse" class="form-control" ui-number-mask="2" ng-required="true">
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Base de Cálculo</label>
+                                <input type="text" ng-model="nf.basedeCalculo" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Aliquota INSS</label>
+                                <input type="text" ng-model="nf.aliquotaINSS" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>INSS</label>
+                                <input type="text" ng-model="nf.valorINSS" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Aliquota IRRF</label>
+                                <input type="text" ng-model="nf.aliquotaIrrf" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>IRRF</label>
+                                <input type="text" ng-model="nf.irrf" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Aliquota de ISS</label>
+                                <input type="text" ng-model="nf.aliquotaISS" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor ISS</label>
+                                <input type="text" ng-model="nf.valorISS" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Pis Retido</label>
+                                <input type="text" ng-model="nf.pisRetido" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Confins Retido</label>
+                                <input type="text" ng-model="nf.cofinsRetida" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>CSLL Retido</label>
+                                <input type="text" ng-model="nf.csllRetida" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Liquido</label>
+                                <input type="text" ng-model="nf.valorLiquido" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Deduções</label>
+                                <input type="text" ng-model="nf.valorDeducoes" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Crédito Imposto</label>
+                                <input type="text" ng-model="nf.creditoImposto" class="form-control" ui-number-mask="2" ng-required="true" />
+                            </div>
+
+                        </div>
+
+
+                        <h4>Tomador</h4>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label>Razão</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.razao" class="form-control" ng-maxlength="50" ng-required="true" />
+                            </div>
+                            <div class='col-md-3 form-group'>
+
+                                <label>Indicador de CNPJ/CPF</label>
+                                <select class="form-control" ng-model="nf.NotaFiscalPessoaTomador.indicadorCnpjCpf" ng-required="true" ng-options="o.Value as o.Text for o in ListaIndicadorPessoa">
+                                    <option value="">--Selecione--</option>
+                                </select>
+
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>CPF/CNPJ</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="nf.NotaFiscalPessoaTomador.indicadorCnpjCpf != 1" ng-required="true" />
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.cnpjCpf" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="nf.NotaFiscalPessoaTomador.indicadorCnpjCpf == 1" ng-required="true" />
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Incrição Estadual</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.inscricaoEstadual" class="form-control" ng-maxlength="20" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Inscrição Municipal</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.inscricaoMunicipal" class="form-control" ng-maxlength="20" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Tipo de Endereço</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.tipoEndereco" class="form-control" ng-maxlength="35" ng-required="true" />
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Endereço</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.endereco" class="form-control" ng-maxlength="35" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Número</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.numero" class="form-control" ng-maxlength="15" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Complemento</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.complemento" class="form-control" ng-maxlength="20"  />
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label>Bairro</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.bairro" class="form-control" ng-maxlength="15" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Cidade</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.cidade" class="form-control" ng-maxlength="30" ng-required="true" />
+
+                            </div>
+                            <div class='col-md-1 form-group'>
+                                <label>UF</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.uf" class="form-control" ng-maxlength="2" ng-required="true" />
+
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                <label>CEP</label>
+                                <input type="text" ng-model="nf.NotaFiscalPessoaTomador.cep" class="form-control" ng-maxlength="10" ng-required="true" />
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Email</label>
+                                <input type="email" ng-model="nf.NotaFiscalPessoaTomador.email" class="form-control" ng-maxlength="300" ng-required="true" />
+                            </div>
+                        </div>
+                        <h4>Dados RPS</h4>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Número</label>
+                                <input type="text" ng-model="nf.numeroRps" class="form-control" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Tipo</label>
+                                <input type="text" ng-model="nf.tipoRps" class="form-control" ng-required="true" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Serie</label>
+                                <input type="text" ng-model="nf.serieRps" class="form-control" ng-required="true" />
+                            </div>
+                        </div>
+                        <h4>Dados Nota</h4>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Número</label>
+                                <input ng-disabled="true" type="text" ng-model="nf.numeroNfse" class="form-control" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Emissão</label>
+                                <input ng-disabled="true" type="text" ng-model="nf.dataEmissaoNfse" class="form-control" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Codigo Verificação</label>
+                                <input ng-disabled="true" type="text" ng-model="nf.codigoVerificacao" class="form-control" />
+                            </div>
+                            
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Carga Tributária</label>
+                                <input type="text" ng-model="nf.valorCargaTributaria" class="form-control" ui-number-mask="2" />
+                            </div>
+                            
+                            <div class='col-md-2 form-group'>
+                                <label>Percentual Carga Tributária</label>
+                                <input  type="text" ng-model="nf.percentualCargaTributaria" class="form-control" ui-number-mask="2" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Fonte Carga Tributária</label>
+                                <input type="text" ng-model="nf.fonteCargaTributaria" class="form-control" ng-maxlength="4" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Codigo CEI</label>
+                                <input type="text" ng-model="nf.codigoCEI" class="form-control" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Matricula Obra</label>
+                                <input type="text" ng-model="nf.matriculaObra" class="form-control" />
+                            </div>
+
+                            <div class='col-md-3 form-group' datetimez ng-model="nf.dataVencimentoNfse">
+                                <label>Data Vencimento</label>
+                                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataVencimentoNfse" ui-date-mask />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>Descrição Nota</label>
+                                <textarea rows="8" cols="80" type="" ng-model="nf.discriminacaoServico" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-primary" type="button" ng-click="Salvar()" value="{{msgSalvar}}" ng-disabled="msgSalvar != 'Salvar' || !showCalcular" ng-show="showSalvar">
+                    <button class="btn btn-success" ng-click="Voltar()">Voltar</button>
+                </div>
+            </div>
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+                <br /><label ng-show="ErrosPrefeitura.length > 0">Erros</label><br />
+                <ul>
+                    <li ng-repeat="item in ErrosPrefeitura">{{item}}</li>
+                </ul>
+                <br /><label ng-show="AlertasPrefeitura.length > 0">Alertas</label><br />
+                <ul>
+                    <li ng-repeat="item in AlertasPrefeitura">{{item}}</li>
+                </ul>
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    setTimeout(
+		function () {
+		    $("#DivTotal").fadeIn("slow");
+		}, 1000);
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination']);
+    app.directive('datetimez', function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModelCtrl) {
+
+                element.datetimepicker({
+                    dateFormat: 'dd/MM/yyyy',
+                    language: 'ptbr',
+                    pickTime: false,
+                    startDate: '01-11-2013',      // set a minimum date
+                    endDate: '01-11-2030'          // set a maximum date
+                }).on('changeDate', function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.localDate).format());
+                    scope.$apply();
+                });
+            }
+        };
+    });
+
+    app.filter('yesNo', function () {
+        return function (input) {
+            return input == "True" ? 'Sim' : 'Não';
+        }
+    })
+
+    app.config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+    ]);
+
+    app.controller('MestreEntidade', [
+		'$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', function ($scope, $http, $location, $anchorScroll, $timeout, $modal) {
+
+		    Metronic.blockUI({
+		        boxed: true
+		    });
+
+		    $scope.showOK = false;
+		    $scope.showNOK = false;
+		    $scope.msgOK = "";
+		    $scope.msgNOK = "";
+		    $scope.reverse = false;
+		    $scope.msgSalvar = "Salvar";
+		    $scope.btnSalvar = true;
+		    $scope.ModoConsulta = false;
+		    $scope.showGrid = true;
+		    $scope.showCalcular = false;
+		    $scope.showSalvar = true;
+		    $scope.ordenar = function (keyname) {
+		        $scope.sortKey = keyname;
+		        $scope.reverse = !$scope.reverse;
+		    };
+		    $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+		    $scope.ListaIndicadorPessoa = [{ Value: 1, Text: "CPF" }, { Value: 2, Text: "CNPJ" }];
+		    $scope.ListaOV = [];
+            $scope.CalculaNota = function () {
+                Metronic.blockUI({
+                    boxed: true
+                });
+		        $http.post("../../Faturar/CalculaNotaTela",
+                    {
+                        codigoServico: $scope.filtro.codigoservico,
+                        data: $scope.filtro.data,
+                        banco_id: $scope.filtro.banco_id,
+                        operacaoid: $scope.filtro.operacaoid,
+                        valor: $scope.filtro.valor,
+                        unidadeNegocioid: $scope.filtro.unidadeNegocioid,
+                        ovid: $scope.filtro.id,
+                        pessoaid: $scope.filtro.pessoaid
+                    })
+                    .success(function (data) {
+                        Metronic.unblockUI();
+                        $scope.nf = data.obj;
+                        $scope.showCalcular = true;
+                    });
+		    }
+		    $scope.LoadListaOV = function () {
+		        $scope.MsgPesquisa = "Aguarde...";
+		        $scope.ListaOV = [];
+		        $http.post("../../Faturar/ObterOrdemVendaAberto", { data: "", contrato: "" })
+                    .success(function (data) {
+                        Metronic.unblockUI();
+                        $scope.ListaOV = data;
+                        
+                        console.log(data);
+
+                        if (data.lenght == undefined)
+                            $scope.MsgPesquisa = "Não foram encontrados ordem de vendas pendentes";
+                    });
+		    }
+		    $scope.GerarNota = function (item) {
+		        $scope.filtro = item;
+		        $scope.showGrid = false;
+		        $scope.showCalcular = false;
+		        $scope.showSalvar = true;
+		    }
+		    $scope.Voltar = function (item) {
+		        $scope.showGrid = true;
+		        $scope.showOK = false;
+		        $scope.Pesquisa();
+		    }
+		    $scope.Pesquisa = function (msg) {
+		        $scope.LoadListaOV();
+		    }
+		    $scope.Pesquisa();
+		    $scope.Salvar = function () {
+		        $scope.showNOK = false;
+		        $scope.showOK = false;
+		        $scope.msgSalvar = "Aguarde";
+		        $scope.btnSalvar = false;
+		        var postdata = $scope.nf;
+
+		        $http.post("../../Faturar/Salvar", postdata)
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+                        $scope.showOK = true;
+                        $scope.showSalvar = false;
+                        $scope.ErrosPrefeitura = data.ErrosPrefeitura;
+                        $scope.AlertasPrefeitura = data.AlertasPrefeitura;
+                        $scope.msgOK = data.DSMessage;
+                        $scope.msgSalvar = "Salvar";
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.Erros = data.Erros;
+                        $scope.msgNOK = data.DSMessage;
+
+
+                        $timeout(
+                            function () {
+                                $scope.showNOK = false;
+                                $scope.showOK = false;
+                                $scope.msgSalvar = "Salvar";
+                                $scope.btnSalvar = true;
+
+                            }, 8000);
+                    }
+
+                })
+                .error(function (data) {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = "Sistema indisponivel";
+                    $scope.msgSalvar = "Salvar";
+                    $scope.btnSalvar = true;
+                });
+		    }
+		    $scope.LoadBancos = function () {
+		        $http.post("../../Faturar/ObterBanco")
+                    .success(function (data) {
+                        $scope.ListaBancos = data;
+                    });
+		    };
+		    $scope.LoadCodigoServicos = function () {
+
+		        $http.post("../../Faturar/ObterCodigoServicos")
+                    .success(function (data) {
+                        $scope.ListaCodigoServicos = data;
+                    });
+		    };
+		    $scope.LoadOperacoes = function () {
+
+		        $http.post("../../Faturar/ObterOperacoes")
+                    .success(function (data) {
+                        Metronic.unblockUI();
+                        $scope.ListaOperacoes = data;
+                    });
+		    };
+		    $scope.LoadBancos();
+		    $scope.LoadCodigoServicos();
+		    $scope.LoadOperacoes();
+		}
+    ]);
+
+
+
+</script>
+

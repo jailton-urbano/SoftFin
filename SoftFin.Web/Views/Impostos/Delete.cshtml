@@ -1,0 +1,45 @@
+﻿@model SoftFin.Web.Models.Imposto
+@{
+    ViewBag.Title = "Imposto - Exclusão";
+}
+
+<fieldset>
+    
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.estabelecimento_id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.codigo)
+
+                    @Html.TextBoxFor(x => x.codigo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigo)
+                </div>
+            <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+        </div>
+
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+    <div class="alert alert-info">
+        
+        @ViewBag.msg
+    </div>
+</fieldset>
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

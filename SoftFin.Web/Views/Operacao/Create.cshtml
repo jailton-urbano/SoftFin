@@ -1,0 +1,60 @@
+﻿@model SoftFin.Web.Models.Operacao
+@{
+    ViewBag.Title = "Operação - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        @Html.HiddenFor(model => model.id)
+        @Html.HiddenFor(model => model.empresa_id)
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.empresa_id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.)
+                    @Html.TextBoxFor(x => x.codigo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.SituacaoNF)
+                    @Html.TextBoxFor(x => x.SituacaoNF, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.SituacaoNF)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricaoNota)
+
+                    @Html.TextAreaFor(x => x.descricaoNota, new { @class = "form-control", @style = "width: 1025px; height: 318px;" })
+                    @Html.ValidationMessageFor(x => x.descricaoNota)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="alert alert-info">
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+
+
+

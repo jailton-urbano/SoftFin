@@ -1,0 +1,239 @@
+﻿<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script src="~/Scripts/angular/chart/angular-chart.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/RelatorioHoldingDRE/RelatorioHoldingDREIndex.js"></script>
+
+
+<div ng-app="SOFTFIN" id="DivTotal">
+
+    <script type="text/ng-template" id="modalDetalhe.html">
+        <div>
+            <div class="modal-header">''
+                <h3>Detalhamento</h3>
+                
+            </div>
+
+            <div class="modal-body">
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        <label>Data Inicial: </label> <br />
+                        {{item.dataInicial | date:'dd/MM/yyyy' }}
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Data Final: </label> <br />
+                        {{item.dataFinal | date:'dd/MM/yyyy' }}
+                    </div>
+                    <div class='col-md-6 form-group'>
+                        <label>Conta: </label> <br />
+                        {{item.conta}} - {{item.historico}}
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-3 form-group'>
+                        <label>Filtro : </label>
+                        <input type="text" class="form-control" ng-model="procurar" />
+                    </div>
+
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Data</th>
+                            <th>Pessoa</th>
+                            <th>Histórico</th>
+                            <th style="text-align: right;">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in objs|filter:procurar">
+                            <td>
+                                {{item.empresa_det}}
+                            </td>
+                            <td>
+                                {{item.data  | date:'dd/MM/yyyy'}}
+                            </td>
+                            <td>
+                                {{item.pessoa}}
+                            </td>
+                            <td>
+                                {{item.historico}}
+                            </td>
+                            <td style="text-align: right;">
+                                {{item.valor | number:2}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+    <div ng-controller="MestreEntidade">
+        <div class='row'>
+
+
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.dataIni">
+                <label>Data Inicial</label>
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataIni" ui-date-mask />
+
+            </div>
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.dataFim">
+                <label>Data Final</label>
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataFim" ui-date-mask />
+
+            </div>
+            <div class='col-md-4 form-group'>
+                <label>Empresa</label>
+                <br />
+                <input type="checkbox" name="Todos" ng-model="filtro.todos" ng-checked="filtro.todos" checked data-toggle="toggle" />
+                <label for="Todos">Logado</label><br />
+                <div ng-repeat="item in Empresas" ng-show="!filtro.todos" class="check">
+                    <span>
+                        <input style="margin-left: 30px" ng-checked="item.Selecionado" type="checkbox" ng-model="item.Selecionado" name="{{item.Valor}}" />
+                        <label for="{{item.Valor}}">{{item.Descricao}}</label><br />
+                    </span>
+                </div>
+
+
+            </div>
+            <div class='col-md-4 form-group'>
+                <label>Opções</label>
+                <select ng-disabled="false" class="form-control" ng-model="filtro.opcao" ng-options="o.Value as o.Text for o in ListaOpcao">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <button style="border-right-width: 1px; padding-right: 49px;"
+                    ng-click="Pesquisar()"
+                    title="Atualiza a lista na tela"
+                    class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+
+        </div>
+        <div class="row">
+            <div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Receitas</div>
+                            <div class="panel-body">
+
+                                <canvas id="pie" class="chart chart-pie"
+                                        chart-data="dataRecebimentos"
+                                        chart-labels="labelsRecebimento"
+                                        chart-options="options"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Despesas</div>
+                            <div class="panel-body">
+
+                                <canvas id="pie" class="chart chart-pie"
+                                        chart-data="dataDebito"
+                                        chart-labels="labelsDebito"
+                                        chart-options="options"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Filtro : </label>
+                <input type="text" class="form-control" ng-model="procurar" />
+            </div>
+            <table class="table table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width:80px">
+
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Conta </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Tipo  </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;">  Descrição </span>
+                        </th>
+                        <th style="text-align: right;">
+                            <span style="cursor: pointer;"> Valor </span>
+                        </th>
+                        <th style="text-align: right;">
+                            <span style="cursor: pointer;"> Percentual </span>
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in Lista|filter:procurar|orderBy:sortKey:reverse">
+
+                        <td>
+                            <button style="border-right-width: 0px; padding-right: 30px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalhe"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-eye-open"></span> Detalhe
+                            </button>
+                        </td>
+                        <td style="{{item.stiloGeral}}">
+                            {{item.codigoConta}}
+                        </td>
+                        <td style="{{item.stiloGeral}}">
+                            {{item.tipoConta | SA}}
+                        </td>
+                        <td style="{{item.stiloGeral}}">
+                            {{item.descricaoConta}}
+                        </td>
+                        <td style="text-align: right;{{item.stiloValor}}">
+                            {{item.valor | number:2}}
+                        </td>
+                        <td style="text-align: right;{{item.stiloGeral}}">
+                            {{item.percentual  * 100| number:2}} %
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+

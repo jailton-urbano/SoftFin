@@ -1,0 +1,131 @@
+﻿@model SoftFin.Web.Models.NotaFiscal
+@{
+    ViewBag.Title = "Emissão de NFS-e";
+}
+
+
+@using (Html.BeginForm())
+{    
+   
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.codigoServico)
+                @Html.DropDownListFor(model => model.codigoServico, (SelectList)ViewData["CodigoServico"], "---Selecione---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.codigoServico)
+                @Html.HiddenFor(model => model.ordemVenda_id)
+
+            </div>
+
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.operacao_id)
+                @Html.DropDownListFor(model => model.operacao_id, (SelectList)ViewData["operacao"], "---Selecione---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.operacao_id)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 form-group">
+                @Html.LabelFor(model => model.dataVencimentoNfse)
+
+                <input type="text" id="dataVencimento" name="dataVencimento" class="form-control"  value="@Model.dataVencimentoNfse.Date.ToString("dd/MM/yyyy")" />
+                @Html.ValidationMessageFor(model => model.dataVencimentoNfse)
+            </div>
+
+            <div class="col-md-2 form-group">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.valorNfse)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.valorNfse, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.valorNfse)
+                </div>
+            </div>
+
+
+            <div class="col-md-3 form-group">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.banco_id)
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.banco_id)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 form-group">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.OrdemVenda.Numero)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.OrdemVenda.Numero, null, new { @class = "form-control", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-md-3 form-group">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.OrdemVenda.ParcelaContrato.ContratoItem.Contrato.contrato)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.OrdemVenda.ParcelaContrato.ContratoItem.Contrato.contrato, null, new { @class = "form-control", @disabled = "disabled" })
+                    @Html.HiddenFor(model => model.OrdemVenda.ParcelaContrato.ContratoItem.Contrato.contrato)
+                </div>
+            </div>
+
+            <div class="col-md-1 form-group">
+                @Html.LabelFor(model => model.OrdemVenda.ParcelaContrato.parcela)
+                @Html.TextBoxFor(model => model.OrdemVenda.ParcelaContrato.parcela, null, new { @class = "form-control", @disabled = "disabled" })
+                @Html.HiddenFor(model => model.OrdemVenda.ParcelaContrato.parcela)
+            </div>
+
+            <div class="col-md-5 form-group   ">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.OrdemVenda.Pessoa.nome)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.OrdemVenda.Pessoa.nome, null, new { @class = "form-control", @disabled = "disabled" })
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataVencimento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimento').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valorNfse').attr('maxlength', '18');
+    $('#valorNfse').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>
+

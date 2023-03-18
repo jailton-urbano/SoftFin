@@ -1,0 +1,83 @@
+﻿@model SoftFin.Web.Models.FornecedorAcordo
+
+@{
+    ViewBag.Title = "Fornecedor Acordo- Alteração";
+
+}
+
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.fornecedor_id)
+                    @Html.DropDownListFor(model => model.fornecedor_id, (SelectList)ViewData["fornecedor"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.fornecedor_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Data)
+                    @if (Model.Data == null)
+                    {
+                        <input type='text' id='Data' class = "form-control" name='Data'  />
+                    }
+                    else
+                    {
+                        <input type='text' id='Data' class = "form-control" name='Data' value='@Model.Data.ToString("dd/MM/yyyy")' />
+                    } 
+                    @Html.ValidationMessageFor(x => x.Data)
+                </div>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+
+
+            </div>
+        </div>
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    </fieldset>
+}
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#Data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#Data').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>
+

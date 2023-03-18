@@ -1,0 +1,8 @@
+<distDFeInt versao="1.00" xmlns="http://www.portalfiscal.inf.br/nfe">
+	<tpAmb>[tpAmb]</tpAmb>
+	<cUFAutor>[UF]</cUFAutor>
+	<CNPJ>[CNPJ]</CNPJ>
+	<distNSU>
+		<ultNSU>000000000000000</ultNSU>
+	</distNSU>
+</distDFeInt>

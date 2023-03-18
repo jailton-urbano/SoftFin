@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Importar Extrato";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/202861905-Como-importar-arquivo-do-extrato-banc%C3%A1rio-OFX-";
+    
+       
+}
+
+@using (Html.BeginForm("Index", "ImportarExtratoOFX", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <label>Clique no botão abaixo e informe o arquivo OFX: </label>
+    <input class="btn btn-primary" type="file" name="file" />
+    <br>
+    <button class="btn btn-primary" type="submit" id="Submit" name="Submit">
+        <span class="glyphicon glyphicon-cloud-upload"></span> Ler Arquivo
+    </button>
+    <br>
+}
+
+
+<div class='alert alert-info'>
+<br>
+    @ViewBag.msg
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

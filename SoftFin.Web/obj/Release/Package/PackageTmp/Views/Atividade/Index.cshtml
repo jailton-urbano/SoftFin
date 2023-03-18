@@ -1,0 +1,158 @@
+﻿@model SoftFin.Web.Models.Atividade
+@{
+    ViewBag.Title = "Atividades";
+}
+
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                @Html.Label("Projeto:")
+                                @Html.DropDownList("projeto_id",(SelectList)ViewData["projeto"], new { @class = "form-control" })
+                            </div>
+                        </div>
+                        
+                    </div>
+   
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<table id="jqgPessoa" cellpadding="0" cellspacing="0"></table>
+<div id="jqgPessoaOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#jqgPessoa').jqGrid({
+            //url from wich data should be requested
+            
+            url: '@Url.Action("Listas")?projeto_id=' + $('#projeto_id').val(),
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Projeto', 'Descrição', 'Predescessora', 'Sucessora', 'Sequencia', 'Data Inicial', 'Data Final', 'Qtd.Horas'],
+            //columns model
+            colModel: [
+                        { name: 'txtnomeProjeto'  , index: 'ProjetoPai', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtdescricao', index: 'descricao', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtpredescessora', index: 'predescessora', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtsucessora', index: 'sucessora', align: 'right', editable: false, width: '150', hidden: false },
+                        { name: 'txtsequencia', index: 'sequencia', align: 'right', editable: false, width: '50', hidden: false },
+                        { name: 'txtdataini', index: 'dataini', align: 'right', editable: false, width: '90', hidden: false },
+                        { name: 'txtdatafin', index: 'dataini', align: 'right', editable: false, width: '90', hidden: false },
+                        { name: 'txttothor', index: 'tothor', align: 'right', editable: false, width: '50', hidden: false }
+            ],
+            //pager for grid
+            pager: $('#jqgPessoaOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgPessoa').jqGrid('navGrid', '#jqgPessoaOpc',
+            { add: false, del: false, edit: false, search: false });
+
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/" + $('#projeto_id').val();
+            },
+            position: "Last"
+        });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#projeto_id').change(function () {
+            Pesquisa();
+        });
+
+        //Pesquisa();
+    });
+
+
+    function Pesquisa() {
+        var caminho = '@Url.Action("Listas")';
+        caminho += '?projeto_id=';
+        caminho += $('#projeto_id').val();
+        jQuery("#jqgPessoa").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    }
+
+</script>
+
+

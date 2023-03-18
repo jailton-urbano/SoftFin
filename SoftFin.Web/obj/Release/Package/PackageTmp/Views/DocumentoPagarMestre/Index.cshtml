@@ -1,0 +1,359 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarMestreVlw
+@{
+    ViewBag.Title = "Lista Contas a Pagar"; 
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318875";
+
+
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                @Html.LabelFor(x => x.pessoa_id)
+                                
+                                @Html.DropDownListFor(model => model.pessoa_id, (SelectList)ViewData["Pessoas"], "---Selecione---", new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.pessoa_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataCompetencia) 
+                                
+                                @Html.TextBox("dataCompetencia", ViewData["competencia"].ToString(), new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.dataCompetencia)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataPagamentoIni) 
+                                
+                                <input type='text' id='dataPagamentoIni' name='dataPagamentoIni' class='form-control' value='' />
+                                @Html.ValidationMessageFor(x => x.dataPagamentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataPagamentoFim) 
+                                
+                                <input type='text' id='dataPagamentoFim' name='dataPagamentoFim' class='form-control' value='' />
+                                @Html.ValidationMessageFor(x => x.dataPagamentoFim)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.tipodocumento_id)
+                                
+                                @Html.DropDownListFor(model => model.tipodocumento_id, (SelectList)ViewData["TipoDocumento"], "---Selecione---", new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.tipodocumento_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.tipolancamento)
+
+                                @Html.DropDownListFor(x => x.tipolancamento, (SelectList)ViewData["TipoLancamento"], new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.tipolancamento)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroDocumento)
+                                
+                                @Html.TextBoxFor(x => x.numeroDocumento, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.numeroDocumento)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataDocumentoIni)
+                                
+                                <input type='text' id='dataDocumentoIni' name='dataDocumentoIni' class = "form-control" value='' />
+                                @Html.ValidationMessageFor(x => x.dataDocumentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataDocumentoFim)
+                                
+                                <input type='text' id='dataDocumentoFim' name='dataDocumentoFim' class = "form-control" value='' />
+                                @Html.ValidationMessageFor(x => x.dataDocumentoFim)
+                            </div>
+
+                        </div>
+                        <div class='row'>
+
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataVencimentoIni)
+                                
+                                <input type='text' id='dataVencimentoIni' name='dataPagamentoIni' class = "form-control value='' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataVencimentoFim)
+                                
+                                <input type='text' id='dataVencimentoFim' name='dataVencimentoFim' class = "form-control value='' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoFim)
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.valorBrutoIni)
+                                
+                                @Html.TextBoxFor(x => x.valorBrutoIni, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.valorBrutoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.valorBrutoFim)
+                                
+                                @Html.TextBoxFor(x => x.valorBrutoFim, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.valorBrutoFim)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                Banco
+                                
+                                @Html.DropDownList("banco", (SelectList)ViewData["bancp"], "---Selecione---", new { @class = "form-control" }) 
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar
+                    </button>
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#jqgObj').jqGrid({
+            ////url from wich data should be requested
+            //url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesa
+            colNames: ['Banco'
+                , 'Pessoa'
+                , 'TipoDocumento'
+                , 'Competencia'
+                , 'Data Vencimento'
+                , 'Valor'
+                , 'Tipo'
+                , 'Data Documento'
+                , 'Num Doc.'
+                , 'Data Pagamento'
+                , 'Sit. Pagamento'
+                , 'Aprovado'],
+            //columns model
+            colModel: [
+                        { name: 'txtBanco', index: 'Banco', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtPessoa',         index: 'Pessoa', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtTipoDocumento',  index: 'TipoDocumento', align: 'left', editable: false, width: '100', hidden: false },
+                        { name: 'txtCompetencia',    index: 'Competencia', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtDataVencimento', index: 'DataVencimento', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtValor',          index: 'Valor', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtTipo',           index: 'Tipo', align: 'left', editable: false, width: '50', hidden: false },
+                        { name: 'txtDataDocumento',  index: 'DataDocumento', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtNumDoc',         index: 'NumDoc', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtDataPagamento',  index: 'DataPagamento', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtSitPagamento',   index: 'SitPagamento', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtAprovado',       index: 'Aprovado', align: 'left', editable: false, width: '80', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        //$('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+        //    caption: "Alterar",
+        //    buttonicon: "ui-icon ui-icon-pencil",
+        //    onClickButton: function () {
+        //        var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+        //        if (gr != null) {
+        //            window.location = "Edit/" + gr;
+        //        }
+        //        else {
+        //            alert("Selecione 1 coluna.");
+        //        };
+        //    },
+        //    position: "Last"
+        //});
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Prorrogar Data Vencto",
+            buttonicon: "ui-icon ui-icon-calendar",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Prorrogar/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Arquivo",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Arquivo/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Baixa",
+            buttonicon: "ui-icon ui-icon-check",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "BaixaManual/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+
+
+    $("#dataCompetencia").datepicker({ dateFormat: "mm/yy" });
+
+    $("#dataDocumento").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataVencimentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataVencimentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataLancamentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataLancamentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataPagamentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataPagamentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+
+    $("#dataDocumentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataDocumentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+
+
+    $('#valorBrutoIni').attr('maxlength', '18');
+    $('#valorBrutoIni').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorBrutoFim').attr('maxlength', '18');
+    $('#valorBrutoFim').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")';
+        caminho += '?pessoa_id=';
+        caminho += $('#pessoa_id').val();
+        caminho += '&banco=';
+        caminho += $('#banco').val();
+        caminho += '&dataCompetencia=';
+        caminho += $('#dataCompetencia').val();
+        caminho += '&dataVencimentoIni=';
+        caminho += $('#dataVencimentoIni').val();
+        caminho += '&dataVencimentoFim=';
+        caminho += $('#dataVencimentoFim').val();
+        caminho += '&valorBrutoIni=';
+        caminho += $('#valorBrutoIni').val();
+        caminho += '&valorBrutoFim=';
+        caminho += $('#valorBrutoFim').val();
+        caminho += '&tipodocumento_id=';
+        caminho += $('#tipodocumento_id').val();
+        caminho += '&tipolancamento=';
+        caminho += $('#tipolancamento').val();
+        caminho += '&numeroDocumento=';
+        caminho += $('#numeroDocumento').val();
+        caminho += '&dataDocumentoIni=';
+        caminho += $('#dataDocumentoIni').val();
+        caminho += '&dataDocumentoFim=';
+        caminho += $('#dataDocumentoFim').val();
+        caminho += '&dataPagamentoIni=';
+        caminho += $('#dataPagamentoIni').val();
+        caminho += '&dataPagamentoFim=';
+        caminho += $('#dataPagamentoFim').val();
+
+        //alert(caminho);
+
+        jQuery("#jqgObj").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    });
+
+    </script>
+
+
+

@@ -1,0 +1,109 @@
+﻿@model SoftFin.Web.Models.NotadeDebito
+@{
+    ViewBag.Title = "Nota de Débito - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.numero)
+                    <br />
+                    @Html.TextBoxFor(model => model.numero, new { @readonly = "readonly" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataEmissao)
+                    <br />
+                    <input type='text' id='DataEmissao' name='DataEmissao' class = "form-control" value='@Model.DataEmissao.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.DataEmissao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataVencimento)
+                    <br />
+                    <input type='text' id='DataVencimento' name='DataVencimento' class = "form-control" value='@Model.DataVencimento.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.DataVencimento)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.Label("Banco")
+                    @Html.DropDownList("bancoID", (SelectList)ViewData["bancos"], "---Selecione---", new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.Label("Conta Contábil")
+                    @Html.DropDownList("contaID", (SelectList)ViewData["contas"], new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.Label("Unidade de Negócio")
+                    @Html.DropDownList("unidadeID", (SelectList)ViewData["unidades"], "---Selecione---", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.cliente_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.cliente_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    <br />
+                    @Html.TextBoxFor(model => model.valor, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    <br />
+                    @Html.TextAreaFor(x => x.descricao, 7, 1, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.comentario)
+                    <br />
+                    @Html.TextAreaFor(x => x.comentario, 3, 1, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.comentario)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#DataEmissao').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DataEmissao').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#DataVencimento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DataVencimento').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>
+

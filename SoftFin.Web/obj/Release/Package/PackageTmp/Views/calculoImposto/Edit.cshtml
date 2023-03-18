@@ -1,0 +1,64 @@
+﻿@model SoftFin.Web.Models.calculoImposto
+@{
+    ViewBag.Title = "Calculo Imposto - Editar";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div class="editor-label">
+            @Html.LabelFor(model => model.aliquota)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.aliquota)
+            @Html.ValidationMessageFor(x => x.aliquota)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.arrecadador)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.arrecadador)
+            @Html.ValidationMessageFor(x => x.arrecadador)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.imposto_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.imposto_id, (SelectList)ViewData["imposto"], "--Selecione--")
+            @Html.ValidationMessageFor(x => x.imposto_id)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.operacao_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.operacao_id, (SelectList)ViewData["operacao"], "--Selecione--")
+            @Html.ValidationMessageFor(x => x.operacao_id)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.retido)
+        </div>
+        <div>
+            @Html.CheckBoxFor(x => x.retido)
+            @Html.ValidationMessageFor(x => x.retido)
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

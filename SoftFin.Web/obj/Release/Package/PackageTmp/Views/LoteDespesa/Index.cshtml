@@ -1,0 +1,132 @@
+﻿@model SoftFin.Web.Models.LoteDespesa
+@{
+    ViewBag.Title = "Lista de Lotes de Despesas";
+
+}
+
+<table id="jqg" cellpadding="0" cellspacing="0"></table>
+
+<div id="jqgOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqg').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Código', 'Data', 'Tipo Lote', 'Histórico', 'Valor', 'Situação', 'Nota de Débito'],
+            //columns model
+            colModel: [
+                        {
+                            name: 'colCodigo', index: 'codigo', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '100'
+                        },
+                        {
+                            name: 'colData', index: 'Data', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 70 }, editrules: { required: true }, width: '150'
+                        },
+                        {
+                            name: 'colTipoLote', index: 'descricao', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '150'
+                        },
+                        {
+                            name: 'colHistorico', index: 'Historico', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '150'
+                        }, {
+                            name: 'colValor', index: 'ValorLote', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '150', formatter: 'currency'
+                        }, {
+                            name: 'colSituacao', index: 'descricao', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '150'
+                        }, {
+                            name: 'colNota', index: 'numero', align: 'left', editable: false, edittype: 'text',
+                            editoptions: { maxlength: 100 }, editrules: { required: true }, width: '100'
+                        }
+            ],
+            //pager for grid
+            pager: $('#jqgOpc'),
+            //number of rows per page
+            rowNum: 20,
+            //initial sorting column
+            sortname: 'APELIDO_ESTAB',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqg').jqGrid('navGrid', '#jqgOpc',
+            { add: false, del: false, edit: false, search: false },
+            { width: 'auto', url: 'www.google.com' },
+            { width: 'auto', url: '@Url.Action("Insert")' },
+                { width: 'auto', url: '@Url.Action("Delete")' });
+
+        $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqg").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+            caption: "Cancelar",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqg").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Cancel/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+
+</script>
+
+<script>
+    $('#Data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#Data').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>

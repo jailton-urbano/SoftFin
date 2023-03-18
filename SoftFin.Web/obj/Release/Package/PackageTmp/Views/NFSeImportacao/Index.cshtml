@@ -1,0 +1,859 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/NFSeImportacao/NFSeImportacaoIndex.js"></script>
+
+
+<div id="divLoadinit" class="loading">
+    Aguarde, carregando...
+    <div id="indicator" style="text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+</div>
+<script type="text/javascript">
+    setTimeout(
+        function () {
+            document.getElementById("divLoadinit").style.display = "none";
+            $("#DivTotal").fadeIn("slow");
+        }, 1000);
+
+</script>
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none">
+    <div ng-controller="MestreEntidade">
+
+        <div class='panel-body'>
+            <form class="form-search">
+                <div class='container'>
+
+                    <div class='col-md-3 form-group'>
+                        <label>Instituição: </label>
+
+                        <select ng-model="filtro.instituicao" class="form-control" ng-options="o.Value as o.Text for o in ListaInstituicao">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+
+                    <div class='col-md-3 form-group' datetimez ng-model="filtro.dataInicial">
+                        <label>Data Inicial : </label>
+                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataInicial" ui-date-mask ng-disabled="filtro.instituicao == 'Sefaz'" />
+                        <span class="add-on">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+
+                    <div class='col-md-3 form-group' datetimez ng-model="filtro.dataFinal">
+                        <label>Data Final : </label>
+                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataFinal" ui-date-mask ng-disabled="filtro.instituicao == 'Sefaz'" />
+                        <span class="add-on">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+
+                    <div class='col-md-3 form-group' datetimez ng-model="filtro.dataFinal">
+
+                        <button type="button" name="pesquisa" id="pesquisa" class='btn btn-primary' ng-click="Pesquisa()">
+                            <span class="glyphicon glyphicon-search"></span> Pesquisar
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+
+        <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+
+        </div>
+
+
+        <div id="loadGrid" style="text-align: center;" class="loading_img" ng-show="showloadGrid">
+            <img src="~/Content/images/loading_bar_animated.gif" />
+        </div>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-show="showMostraTodos"></th>
+                        <th>Dados Nota</th>
+                        <th>Prestador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ListaNotas" class="{{item.active}}">
+                        <td style="width: 40px;" ng-show="showMostraTodos">
+                            <button title="Iniciar importação" ng-click="Importa(item)" ng-show="!item.ExisteNF"
+
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Importa
+                            </button>
+                        </td>
+
+                        <td ng-show="item.ChaveNFe.CodigoVerificacao == idSelecionado || showMostraTodos">
+                            <b>
+                                Número da Nota / Inscrição / Codigo Verificação:
+                            </b>
+                            {{item.ChaveNFe.NumeroNFe}} / {{item.ChaveNFe.InscricaoPrestador}} / {{item.ChaveNFe.CodigoVerificacao}}
+                            <br />
+                            <b>
+                                Data Emissão:
+                            </b>
+                            {{item.DataEmissaoNFe | date:'dd-MM-yyyy'}}
+                            <br />
+                            <b>
+                                Tipo RPS / Tributação  / Situação:
+                            </b>
+                            {{item.TipoRPS}} / {{item.TributacaoNFe}} / {{item.StatusNFe}}
+                            <br />
+                            <b>
+                                Lote:
+                            </b>
+                            {{item.NumeroLote}}
+                            <br />
+                            <b>
+                                Codigo Serviço:
+                            </b>
+                            {{item.CodigoServico}}
+                            <br />
+                            <b>
+                                Valor Serviços:
+                            </b>
+                            {{item.ValorServicos |number:2}}
+                            <br />
+                            <b>
+                                ISS Retido:
+                            </b>
+                            {{item.ISSRetido|yesNo}}
+                            <br />
+                        </td>
+                        <td ng-show="item.ChaveNFe.CodigoVerificacao == idSelecionado || showMostraTodos">
+                            <b>
+                                Razão Prestador:
+                            </b>
+                            {{item.RazaoSocialPrestador}}
+                            <br />
+                            <b>
+                                Opção Simples:
+                            </b>
+                            {{item.OpcaoSimples}}
+                            <br />
+                            <b>
+                                Logradouro:
+                            </b>
+                            {{item.EnderecoPrestador.TipoLogradouro}} - {{item.EnderecoPrestador.Logradouro}}, {{item.EnderecoPrestador.NumeroEndereco}}, {{item.EnderecoPrestador.ComplementoEndereco}},
+                            {{item.EnderecoPrestador.ComplementoEndereco}}, {{item.EnderecoPrestador.Cidade}}, {{item.EnderecoPrestador.UF}}, {{item.EnderecoPrestador.CEP}}
+                            <br />
+                            <b>
+                                CNPJ:
+                            </b>
+                            {{item.CPFCNPJPrestador.CNPJ}}
+                            <br />
+
+                            <span class="label label-sm label-success" ng-show="item.ExistePessoas"> Pessoa já importada</span>
+                            <span class="label label-sm label-warning" ng-show="item.ExisteNF"> Lançado em Notas Fiscais</span>
+                            <span class="label label-sm label-info" ng-show="item.ExisteCPAG"> Lançado em Contas a Pagar</span>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div id="divImportacao" ng-show="showImportacao">
+                <h4>Opções de Importação</h4>
+
+                <div class="row">
+
+                    <div class='col-md-2 form-group'>
+                        <label>Gerar Contas a Pagar</label>
+                        <select class="form-control" ng-model="GERACPAG"
+                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-12'>
+                        <ul class="nav nav-tabs">
+                            <li class="aba-pessoa active" id="liPessoa">
+                                <a href="#tabPessoa" data-toggle="tab">
+                                    Pessoas
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                            <li class="aba-nf" id="liNf">
+                                <a href="#tabnf" data-toggle="tab">
+                                    Nota Fiscal de Entrada
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                            <li class="aba-cpag" ng-show="GERACPAG" id="liCPAG">
+                                <a href="#tabCpag" data-toggle="tab" ng-click="AtualizaCPAG()">
+                                    Contas a Pagar
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="tabPessoa" class="tab-pane fade active in" aria-expanded="true">
+
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" ng-show="pessoa.id == 0">Prestador não cadastrado</div>
+                                    <div ng-form="frmpessoas">
+                                        <div class="panel-body">
+                                            <div class='container-fluid'>
+                                                <div class='row'>
+                                                    <div class='col-md-6 form-group'>
+                                                        <label>Nome Pessoa</label>
+                                                        <input type="text" ng-model="pessoa.nome" class="form-control" required ng-maxlength="150" />
+                                                    </div>
+                                                    <div class='col-md-6 form-group'>
+                                                        <label>Razão Social</label>
+                                                        <input type="text" ng-model="pessoa.razao" class="form-control" required ng-maxlength="150" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Tipo Pessoa</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoPessoa_ID" ng-options="o.Value as o.Text for o in ListaPessoas" required>
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Categoria Pessoa</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.CategoriaPessoa_ID" ng-options="o.Value as o.Text for o in ListaCategorias" required>
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Unidade de Negócio</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.UnidadeNegocio_ID" ng-options="o.Value as o.Text for o in ListaUnidadeNegocio" required>
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Código</label>
+                                                        <input type="text" ng-model="pessoa.codigo" class="form-control" required ng-maxlength="20" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Telefone Fixo</label>
+                                                        <input type="text" ng-model="pessoa.TelefoneFixo" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Celular</label>
+                                                        <input type="text" ng-model="pessoa.Celular" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>CNPJ/CPF</label>
+                                                        <input type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="pessoa.CategoriaPessoa_ID != 1" />
+                                                        <input type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="pessoa.CategoriaPessoa_ID == 1" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Incrição Estadual</label>
+                                                        <input type="text" ng-model="pessoa.inscricao" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>CCM</label>
+                                                        <input type="text" ng-model="pessoa.ccm" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-7 form-group'>
+                                                        <label>E-Mail</label>
+                                                        <input type="text" ng-model="pessoa.eMail" class="form-control" ng-maxlength="3" />
+                                                    </div>
+                                                </div>
+
+
+                                                <h4>Endereço</h4>
+                                                <div class='row'>
+
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>CEP</label>
+                                                        <span class="input-group-btn">
+                                                            <input type="text" ng-model="pessoa.cep" class="form-control" ng-maxlength="14" ui-br-cep-mask />
+                                                            <a ng-click="BuscaCEP(pessoa.cep)" class="btn btn-default" role="button">Pesquisar</a>
+                                                        </span>
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Tipo Endereço</label>
+                                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoEndereco_ID" ng-options="o.Value as o.Text for o in ListaTipoEnderecos">
+                                                            <option value="">--Selecione--</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class='col-md-7 form-group'>
+                                                        <label>Endereço</label>
+                                                        <input type="text" ng-model="pessoa.endereco" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Número</label>
+                                                        <input type="text" ng-model="pessoa.numero" class="form-control" ng-maxlength="20" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Complemento</label>
+                                                        <input type="text" ng-model="pessoa.complemento" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Bairro</label>
+                                                        <input type="text" ng-model="pessoa.bairro" class="form-control" ng-maxlength="50" />
+                                                    </div>
+                                                    <div class='col-md-1 form-group'>
+                                                        <label>UF</label>
+                                                        <input type="text" ng-model="pessoa.uf" class="form-control" ng-maxlength="2" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Cidade</label>
+                                                        <input type="text" ng-model="pessoa.cidade" class="form-control" ng-maxlength="30" />
+                                                    </div>
+                                                </div>
+                                                <h4>Dados Bancários</h4>
+                                                <div class='row'>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Código Banco</label>
+                                                        <input type="text" ng-model="pessoa.bancoConta" class="form-control" ng-maxlength="3" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Agência</label>
+                                                        <input type="text" ng-model="pessoa.agenciaConta" class="form-control" ng-maxlength="10" />
+                                                    </div>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Digito</label>
+                                                        <input type="text" ng-model="pessoa.agenciaDigito" class="form-control" ng-maxlength="1" />
+                                                    </div>
+                                                    <div class='col-md-3 form-group'>
+                                                        <label>Conta</label>
+                                                        <input type="text" ng-model="pessoa.contaBancaria" class="form-control" ng-maxlength="12" />
+                                                    </div>
+                                                    <div class='col-md-2 form-group'>
+                                                        <label>Dígito Conta</label>
+                                                        <input type="text" ng-model="pessoa.digitoContaBancaria" class="form-control" ng-maxlength="1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane fade" id="tabnf">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" ng-show="nf.id == 0">Nota não cadastrada</div>
+                                    <div class="panel-body">
+                                        <h4>Configuração Calculo Nota</h4>
+                                        <div class='row'>
+                                            @*<div class='col-md-9 form-group'>
+                                                    <label>Código Serviço</label>
+                                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="nf.codigoServico_id" ng-options="o.Value as o.Text for o in ListaCodigoServico">
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>*@
+                                            <div class='col-md-3 form-group'>
+                                                <label>Operação</label>
+                                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="nf.operacao_id" ng-options="o.Value as o.Text for o in ListaOperacao">
+                                                    <option value="">--Selecione--</option>
+                                                </select>
+                                            </div>
+                                            <div class='col-md-3 form-group' datetimez ng-model="nf.dataVencimentoNfse">
+                                                <label>Data Vencimento NFse</label>
+                                                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="nf.dataVencimentoNfse" ui-date-mask />
+                                                <span class="add-on">
+                                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                </span>
+                                            </div>
+
+                                            <div class='col-md-6 form-group'>
+                                                <label>Banco</label>
+                                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="nf.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" required>
+                                                    <option value="">--Selecione--</option>
+                                                </select>
+                                            </div>
+                                            <div class='col-md-3 form-group'>
+                                                <button ng-show="!ModoConsulta" type="button"
+                                                        ng-click="CalculaNota()"
+                                                        class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-check"></span> Calcular Nota
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <h4>Impostos</h4>
+                                        <div class='row'>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Valor da Nota Fiscal: </label>
+                                                <input type="text" ng-model="nf.valorNfse" class="form-control" ng-disabled="true" ui-number-mask="2">
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Base de Cálculo</label>
+                                                <input type="text" ng-model="nf.basedeCalculo" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Aliquota INSS</label>
+                                                <input type="text" ng-model="nf.aliquotaINSS" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>INSS</label>
+                                                <input type="text" ng-model="nf.valorINSS" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Aliquota IRRF</label>
+                                                <input type="text" ng-model="nf.aliquotaIrrf" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>IRRF</label>
+                                                <input type="text" ng-model="nf.irrf" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Aliquota de ISS</label>
+                                                <input type="text" ng-model="nf.basedeCalculo" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Valor ISS</label>
+                                                <input type="text" ng-model="nf.aliquotaISS" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Pis Retido</label>
+                                                <input type="text" ng-model="nf.pisRetido" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Confins Retido</label>
+                                                <input type="text" ng-model="nf.cofinsRetida" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>CSLL Retido</label>
+                                                <input type="text" ng-model="nf.csllRetida" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Valor Liquido</label>
+                                                <input type="text" ng-model="nf.valorLiquido" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Deduções</label>
+                                                <input type="text" ng-model="nf.valorDeducoes" class="form-control" ui-number-mask="2" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Crédito Imposto</label>
+                                                <input type="text" ng-model="nf.creditoImposto" class="form-control" ui-number-mask="2" />
+                                            </div>
+
+                                        </div>
+                                        <h4>Dados RPS</h4>
+                                        <div class='row'>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Número</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.numeroRps" class="form-control" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Tipo</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.tipoRps" class="form-control" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Serie</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.serieRps" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <h4>Dados Nota</h4>
+                                        <div class='row'>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Número</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.numeroNfse" class="form-control" />
+                                            </div>
+                                            <div class='col-md-2 form-group'>
+                                                <label>Data Emissão</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.dataEmissaoNfse" class="form-control" />
+                                            </div>
+                                            <div class='col-md-4 form-group'>
+                                                <label>Codigo Verificação</label>
+                                                <input ng-disabled="true" type="text" ng-model="nf.codigoVerificacao" class="form-control" />
+                                            </div>
+
+                                        </div>
+                                        <div class='row'>
+                                            <div class='col-md-12 form-group'>
+                                                <label>Descrição Nota</label>
+                                                <textarea rows="8" cols="80" ng-disabled="true" type="" ng-model="nf.discriminacaoServico" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tabCpag">
+                                <form name="frmDadosGerais" novalidate>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" ng-show="CPAG.id == 0">Contas a pagar não cadastrada</div>
+                                        <div class="panel-body">
+                                            <div class='row'>
+                                                <div class='col-md-6 form-group'>
+                                                    <label>Nome Fornecedor </label>
+                                                    <input ng-disabled="true" type="text" ng-model="CPAG.nome" class="form-control" disabled="disabled" />
+                                                </div>
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Data Lançamento</label>
+                                                    <input type="text" ng-model="CPAG.dataLancamento" class="form-control" disabled="disabled" ui-date-mask />
+                                                </div>
+
+                                                <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataCompetencia">
+                                                    <label>Data Competência</label>
+                                                    <input data-format="MM/yyyy" type="text" ng-model="CPAG.dataCompetencia" class="form-control" />
+                                                    <span class="add-on">
+                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataDocumento">
+                                                    <label>Data Documento</label>
+                                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAG.dataDocumento" ui-date-mask />
+                                                    <span class="add-on">
+                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class='row'>
+
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Valor Bruto</label>
+                                                    <input type="text" ng-model="CPAG.valorBruto" ng-change="CPAGITEM.valor = CPAG.valorBruto" class="form-control" ui-number-mask="2" />
+                                                </div>
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Número Documento</label>
+                                                    <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.numeroDocumento" class="form-control" />
+                                                </div>
+                                                <div class='col-md-4 form-group'>
+                                                    <label>Tipo Documento</label>
+                                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipodocumento_id" ng-options="o.Value as o.Text for o in ListaTipoDocumento" ng-change="MostraComplementoTipoDOC(true)" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class='row'>
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Tipo Lançamento</label>
+                                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipolancamento" ng-options="o.Value as o.Text for o in ListaTipoLancamento" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Código Pagamento</label>
+                                                    <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.codigoPagamento" name="txtcodigoPagamento" class="form-control" required />
+                                                    <span class='help-block' ng-show='frmDadosGerais.txtcodigoPagamento.$error.required && frmDadosGerais.txtcodigoPagamento.$dirty'>Campo Obrigatório</span>
+                                                </div>
+                                                <div class='col-md-4 form-group'>
+                                                    <label>Banco/Conta</label>
+                                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                                <div class='col-md-4 form-group'>
+                                                    <label>Conta Contabil</label>
+                                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.planoDeConta_id" ng-options="o.Value as o.Text for o in ListaContaContabil" id="txtplanoDeConta_id" required>
+                                                        <option value=" ">
+                                                            --Selecione--
+                                                        </option>
+                                                    </select>
+                                                    <span class='help-block' ng-show='frmDadosGerais.txtplanoDeConta_id.$error.required && frmDadosGerais.txtplanoDeConta_id.$dirty'>Campo Obrigatório</span>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Parcelamento</div>
+                                        <div class="panel-body">
+                                            <form id="frmItem">
+                                                <div class='container-fluid'>
+                                                    <div class='row'>
+                                                        <div class='col-md-2 form-group' datetimez ng-model="CPAGPARCELA.vencimento">
+                                                            <label>Data de Vencimento</label>
+                                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAGPARCELA.vencimento" ui-date-mask ng-disabled="ModoConsulta" />
+                                                            <span class="add-on">
+                                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class='col-md-2 form-group' datetimez ng-model="CPAGPARCELA.vencimentoPrevisto">
+                                                            <label>Data Prevista Pagar</label>
+                                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAGPARCELA.vencimentoPrevisto" ui-date-mask ng-disabled="ModoConsulta" />
+                                                            <span class="add-on">
+                                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                            </span>
+                                                        </div>
+
+                                                        <div class='col-md-4 form-group'>
+                                                            <label>Histórico</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" id="txtparcelaHistorico" class="form-control" ng-model="CPAGPARCELA.historico" ng-maxlength="50" />
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <label>Qtd. Parcelas</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="CPAGPARCELA.parcelas" ui-number-mask="0">
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <label>Acrescenta Sobra</label>
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAGPARCELA.sobra" ng-options="o.Value as o.Text for o in ListaSobra">
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class='col-md-10 form-group'>
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <span class="input-group-btn">
+                                                                <button ng-show="!ModoConsulta" type="button"
+                                                                        ng-click="fcAdicionaParcela(CPAGPARCELA)"
+                                                                        name="btnAdicione" id="btnAdicione"
+                                                                        class="btn btn-success">
+                                                                    <span class="glyphicon glyphicon-plus"></span> Gerar Parcelas
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                                                {{MsgDivValidacao}}
+                                            </div>
+                                        </div>
+                                        <div class='container-fluid'>
+                                            <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                                            <div id="Repositorio">
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Parcela</th>
+                                                            <th>Data de Vencimento</th>
+                                                            <th>Data Prevista Pagar</th>
+                                                            <th>Histórico</th>
+                                                            <th>Valor</th>
+                                                            <th>Situação</th>
+                                                            <th>Lote</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in CPAGPARCELAS">
+                                                            <td>{{item.parcela}}</td>
+                                                            <td>{{item.vencimento | date:'dd/MM/yyyy'}}</td>
+                                                            <td>{{item.vencimentoPrevisto | date:'dd/MM/yyyy' }}</td>
+                                                            <td>{{item.historico}}</td>
+                                                            <td>{{item.valor | number:2}}</td>
+                                                            <td>{{item.situacao}}</td>
+                                                            <td>{{item.lotePagamentoBanco}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>Total</td>
+                                                            <td>{{valorTotalParcelas | number:2}}</td>
+                                                            <td></td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Distribuição de custo por área</div>
+                                        <div class="panel-body">
+                                            <form id="frmItem">
+                                                <div class='container-fluid'>
+                                                    <div class='row'>
+
+                                                        <div class='col-md-4 form-group'>
+                                                            <label>Unidade de Negócio</label>
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAGITEM.UnidadeNegocio_desc" ng-options="o.Text as o.Text for o in ListaUnidadeNegocio">
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class='col-md-4 form-group'>
+                                                            <label>Histórico</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" id="txtHistorico" class="form-control" ng-model="CPAGITEM.historico" />
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <label>Valor</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="CPAGITEM.valor" ui-number-mask="2">
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <label>%</label>
+                                                            <input ng-disabled="ModoConsulta" type="text" id="txtPorcentagemLct" class="form-control" ng-model="CPAGITEM.PorcentagemLct" ui-number-mask="2" />
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class='col-md-10 form-group'>
+                                                        </div>
+                                                        <div class='col-md-2 form-group'>
+                                                            <span class="input-group-btn">
+                                                                <button ng-show="!ModoConsulta" type="button"
+                                                                        ng-click="fcAdiciona(CPAGITEM)"
+                                                                        name="btnAdicione" id="btnAdicione"
+                                                                        class="btn btn-success">
+                                                                    <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                                                {{MsgDivValidacao}}
+                                            </div>
+                                        </div>
+                                        <div class='container-fluid'>
+                                            <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                                            <div id="Repositorio">
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Unidade de Negócio</th>
+                                                            <th>Histórico</th>
+                                                            <th>Valor</th>
+                                                            <th>Opções</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="item in CPAGITEMS">
+                                                            <td>{{item.UnidadeNegocio_desc}}</td>
+                                                            <td>{{item.historico}}</td>
+                                                            <td>{{item.valor | number:2}}</td>
+                                                            <td>
+
+                                                                <button ng-show="!ModoConsulta"
+                                                                        type="button"
+                                                                        ng-click="fcExcluir($index)"
+                                                                        class="btn btn-danger">
+                                                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>Total</td>
+                                                            <td>{{valorTotal | number:2}}</td>
+                                                            <td></td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-primary" type="button" ng-click="OK()" value="{{msgSalvar}}" ng-disabled="!btnSalvar">
+                            <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+        <div id="MestreEntidade" class="container-fluid" ng-show="false">
+
+
+
+            <form name="frmNota">
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-9 form-group' ng-show="!NJ">
+                            <h3>Holding</h3>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <span class="input-group-btn">
+                                <button type="button" ng-show="!NJ"
+                                        ng-click="OK()"
+                                        class="btn btn-success">
+                                    <span class="glyphicon glyphicon-plus"></span> Salvar
+                                </button>
+                            </span>
+                            <span class="input-group-btn">
+                                <button type="button" ng-show="!NJ"
+                                        ng-click="Voltar()"
+                                        class="btn btn-success">
+                                    <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div id="tabs" ng-show="empresa.id != 0">
+                <ul class="nav nav-tabs">
+                    <li class="aba-estab">
+                        <a href="#tabEstab" data-toggle="tab">
+                            Nota Fiscal
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content ">
+
+                    <div class="tab-pane fade in activate" id="tabEstab" aria-expanded="true">
+                        <div class="panel panel-primary">
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

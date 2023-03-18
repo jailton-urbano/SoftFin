@@ -1,0 +1,54 @@
+﻿@model SoftFin.Web.Models.Usuario
+@{
+    ViewBag.Title = "Usuario - Exclusão";
+}
+
+
+
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+    <div class='container-fluid'>
+    @Html.HiddenFor(x => x.id)
+    <div class='row'>
+        <div class='col-md-4 form-group'>
+            <label>Email:</label>
+            @Html.TextBoxFor(x => x.codigo, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.codigo)
+        </div>
+
+        <div class='col-md-4 form-group'>
+            <label>Nome:</label>
+            @Html.TextBoxFor(x => x.nome, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.nome)
+        </div>
+        <div class='col-md-4 form-group'>
+            <label>Senha:</label>
+            @Html.PasswordFor(x => x.senha, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.senha)
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-md-4 form-group'>
+            <label>Perfil:</label>
+            @Html.DropDownList("idPerfil", (SelectList)ViewData["Perfis"], "--Selecione--", new { @class = "form-control" })
+        </div>
+        <div class='col-md-2 form-group'>
+            <label>Bloqueado:</label>
+            @Html.CheckBoxFor(x => x.usuarioBloqueado,  new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.usuarioBloqueado)
+        </div>
+    </div>
+    </div>
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

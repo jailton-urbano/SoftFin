@@ -1,0 +1,12 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Debug\SoftFin.NFSe.DTO.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Debug\SoftFin.NFSe.DTO.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Debug\SoftFin.NFSe.DTO.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Debug\SoftFin.NFSe.DTO.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.csprojAssemblyReference.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.csproj.CoreCompileInputs.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Debug\SoftFin.NFSe.DTO.pdb

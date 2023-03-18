@@ -1,0 +1,35 @@
+﻿@model SoftFin.Web.Models.UnidadeNegocio
+
+@{
+    ViewBag.Title = "Unidade de Negócio - Exclusão";
+}
+
+
+
+        
+<fieldset>
+            
+@RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+<div>
+    Unidade de Negócio:
+</div>
+<div>
+    <input type="text" name="unidade" value="@Model.unidade" readonly="readonly" />
+</div>
+@RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+<div class="alert alert-info">
+                
+    @ViewBag.msg
+</div>
+</fieldset>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+

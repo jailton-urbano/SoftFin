@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Demonstração do Resultado";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn" type="button" id="pesquisa" name="pesquisa">Gerar DRE</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+<script>
+
+    $('#pesquisa').click(function () {
+        $('#indicator').show();
+        $.ajax(
+            {
+                url: "geraDRE",
+                data: {
+                    'DataInicial': $("#dataInicial").val(),
+                    'DataFinal': $("#dataFinal").val()
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    montaDRE(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+    function montaDRE(jsonData) {
+        var table = '<table width="600" cellpadding="5" class="table table-condensed table-bordered"><thead><tr><th scope="col" align="center">Conta</th><th scope="col" align="center">Descrição</th><th scope="col" class="text-right">Valor</th><th scope="col" class="text-right">%</th></tr></thead><tbody>';
+
+        $.each(jsonData, function (index, dre) {
+            console.log(dre);
+
+            if (dre.codigoConta == "01") {
+                table += '<tr class="receb">';
+                table += '<td class="active" font:"bold">Recebimentos</td>';
+                table += '<td class="active"></td>';
+                table += '<td class="text-right"></td>';
+                table += '<td class="text-right"></td>';
+                table += '</tr>';
+                table += '<tr>';
+                table += '<td class="active">' + dre.codigoConta + '</td>';
+                table += '<td class="active">' + dre.descricaoConta + '</td>';
+                table += '<td class="text-right">' + dre.valor + '</td>';
+                table += '<td class="text-right">' + dre.percentual + '</td>';
+                table += '</tr>';
+                table += '<tr class="pagtos">';
+                table += '<td class="active" font:"bold">Pagamentos</td>';
+                table += '<td class="active"> </td>';
+                table += '<td class="text-right"> </td>';
+                table += '<td class="text-right"> </td>';
+            }
+            else if (dre.codigoConta == "99") {
+                table += '<tr class="result">';
+                table += '<td class="active">' + dre.descricaoConta + '</td>';
+                table += '<td class="active"></td>';
+                table += '<td class="text-right-bold">' + dre.valor + '</td>';
+                table += '<td class="text-right-bold">' + dre.percentual + '</td>';
+                table += '</tr>';
+            }
+            else {
+                table += '<tr>';
+                table += '<td class="active">' + dre.codigoConta + '</td>';
+                table += '<td class="active">' + dre.descricaoConta + '</td>';
+                table += '<td class="text-right">' + dre.valor + '</td>';
+                table += '<td class="text-right">' + dre.percentual + '</td>';
+                table += '</tr>';
+            }
+        });
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+

@@ -1,0 +1,128 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/MC/MCIndex.js"></script>
+<style>
+
+</style>
+
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div class='row'>
+
+
+            <div class='col-md-3 form-group'>
+                <label>Mes</label>
+                <select class="form-control" ng-model="filter.mes" ng-options="o.Value as o.Text for o in listMonth">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Ano</label>
+                <select class="form-control" ng-model="filter.ano" ng-options="o.Value as o.Text for o in listYear">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+            <div class='col-md-4 form-group'>
+                <label>Banco</label>
+                <select class="form-control" ng-model="filter.banco_id" ng-options="o.Value as o.Text for o in listBancos ">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+            @*Colocar banco*@
+        </div>
+        <div class="modal-footer">
+
+            <button style="border-right-width: 1px; padding-right: 49px;"
+                    ng-click="Search()"
+                    title="Atualiza a lista na tela"
+                    class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+
+        </div>
+
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <label>Filtro : </label>
+                <input type="text" class="form-control" ng-model="locate" />
+            </div>
+
+        </div>
+        <div class="row">
+            <table  class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="height: 25%">
+                            <span style="cursor: pointer;" ng-click="Order('data')"> Data </span>
+                        </th>
+
+
+                        <th style="height: 25%">
+                            
+                            <span style="cursor: pointer;" ng-click="Order('statusSaldoReal')"> Saldo Real </span>
+                        </th>
+
+                        <th style="height: 25%">
+                            <span style="cursor: pointer;" ng-click="Order('statusSaldoCalculado')"> Saldo Calculado </span>
+                        </th>
+                        <th style="height: 25%">
+                            <span style="cursor: pointer;" ng-click="Order('statusLanctosConciliacao')"> Conciliação </span>
+                        </th>
+                        @*colocar campos do cabeçalho*@
+                        @*Saldo Real
+        Saldo Calculado
+        Conciliação*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in list|filter:locate|orderBy:sortKey:reverse track by $index">
+
+                        <td>
+                            {{item.data | removezero}}
+                        </td>
+
+                        <td>
+                            <i ng-show="item.statusLanctosConciliacao == 0" class="fa fa-check-square fa-fw" style="color:darkslateblue"></i>
+                            <i ng-show="item.statusLanctosConciliacao == 1" class="fa fa-remove fa-fw" style="color:red"></i>
+
+
+                        </td>
+                        <td>
+                            <i ng-show="item.statusSaldoReal == 0" class="fa fa-check-square fa-fw" style="color:darkslateblue"></i>
+                            <i ng-show="item.statusSaldoReal == 1" class="fa fa-remove fa-fw" style="color:red"></i>
+
+                        </td>
+                        <td>
+                            <i ng-show="item.statusSaldoCalculado == 0" class="fa fa-check-square fa-fw" style="color:darkslateblue"></i>
+                            <i ng-show="item.statusSaldoCalculado == 1" class="fa fa-remove fa-fw" style="color:red"></i>
+
+      
+                        </td>
+
+
+
+
+                        @*....*@
+                        @*public string data {get; set;}
+        public string statusSaldoReal { get; set; }
+        public string statusSaldoCalculado { get; set; }
+        public string statusLanctosConciliacao { get; set; }*@
+
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+

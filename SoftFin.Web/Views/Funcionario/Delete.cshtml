@@ -1,0 +1,106 @@
+﻿@model SoftFin.Web.Models.Funcionario
+
+@{
+    ViewBag.Title = "Funcionário - Excluir";
+
+}
+
+
+<fieldset>
+
+    
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.pessoa_id)
+                    @Html.DropDownListFor(model => model.pessoa_id, (SelectList)ViewData["pessoa"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoa_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeNegocio_id)
+                    @Html.DropDownListFor(model => model.unidadeNegocio_id, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.unidadeNegocio_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.responsavel_id)
+                    @Html.DropDownListFor(model => model.responsavel_id, (SelectList)ViewData["responsavel"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.responsavel_id)                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.funcao_id)
+                    @Html.DropDownListFor(model => model.funcao_id, (SelectList)ViewData["FuncionarioFuncao"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.funcao_id)                </div>
+
+                <div class='col-md-7 form-group'>
+                    @Html.LabelFor(x => x.profissao)
+                    @Html.TextBoxFor(x => x.profissao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.profissao)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.estadocivil)
+                    @Html.TextBoxFor(x => x.estadocivil, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.estadocivil)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataAdmissao)
+                    @if (Model.dataAdmissao == null)
+                    {
+                        <input type='text' id='dataAdmissao' class = "form-control" name='dataAdmissao' class='text-box single-line'   />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataAdmissao' class = "form-control" name='dataAdmissao' class='text-box single-line'  value='@Model.dataAdmissao.Value.ToString("dd/MM/yyyy")' />
+                    } 
+                    @Html.ValidationMessageFor(x => x.dataAdmissao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataNascimento)
+                    @if (Model.dataNascimento == null)
+                    {
+                        <input type='text' id='dataNascimento' class = "form-control" name='dataNascimento' class='text-box single-line'  />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataNascimento' class = "form-control" name='dataNascimento' class='text-box single-line'  value='@Model.dataNascimento.Value.ToString("dd/MM/yyyy")' />
+                    }
+                    @Html.ValidationMessageFor(x => x.dataNascimento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataSaida)
+                    @if (Model.dataSaida == null)
+                    {
+                        <input type='text' id='dataSaida' class = "form-control" name='dataSaida' class='text-box single-line'  />
+                    }
+                    else
+                    {
+                        <input type='text' id='dataSaida' class = "form-control" name='dataSaida' class='text-box single-line'  value='@Model.dataSaida.Value.ToString("dd/MM/yyyy")' />
+                    }
+                    @Html.ValidationMessageFor(x => x.dataSaida)
+                </div>
+            </div>
+        </div>
+
+		 
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+</fieldset>
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input[type!=hidden]").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>
+

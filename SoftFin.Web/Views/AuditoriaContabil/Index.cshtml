@@ -1,0 +1,396 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/BC/Index.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade" ng-cloak>
+        <div id="loadGrid" style="text-align: center;" class="loading_img" ng-show="showloadGrid">
+            <img src="~/Content/images/loading_bar_animated.gif" />
+        </div>
+        <br />
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Banco?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>
+                                        {{item.codigo}} /
+                                        {{item.nomeBanco}} /
+                                        {{item.codigoBanco}} /
+                                        {{item.agencia}} /
+                                        {{item.contaCorrente}} - {{item.contaCorrenteDigito}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                              OK
+                        </button>
+                        <button class="btn btn-default" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+</div>
+            </div>
+        </script>
+
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-show="showMostraTodos">
+
+
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Pesquisa()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="Novo()"
+                                    title="Novo banco"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+
+
+                        </th>
+                        <th>Dados</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7" class="{{item.active}}">
+                        <td style="width: 40px;" ng-show="showMostraTodos">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalha o banco da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Alterar(item)"
+                                    title="Edita o banco"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"
+                                    title="Remove o banco"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('codigo')"> Código </span> /
+                                <span ng-click="ordenar('nomeBanco')"> Nome </span> /
+                                <span ng-click="ordenar('codigoBanco')">Código Banco </span> /
+                                <span ng-click="ordenar('agencia')">Agência </span> /
+                                <span ng-click="ordenar('contaCorrente')">Conta </span> 
+                            </b>
+                            <br />
+                            <label>
+                                {{item.codigo}} /
+                                {{item.nomeBanco}} /
+                                {{item.codigoBanco}} /
+                                {{item.agencia}} /
+                                {{item.contaCorrente}} - {{item.contaCorrenteDigito}} /
+                                {{item.TipoConta | TipoConta}}
+                            </label>
+                            <br />
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div ng-show="showManut">
+
+            <div>
+
+                <div ng-form="frmpessoas">
+                    <div>
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Código</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.codigo' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Nome Banco</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.nomeBanco' class='form-control' ng-maxlength="50" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código Banco</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.codigoBanco' class='form-control' ng-maxlength="3" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Agência</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.agencia' class='form-control' ng-maxlength="10" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Agência Digito</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.agenciaDigito' class='form-control' ng-maxlength="1" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Conta Corrente</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.contaCorrente' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Conta Corrente Digito</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.contaCorrenteDigito' class='form-control' ng-maxlength="1" />
+                                </div>
+
+
+                                <div class='col-md-2 form-group'>
+                                    <label>ValorLimite</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.ValorLimite' class='form-control' ui-number-mask="2" ng-maxlength="20" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Principal</label>
+                                    <select class="form-control" ng-model="banco.principal" ng-disabled='ModoConsulta'
+                                            ng-options="o.Value as o.Text for o in ListaSimNao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Referência Integração</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.ReferenciaIntegracao' class='form-control' ng-maxlength="20" />
+                                </div>
+
+                                <div class='col-md-12 form-group'>
+                                    <label>Observação</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.observacao' class='form-control' ng-maxlength="30" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Tipo Conta</label>
+                                    <select class="form-control" ng-model="banco.TipoConta" ng-disabled='ModoConsulta'
+                                            ng-options="o.Value as o.Text for o in ListaTipoConta">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-6 form-group' ng-show="banco.TipoConta == 0">
+                                    <label>Aplicação Automática</label>
+                                    <select class="form-control" ng-model="AplicacaoAutomatica" ng-options="o.Value as o.Text for o in ListaBancos" ng-disabled='ModoConsulta'>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Sequencial Lote CNAB</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.SequencialLoteCNAB' class='form-control' ng-maxlength="20" ui-number-mask="0" />
+                                </div>
+                            </div>
+                            <h3 ng-show="banco.TipoConta == 0">Dados de Emissão de Boletos</h3>
+                            <div class='row' ng-show="banco.TipoConta == 0">
+                                <div class='col-md-3 form-group'>
+                                    <label>Emite Boleto</label>
+                                    <select class="form-control" ng-model="banco.EmiteBoleto" ng-disabled='ModoConsulta'
+                                            ng-options="o.Value as o.Text for o in ListaSimNao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Envia boleto com NF(PDF)</label>
+                                    <select class="form-control" ng-model="banco.EmissaoBoletoComNFPDF" ng-disabled='ModoConsulta'
+                                            ng-options="o.Value as o.Text for o in ListaSimNao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Emissão boleto após emissão de NF</label>
+                                    <select class="form-control" ng-model="banco.EmissaoBoletoAposNF" ng-disabled='ModoConsulta'
+                                            ng-options="o.Value as o.Text for o in ListaSimNao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Multa</label>
+                                    <input type='text' ng-disabled='false' ng-model='banco.Multa' class='form-control' ng-maxlength="20" ui-number-mask="2" />
+                                </div>
+
+                            </div>
+
+                            <div class='row' ng-show="banco.TipoConta == 0">
+
+
+                                
+                                <div class='col-md-2 form-group'>
+                                    <label>Juros Mora dia</label>
+                                    <input type='text' ng-disabled='false' ng-model='banco.JurosDia' class='form-control' ng-maxlength="20" ui-number-mask="2" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Nosso Número</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.nossoNumero' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Número Documento</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.numeroDocumento' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Nosso Convênio</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.NumeroConvenio' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Número Arquivo Remessa</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.NumeroArquivoRemessa' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Carteira</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.carteira' class='form-control' ng-maxlength="20" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código Transmissão</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.CodigoTransmissao' class='form-control' ng-maxlength="30" />
+                                </div>
+                                <div class='col-md-12 form-group'>
+                                    <label>Texto Boleto 01</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.TextoBoleto01' class='form-control' ng-maxlength="40" />
+                                </div>
+                                <div class='col-md-12 form-group'>
+                                    <label>Texto Boleto 02</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.TextoBoleto02' class='form-control' ng-maxlength="40" />
+                                </div>
+                                <div class='col-md-12 form-group'>
+                                    <label>Texto Boleto 03</label>
+                                    <input type='text' ng-disabled='ModoConsulta' ng-model='banco.TextoBoleto03' class='form-control' ng-maxlength="40" />
+                                </div>
+
+
+
+
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" ng-show="showOK">
+                    {{msgOK}}
+                </div>
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>

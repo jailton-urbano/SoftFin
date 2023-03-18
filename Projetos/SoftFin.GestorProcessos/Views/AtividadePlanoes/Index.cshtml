@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SoftFin.GestorProcessos.Models.AtividadePlano>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Atividade.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AtividadeEntrada.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Processo.Codigo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Versao.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CondicaoEntrada)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Atividade.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AtividadeEntrada.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Processo.Codigo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Versao.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CondicaoEntrada)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

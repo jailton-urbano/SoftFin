@@ -1,0 +1,2298 @@
+﻿
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+
+
+
+
+
+
+
+<div ng-app="SOFTFIN" id="DivTotal" style="display:none">
+    <div ng-controller="MestreEntidade">
+        <div id="divLoadinit" class="loading">
+            Aguarde, carregando...
+            <div id="indicator" style="text-align: center;" class="loading_img">
+                <img src="~/Content/images/loading_bar_animated.gif" />
+            </div>
+        </div>
+        <script type="text/javascript">
+            setTimeout(
+                function () {
+                    document.getElementById("divLoadinit").style.display = "none";
+                    $("#DivTotal").fadeIn("slow");
+                }, 1000);
+
+        </script>
+
+
+        <script type="text/ng-template" id="modalModelo.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Dados da Empresa</h3>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalUnidade.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Unidades de Negócio</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label>Unidade</label>
+                                <input type="text" ng-model="unidade.unidade" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalUpload.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo para upload</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="image/*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+
+                        </div>
+                        <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Upload
+                        </button>
+                        <button class="btn btn-default" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalEmpresas.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Dados da Empresa</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <form name="frmEstab">
+                            <div class='container-fluid'>
+                                <h4>Identificação</h4>
+
+                                <div class='row'>
+                                    <div class='col-md-3 form-group'>
+                                        <label>CNPJ</label>
+                                        <input type="text" ng-model="estab.CNPJ" class="form-control" required ng-maxlength="18" ui-br-cnpj-mask />
+                                    </div>
+                                    <div class='col-md-4 form-group'>
+                                        <label>Nome Completo</label>
+                                        <input type="text" ng-model="estab.NomeCompleto" class="form-control" required ng-maxlength="150" />
+                                    </div>
+                                    <div class='col-md-5 form-group'>
+                                        <label>Apelido</label>
+                                        <input type="text" ng-model="estab.Apelido" class="form-control" required ng-maxlength="50" />
+                                    </div>
+
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-2 form-group'>
+                                        <label>Código</label>
+                                        <input type="text" ng-model="estab.Codigo" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Inscrição Estadual</label>
+                                        <input type="text" ng-model="estab.InscricaoEstadual" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Inscrição Municipal</label>
+                                        <input type="text" ng-model="estab.InscricaoMunicipal" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-2 form-group'>
+                                        <label>Ativo</label>
+                                        <select class="form-control" ng-model="estab.ativo"
+                                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Opção Simples</label>
+                                        <select ng-disabled="ModoConsulta" class="form-control" ng-model="estab.opcaoTributariaSimples_id" ng-options="o.Value as o.Text for o in ListaOpcaoSimples" required>
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Código de Tributação no Municipio</label>
+                                        <input type="text" ng-model="estab.CodigoTributacaoMunicipio" class="form-control" ng-maxlength="50" />
+                                    </div>
+                                </div>
+                                <h4>Endereço</h4>
+                                <div class='row'>
+
+                                    <div class='col-md-2 form-group'>
+                                        <label>CEP</label>
+                                        <span class="input-group-btn">
+                                            <input type="text" ng-model="estab.CEP" class="form-control" required ng-maxlength="14" ui-br-cep-mask />
+                                            <a ng-click="BuscaCEP(estab.CEP)" class="btn btn-default" role="button">Pesquisar</a>
+                                        </span>
+                                    </div>
+                                    <div class='col-md-8 form-group'>
+                                        <label>Logradouro</label>
+                                        <input type="text" ng-model="estab.Logradouro" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-2 form-group'>
+                                        <label>Número</label>
+                                        <input type="text" ng-model="estab.NumeroLogradouro" class="form-control" required ng-maxlength="50" />
+                                    </div>
+
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Complemento</label>
+                                        <input type="text" ng-model="estab.Complemento" class="form-control" ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Bairro</label>
+                                        <input type="text" ng-model="estab.BAIRRO" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-4 form-group'>
+                                        <label>Municipio</label>
+                                        <input type="text" ng-model="estab.MunicipioDesc" typeahead="o.Text as o.Text for o in ListaMunicipios | filter:$viewValue | limitTo:8" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-2 form-group'>
+                                        <label>UF</label>
+                                        <input type="text" ng-model="estab.UF" class="form-control" required ng-maxlength="50" />
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Email Notificação</label>
+                                        <input type="text" ng-model="estab.emailNotificacoes" class="form-control" ng-maxlength="250" />
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Fone</label>
+                                        <input type="text" ng-model="estab.Fone" class="form-control" ng-maxlength="20" />
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Solicita autorização para lançamentos no Contas a Pagar</label>
+                                        <select class="form-control" ng-model="estab.autorizacaoCPAG"
+                                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Solicita autorização emissão de Notas Fiscais</label>
+                                        <select class="form-control" ng-model="estab.autorizacaoFaturamento"
+                                                ng-options="o.Value as o.Text for o in ListaSimNao">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>CRT</label>
+                                        <select class="form-control" ng-model="estab.CRT"
+                                                ng-options="o.Value as o.Text for o in ListaCRT">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-6 form-group'>
+                                        <label>Código Migrate</label>
+                                        <input type="text" ng-model="estab.MigrateCode" class="form-control" ng-maxlength="250" />
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <div class="alert alert-info" ng-show="showOK">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary" ng-click="OK()">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Salvar
+                            </button>
+                            <button class="btn btn-default" ng-click="cancel()">
+                                <span class="glyphicon glyphicon-log-out"></span>
+                                Voltar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalPerfil.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Dados do Perfil</h3>
+                </div>
+                <div class="modal-body">
+                    <form name="frmEstab">
+                        <div class='container-fluid'>
+                            <h4>Identificação</h4>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Descrição</label>
+                                    <input type="text" ng-model="perfil.Descricao" class="form-control" required ng-maxlength="50" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código</label>
+                                    <input type="text" ng-model="perfil.Codigo" class="form-control" required ng-maxlength="15" />
+                                </div>
+                            </div>
+
+                            <div class="panel-group accordion" id="accordion3">
+                                <div class="panel panel-default" ng-repeat="item in perfil.funcs">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href='#collapse{{item.id}}'> {{item.Descricao}} </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{item.id}}" class="panel-collapse">
+                                        <div class="panel-body">
+                                            <div class='row'>
+                                                <div class='col-md-4 form-group' ng-repeat="itemfc in item.ListaFuncionalidades">
+                                                    <label>{{itemfc.Descricao}}</label>
+                                                    <select class="form-control" ng-model="itemfc.valor"
+                                                            ng-options="o.Value as o.Text for o in ListaTipoPermisao" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()" ng-disabled="!BtnSalvarAtivo" value="{{BtnSalvar}}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalHome.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Acesso a Home</h3>
+                </div>
+                <div class="modal-body">
+                    <form name="frmEstab">
+                        <div class='container-fluid'>
+                            <h4>Identificação</h4>
+                            <div class="panel-group accordion" id="accordion3">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href='#collapse'> Página Principal </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse" class="panel-collapse">
+                                        <div class="panel-body">
+                                            <div class='row'>
+                                                <div class='col-md-4 form-group'>
+                                                    <label>Calendário</label><br />
+
+                                                    <input type="checkbox" ng-model="calendario.contasapagar" name="calendariocontasapagar" /> <label for="calendariocontasapagar">Contas a Pagar</label><br />
+                                                    <input type="checkbox" ng-model="calendario.faturamento" name="calendariofaturamento" /> <label for="calendariofaturamento">Faturamento</label><br />
+                                                    <input type="checkbox" ng-model="calendario.importacaonfMunicipal" name="calendarioimportacaonfMunicipal" /> <label for="calendarioimportacaonfMunicipal">Importação de Nota Municipal</label><br />
+                                                    <input type="checkbox" ng-model="calendario.classificacao" name="calendarioclassificacao" /> <label for="calendarioclassificacao">Classificação</label><br />
+                                                    <input type="checkbox" ng-model="calendario.processo" name="calendarioprocesso" /> <label for="calendarioprocesso">Processos</label><br />
+
+                                                </div>
+                                                <div class='col-md-3 form-group'>
+                                                    <label>Saldos Bancários</label><br />
+                                                    <select class="form-control" ng-model="saldo.sim"
+                                                            ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                  </div>
+                                                <div class='col-md-3 form-group'>
+                                                    <label>Notas Fiscais</label><br />
+
+                                                    <select class="form-control" ng-model="notafiscal.sim"
+                                                            ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                                <div class='col-md-2 form-group'>
+                                                    <label>Parcelas</label><br />
+
+                                                    <select class="form-control" ng-model="parcelas.sim"
+                                                            ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                                        <option value="">--Selecione--</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()" value="{{BtnSalvar}}">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalUsuario.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Dados do Usuário</h3>
+                </div>
+                <div class="modal-body">
+                    <form name="frmEstab">
+                        <div class='container-fluid'>
+                            <h4>Identificação</h4>
+                            <div class='row'>
+                                <div class='col-md-6 form-group'>
+                                    <label>Nome</label>
+                                    <input type="text" ng-model="usuario.nome" class="form-control" required ng-maxlength="50" />
+                                </div>
+                                <div class='col-md-6 form-group'>
+                                    <label>Login/Email</label>
+                                    <input type="text" ng-model="usuario.codigo" class="form-control" required ng-maxlength="50" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-3 form-group'>
+                                    <label>Bloqueado</label>
+                                    <select class="form-control" ng-model="usuario.usuarioBloqueado"
+                                            ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <label>Perfil</label>
+                                    <select class="form-control" ng-model="usuario.idPerfil"
+                                            ng-options="o.id as o.Descricao for o in usuario.ListaPerfils" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-3 form-group' ng-show="(usuario.id != 0)">
+                                    <label>Alterar Senha</label>
+                                    <select class="form-control" ng-model="usuario.alterarsenha" ng-change="ValidarSenha(usuario)"
+                                            ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-3 form-group' ng-show="((usuario.id == 0) || (usuario.alterarsenha == true))">
+                                    <label>Senha</label>
+                                    <input type="password" ng-model="usuario.senha" class="form-control" required ng-maxlength="50" />
+                                </div>
+
+
+                            </div>
+
+                            <div class='row' ng-repeat="item in usuario.ListaEstabelecimento">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">{{item.Apelido}} - {{item.NomeCompleto}} - {{item.CNPJ}}</div>
+
+
+                                    <div class='col-md-3 form-group'>
+                                        <label>Tem acesso ao estabelecimento ?</label>
+                                        <select class="form-control" ng-model="item.valor"
+                                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Autorizar Conta a Pagar e Emissão NFs-e</label>
+                                        <select class="form-control" ng-model="item.Inativo" ng-show="item.valor == true"
+                                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Limite para autorização Contas a Pagar</label>
+                                        <input ng-show="item.valor == true" ng-disabled="ModoConsulta || item.Inativo != true" type="text" ng-model="item.valorLimiteCPAG" class="form-control" ui-number-mask="2" />
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        <label>Limite para autorização Emissaão NFs-e</label>
+                                        <input ng-show="item.valor == true" ng-disabled="ModoConsulta || item.Inativo != true" type="text" ng-model="item.valorLimiteNFSE" class="form-control" ui-number-mask="2" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalTrocarSenha.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Dados da Empresa</h3>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="DivFiltro">
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search' id="frmfiltro">
+                                <div class='container'>
+                                    <div class='row'>
+                                        <div class='col-md-6 form-group'>
+                                            <label>Holding</label>
+                                            <input type="text" ng-model="FILTRO.holding" typeahead="o.Text as o.Text for o in ListaHoldings | filter:$viewValue | limitTo:8" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisa()">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="modalUploadCert.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo .pfx para upload</h3>
+                    <h4>Somente gerar o certificado que será utilizado no arquivo .pfx</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Senha </label>
+                                <input type="password" ng-model="cert.senha">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Senha Confirmação </label>
+                                <input type="password" ng-model="cert.senhaConf">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+
+                        </div>
+
+                        <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Upload
+                        </button>
+                        <button class="btn btn-default" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <div class='row' id="DivGrid">
+            <div class='col-md-3 form-group'>
+                <table id="jqgEntidade" cellpadding="0" cellspacing="0"></table>
+                <div id="jqgEntidadeOpc" style="text-align:center;"></div>
+            </div>
+        </div>
+
+        <div id="MestreEntidade" class="container-fluid">
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+
+            <form name="frmHolding">
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-9 form-group' ng-show="!NJ">
+                            <h3>Holding</h3>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <span class="input-group-btn">
+                                <button type="button" ng-show="!NJ"
+                                        ng-click="OK()"
+                                        class="btn btn-success">
+                                    <span class="glyphicon glyphicon-plus"></span> Salvar
+                                </button>
+                            </span>
+                            <span class="input-group-btn">
+                                <button type="button" ng-show="!NJ"
+                                        ng-click="Voltar()"
+                                        class="btn btn-success">
+                                    <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class='row' ng-show="!NJ">
+                        <div class='col-md-2 form-group'>
+                            <label>Código</label>
+                            <input type="text" ng-model="holding.codigo" ng-maxlength="10" class="form-control">
+                        </div>
+
+                        <div class='col-md-4 form-group'>
+                            <label>Nome</label>
+                            <input type="text" ng-model="holding.nome" ng-maxlength="50" class="form-control">
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+
+                            <label>Bloqueada</label>
+                            <select class="form-control" ng-model="holding.bloqueada"
+                                    ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+
+                        <div class='col-md-4 form-group'>
+                            <label>Motivo Bloqueada</label>
+                            <input type="text" ng-model="holding.motivobloqueada" ng-maxlength="50" class="form-control" ng-disabled="!holding.bloqueada">
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Id Vindi</label>
+                            <input type="text" ng-model="holding.codigoApiPagamento" ng-maxlength="100" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <form name="frmHolding">
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-9 form-group'>
+                            <h3>Empresa</h3>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Código</label>
+                            <input type="text" ng-model="empresa.codigo" ng-maxlength="10" class="form-control" ng-disabled="NJ">
+                        </div>
+
+                        <div class='col-md-4 form-group'>
+                            <label>Nome</label>
+                            <input type="text" ng-model="empresa.nome" ng-maxlength="50" class="form-control" ng-disabled="NJ">
+                        </div>
+
+                        <div class='col-md-4 form-group'>
+                            <label>Apelido</label>
+                            <input type="text" ng-model="empresa.apelido" ng-maxlength="50" class="form-control" ng-disabled="NJ">
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <div id="tabs" ng-show="empresa.id != 0">
+                <ul class="nav nav-tabs">
+                    <li class="aba-estab">
+                        <a href="#tabEstab" data-toggle="tab">
+                            Estabelecimentos (CNPJ)
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-perfil">
+                        <a href="#tabPerfil" data-toggle="tab">
+                            Perfil
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-usuario">
+                        <a href="#tabUsuario" data-toggle="tab">
+                            Usuários
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+                    <li class="aba-unidade">
+                        <a href="#tabUnidade" data-toggle="tab">
+                            Unidades
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+
+                    <li class="aba-configempresa">
+                        <a href="#tabconfigempresa" data-toggle="tab">
+                            Configuração Contabil
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+
+                    <li class="aba-vindi">
+                        <a href="#tabVindi" data-toggle="tab">
+                            Pagamentos
+                            <span class="badge"></span>
+                        </a>
+                    </li>
+
+
+                </ul>
+
+                <div class="tab-content ">
+
+                    <div class="tab-pane fade in activate" id="tabEstab" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Passo 1 - Cadastre seu Estabelecimento</div>
+                            <div class="alert alert-info" ng-show="ListaEstabelecimento.length == 0">
+                                Você ainda não tem estabelecimentos cadastrados
+                            </div>
+
+                            <button ng-click="AdicionarEstab()" style="padding-right: 66px; margin-top: 4px; margin-left: 8px;"
+                                    class="btn btn-warning"
+                                    title="Adicionar estabelecimento">
+                                <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+                            </button>
+
+                            <table class="table table-bordered" ng-show="ListaEstabelecimento.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>CNPJ</th>
+                                        <th>Nome Completo</th>
+                                        <th>Apelido</th>
+                                        <th>Código</th>
+                                        <th>Inscrição Estadual</th>
+                                        <th>Inscrição Municipal</th>
+                                        <th>CEP</th>
+                                        <th>Logradouro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaEstabelecimento" class="{{item.active}}">
+                                        <td style="width: 40px;">
+                                            <button title="Fazer upload de logotipo" ng-click="btnUploader(item)" style="padding-right: 46px; margin-top: 4px;"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-upload"></span> Upload Logo
+                                            </button>
+                                            <button title="Fazer upload de certificado" ng-click="btnUploaderCert(item)" style="padding-right: 5px; margin-top: 4px;"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-upload"></span> Upload Certificado
+                                            </button>
+                                            <button title="Editar estabelecimento" title="Alterar estabelecimento" ng-click="AlterarEstab(item)" style="padding-right: 88px; margin-top: 4px;"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                        </td>
+                                        <td>{{item.CNPJ}} <br /> <img src="{{item.Logo}}" width="100" height="80" ng-show='item.Logo != null' /></td>
+                                        <td>{{item.NomeCompleto}} <br /> <b> Certificado Digital: </b>{{item.senhaCertificado}} <br /> <b>Ativo:</b> {{item.ativo | yesNo}}</td>
+                                        <td>{{item.Apelido}}</td>
+                                        <td>{{item.Codigo}}</td>
+                                        <td>{{item.InscricaoEstadual}}</td>
+                                        <td>{{item.InscricaoMunicipal}}</td>
+                                        <td>{{item.CEP}}</td>
+                                        <td>{{item.Logradouro}} n.{{item.NumeroLogradouro}}, {{item.Complemento}}, Bairro: {{item.BAIRRO}} </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabPerfil" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Passo 2 - Cadastre seu Perfil</div>
+                            <div class="alert alert-info" ng-show="ListaPerfils.length == 0">
+                                Você ainda não tem perfil cadastrado
+                            </div>
+
+                            <button ng-click="AdicionarPerfil()" style="padding-right: 61px; margin-top: 4px; margin-left: 8px;"
+                                    class="btn btn-warning"
+                                    title="Adicionar perfil">
+                                <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+                            </button>
+
+                            <table class="table table-bordered" ng-show="ListaPerfils.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Descrição</th>
+                                        <th>Código</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaPerfils" class="{{item.active}}">
+                                        <td style="width: 40px;">
+                                            <button ng-click="AlterarPerfil(item)" style="padding-right: 85px; margin-top: 4px; margin-left: 0px;"
+                                                    class="btn btn-primary"
+                                                    title="Editar perfil">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                            <button ng-click="btnModalHome(item)" style="padding-right: 85px; margin-top: 4px; margin-left: 0px;"
+                                                    class="btn btn-primary"
+                                                    title="Editar perfil">
+                                                <span class="glyphicon glyphicon-edit"></span> Home
+                                            </button>
+                                            <button type="button" style="padding-right: 80px; margin-top: 4px; margin-left: 0px;"
+                                                    ng-click="ExcluirPerfil(item)"
+                                                    class="btn btn-danger"
+                                                    title="Excluir perfil">
+                                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                                            </button>
+
+                                        </td>
+                                        <td>{{item.Descricao }}</td>
+                                        <td>{{item.Codigo }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabUsuario" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Passo 3 - Cadastre seus Usuários e Relacione a Perfil e seus Estabelecimentos</div>
+                            <div class="alert alert-info" ng-show="ListaUsuarios.length == 0">
+                                Você ainda não tem usuários cadastrados
+                            </div>
+
+                            <button ng-click="AdicionarUsuario()" style="padding-right: 61px; margin-top: 4px; margin-left: 8px;"
+                                    class="btn btn-warning"
+                                    title="Adicionar usuário">
+                                <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+                            </button>
+                            <form class="form-inline" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label style="margin-left: 8px;">Procurar</label>
+                                    <input type="text" ng-model="procurar" class="form-control" placeholder="Procurar...">
+                                </div>
+                            </form>
+                            <table class="table table-bordered" ng-show="ListaUsuarios.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+
+                                        <th ng-click="ordenar('nome')">Nome</th>
+                                        <th ng-click="ordenar('codigo')">Login/Email</th>
+                                        <th ng-click="ordenar('usuarioBloqueado')">Bloqueado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="item in ListaUsuarios|filter:procurar|itemsPerPage:7|orderBy:sortKey:reverse" class="{{item.active}}">
+                                        <td style="width: 40px;">
+                                            <button ng-click="AlterarUsuario(item)" style="padding-right: 80px; margin-top: 4px; margin-left: 0px;"
+                                                    class="btn btn-primary"
+                                                    title="Editar usuário">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                        </td>
+                                        <td>{{item.nome }}</td>
+                                        <td>{{item.codigo }}</td>
+                                        <td>{{item.usuarioBloqueado }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabUnidade" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Passo 4 - Cadastre suas Unidades de Negócio</div>
+                            <div class="alert alert-info" ng-show="ListaUnidades.length == 0">
+                                Você ainda não tem unidades cadastrados
+                            </div>
+                            <button ng-click="ModalUnidade(null)" title="Adicionar unidade" style="padding-right: 61px; margin-top: 4px; margin-left: 8px;"
+                                    class="btn btn-warning">
+
+                                <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+                            </button>
+                            <table class="table table-bordered" ng-show="ListaUnidades.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th ng-click="ordenarUnidade('unidade')">Nome</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="item in ListaUnidades|filter:Unidadeprocurar|itemsPerPage:7|orderBy:UnidadesortKey:Unidadereverse" pagination-id="gridEstab">
+                                        <td style="width: 40px;">
+                                            <button ng-click="ModalUnidade(item)" style="padding-right: 80px; margin-top: 4px; margin-left: 0px;"
+                                                    class="btn btn-primary"
+                                                    title="Editar unidade">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+                                        </td>
+                                        <td>{{item.unidade}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridEstab"></dir-pagination-controls>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabVindi" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Lista de Pagamentos Efetuados</div>
+                            <div class="alert alert-info" ng-show="ListaPagamentos.length == 0">
+                                Você ainda não tem pagamentos efetuados
+                            </div>
+                            <table class="table table-bordered" ng-show="ListaPagamentos.length != 0">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Detalhar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in ListaPagamentos">
+                                        <td>
+                                            {{item.created_at | date:'dd/MM/yyyy'}}
+                                        </td>
+                                        <td>
+                                            {{item.amount}}
+                                        </td>
+                                        <td>
+                                            <a href="{{item.url}}" target="_blank">Clique aqui</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="tabconfigempresa" aria-expanded="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Passo 5 - Configuração adicional de empresa (Este passo deve ser efetuado após configuração do plano de contábil)</div>
+                            <div id="Grid" class="container-fluid">
+                                <div class="row">
+                                    <div class='col-md-4 form-group'>
+                                        <button ng-click="SalvarConfigEmpresa(null)" title="Salvar Configuração adicional de empresa" style="padding-right: 61px; margin-top: 4px; margin-left: 8px;"
+                                                class="btn btn-warning">
+
+                                            <span class="glyphicon glyphicon-plus-sign"></span> Salvar
+                                        </button>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado o lançamento de inclusão de Contas a pagar quando o fornecedor não tiver uma conta especifica parametrizada no cadastro de pessoas.">
+                                        <label>Conta lançamento Titulo – Passivo (crédito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilTitulo_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado o lançamento de baixa (pagamento) do Contas a pagar quando o fornecedor não tiver uma conta especifica parametrizada no cadastro de pessoas.">
+                                        <label>Conta lançamento Pagamento – Passivo (débito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilPagamento_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de entradas e saídas do caixa da empresa quando não houver uma conta contábil parametrizada no cadastro de banco/conta">
+                                        <label>Conta lançamento recebimento no caixa – Ativo (débito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilRecebimento_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de faturamento de Notas de serviço no grupo de resultado.">
+                                        <label>Conta emissão de NFS-e – Faturamento/Resultado (crédito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilNFServico_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de faturamento de Notas de mercadorias no grupo de resultado.">
+                                        <label>Conta emissão de NF-e – Faturamento/Resultado (crédito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilNFMercadoria_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de faturamento de Recibos, NDs ou outros documentos não fiscais no grupo de resultado.">
+                                        <label>Conta emissão de Outros – Faturamento/Resultado (crédito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilOutro_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                    <div class='col-md-4 form-group' title="Campo para a parametrização da conta contábil que deverá ser realizado os lançamentos de faturamento de Recibos, NDs ou outros documentos não fiscais no grupo de resultado.">
+                                        <label>Conta lançamento/baixa de recebimentos – Ativo (débito/crédito)</label>
+                                        <select class="form-control" ng-model="Config.ContaContabilRecebimentoDC_id"
+                                                ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="alert alert-info" ng-show="showOK">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    var key = 0;
+    $(document).ready(function () {
+        //$('#MestreEntidade').hide();
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+        $('#jqgEntidade').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: [//'Cliente', 'CPF ou CNPJ',
+				'Nome', 'Código', 'Bloqueada', 'Motivo Bloqueada'],
+            //columns model
+            colModel: [
+				{ name: 'param$nome', index: 'param$nome', align: 'left', editable: false, hidden: false, width: screen.width / 4 },
+				{ name: 'param$codigo', index: 'param$codigo', align: 'left', editable: false, hidden: false, width: screen.width / 4 },
+				{ name: 'param$bloqueada', index: 'param$bloqueada', align: 'left', editable: false, hidden: false, width: screen.width / 7 },
+				{ name: 'param$motivobloqueada', index: 'param$motivobloqueada', align: 'left', editable: false, hidden: false, width: screen.width / 8 }
+            ],
+            //pager for grid
+            pager: $('#jqgEntidadeOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'param$nome',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+
+        $('#jqgEntidade').jqGrid('navGrid', '#jqgEntidadeOpc',
+		{ add: false, del: false, edit: false, search: false });
+
+        $('#jqgEntidade').navButtonAdd('#jqgEntidadeOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                key = 0;
+                $('#MestreEntidade').fadeIn("slow");
+                $("#DivFiltro").hide();
+                angular.element('#MestreEntidade').scope().fshowCadastro("Novo");
+                angular.element('#MestreEntidade').scope().$apply();
+
+            },
+            position: "Last"
+        });
+
+        $('#jqgEntidade').navButtonAdd('#jqgEntidadeOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                key = jQuery("#jqgEntidade").jqGrid('getGridParam', 'selrow');
+                if (key != null) {
+                    $('#MestreEntidade').fadeIn("slow");
+                    $("#DivFiltro").hide();
+                    angular.element('#MestreEntidade').scope().fshowCadastro("Alterar");
+                    angular.element('#MestreEntidade').scope().$apply()
+                }
+                else {
+                    alert("Selecione 1 registro.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination']);
+
+    app.directive('datetimez', function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModelCtrl) {
+
+                element.datetimepicker({
+                    dateFormat: 'dd/MM/yyyy',
+                    language: 'ptbr',
+                    pickTime: false,
+                    startDate: '01-11-2013',      // set a minimum date
+                    endDate: '01-11-2030'          // set a maximum date
+                }).on('changeDate', function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.localDate).format());
+                    scope.$apply();
+                });
+            }
+        };
+    });
+
+
+
+
+    app.directive('prettyp', function () {
+        return function (scope, element, attrs) {
+            $("[rel^='prettyPhoto']").prettyPhoto({ deeplinking: false, social_tools: false });
+        }
+    })
+
+    app.filter('yesNo', function () {
+        return function(input) {
+            return input ? 'Sim' : 'Não';
+        }
+    })
+
+    app.controller('MestreEntidade', [
+		'$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', function ($scope, $http, $location, $anchorScroll, $timeout, $modal) {
+
+		    $scope.procurar = "";
+			$scope.statusAdicionar = "Adicionar";
+			$scope.statusAlterar = "Alterar";
+			$scope.btnstatusestab = $scope.statusAdicionar
+			$scope.showCancelar = false;
+			$scope.showDivTotal = false;
+			$scope.showApolice = false;
+			$scope.showCadastro = false;
+			$scope.showOK = false;
+			$scope.showNOK = false;
+			$scope.msgOK = "";
+			$scope.msgNOK = "";
+			$scope.titulo = "";
+			$scope.titulobtn = "";
+			$scope.timeoutview = "";
+			$scope.Manutencao = false;
+			$scope.tabSelecionada = "Estabelecimento";
+			$scope.FILTRO = {
+				holding: ""
+			};
+			$scope.reverse = false;
+			$scope.ordenar = function (keyname) {
+			    $scope.sortKey = keyname;
+			    $scope.reverse = !$scope.reverse;
+			};
+
+
+
+
+			$scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+
+
+			$scope.ObterPorID = function () {
+
+				$("#divLoadinit").show();
+				$("#DivTotal").hide();
+				$http.get("../../ADM/ObterPorId?id=" + key)
+
+					.success(function (data) {
+
+						$scope.holding = data.hold;
+						$scope.empresa = data.Empresa;
+                        $scope.ListaEstabelecimento = data.Estabs;
+                        $scope.Config = data.ConfigConta;
+                        
+						$scope.ObterUsuariosPorID();
+						$scope.ObterPerfilPorID();
+						$scope.LoadListaUnidades();
+						$scope.LoadListaPagamentos();
+						$("#divLoadinit").hide();
+						$("#DivTotal").fadeIn("slow");
+					}).error(function (data) {
+						$("#divLoadinit").hide();
+						$scope.MsgError("Sistema indisponivel");
+						$("#DivTotal").fadeIn("slow");
+					});
+			}
+
+			$scope.ObterUsuariosPorID = function () {
+				if ($scope.empresa != null) {
+				    $http.get("../../ADM/ObterUsuarioPorIdEmpresa?id=" + $scope.empresa.id)
+						.success(function (data) {
+							$scope.ListaUsuarios = data.Usuarios;
+
+						}).error(function (data) {
+							$scope.MsgError("Sistema indisponivel");
+						});
+				}
+			}
+
+			$scope.ObterPerfilPorID = function () {
+                if ($scope.empresa != null) {
+                    Metronic.blockUI({
+                        boxed: true
+                    });
+					$http.get("../../ADM/ObterPerfilPorIdEmpresa?id=" + $scope.empresa.id)
+						.success(function (data) {
+                            $scope.ListaPerfils = data.Perfils;
+                            Metronic.unblockUI();
+
+                        }).error(function (data) {
+                            Metronic.unblockUI();
+							$scope.MsgError("Sistema indisponivel");
+						});
+				}
+			}
+
+			$scope.Voltar = function (msg) {
+				$scope.Pesquisa();
+				$('#MestreEntidade').hide();
+				$('#DivGrid').fadeIn("slow");
+				$("#DivFiltro").fadeIn("slow");
+				$('#MigralhaC').html("Lista");
+			}
+
+			$scope.MsgError = function (msg) {
+				$scope.msgNOK = msg;
+				$scope.showNOK = true;
+				$scope.showOK = false;
+				//$scope.timeoutview = $timeout($scope.LimpaMensagens(), 50000);
+			}
+
+			$scope.MsgSucesso = function (msg) {
+				$scope.msgOK = msg;
+				$scope.showOK = true;
+				$scope.showNOK = false;
+				//$scope.timeoutview = $timeout($scope.LimpaMensagens(), 50000);
+			}
+
+			$scope.LimpaMensagens = function () {
+
+				$scope.showOK = false;
+				$scope.showNOK = false;
+				$scope.msgOK = "";
+				$scope.msgNOK = "";
+				$timeout.cancel($scope.timeoutview);
+			}
+
+			$scope.fshowCadastro = function (tipo) {
+				$('#MigralhaC').html(tipo);
+				$('#DivGrid').hide();
+				$scope.ObterPorID();
+				if (tipo == "Novo") {
+					$scope.titulo = "Novo";
+					$scope.titulobtn = "Salvar";
+				}
+				if (tipo == "Alterar") {
+					$scope.titulo = "Alterar";
+					$scope.titulobtn = "Salvar";
+				}
+				if (tipo == "Excluir") {
+					$scope.titulo = "Excluir";
+					$scope.titulobtn = "Confirmar";
+				}
+				$scope.LimpaMensagens();
+				$scope.GotoCadastro();
+			}
+
+
+
+
+
+			$scope.fhideCadastro = function () {
+				$scope.showCadastro = false;
+			}
+			$scope.GotoCadastro = function () {
+				$scope.timeoutview = $timeout($scope.GotoCadastroImplementation, 10);
+			}
+			$scope.GotoCadastroImplementation = function () {
+				$timeout.cancel($scope.timeoutview);
+			}
+
+			$scope.Pesquisa = function () {
+
+				var caminho = '../../ADM/Listas';
+				caminho += '?param$holding=';
+				caminho += $scope.FILTRO.holding;
+				jQuery("#jqgEntidade").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+			}
+
+            $scope.OK = function () {
+                Metronic.blockUI({
+                    boxed: true
+                });
+
+
+				$http.post("../../ADM/Salva", { holding: $scope.holding, empresa: $scope.empresa })
+				.success(function (data) {
+                    Metronic.unblockUI();
+					if (data.CDStatus == "OK") {
+						$scope.holding = data.hold;
+						$scope.empresa = data.Empresa;
+						$scope.ListaEstabelecimento = data.Estabs;
+						$scope.MsgSucesso("Salvo com sucesso");
+					} else {
+						$scope.MsgError(data.Exception);
+						$scope.Erros = data.Erros;
+                    }
+					$("#divLoadinit").hide();
+                }).error(function (data) {
+                        Metronic.unblockUI();
+					$scope.MsgError("Sistema indisponivel");
+					$("#divLoadinit").hide();
+				});
+			}
+
+
+			$scope.AdicionarEstab = function () {
+
+				$scope.DefaultEstab();
+				$scope.AlterarEstab($scope.estab);
+
+			}
+
+			$scope.DefaultEstab = function () {
+				$scope.estab = {
+					id: "",
+					Apelido: "",
+					NomeCompleto: "",
+					CNPJ: "",
+					Codigo: "",
+					InscricaoEstadual: "",
+					InscricaoMunicipal: "",
+					CEP: "",
+					Logradouro: "",
+					Complemento: "",
+					Municipio_id: "",
+					MunicipioDesc: "",
+					NumeroLogradouro: "",
+					BAIRRO: "",
+					Empresa_id: $scope.empresa.id,
+					UF: ""
+				}
+
+			}
+			$scope.AlterarEstab = function (item) {
+				$scope.opts = {
+					size: 'lg',
+					animation: true,
+					backdrop: false,
+					backdropClick: false,
+					dialogFade: false,
+					keyboard: true,
+					templateUrl: 'modalEmpresas.html',
+					controller: ControllerEmpresas,
+					resolve: {} // empty storage
+				};
+
+				item.Empresa_id = $scope.empresa.id;
+
+				$scope.opts.resolve.item = function () {
+					return angular.copy({ item: item }); // pass name to Dialog
+				}
+
+				var modalInstance = $modal.open($scope.opts);
+
+				modalInstance.result.then(function (value) {
+					$scope.ListaEstabelecimento = value;
+				}, function () {
+				});
+			}
+
+			$scope.AdicionarPerfil = function () {
+				$scope.DefaultPerfil(0);
+			}
+			$scope.AlterarPerfil = function (item) {
+				$scope.DefaultPerfil(item.id);
+			}
+
+            $scope.DefaultPerfil = function (id) {
+                Metronic.blockUI({
+                    boxed: true
+                });
+
+				$http.get("../../ADM/ObterPerfilDefault/" + id)
+                    .success(function (data) {
+                        Metronic.unblockUI();
+						$scope.Perfil = data.perfil;
+						$scope.Funcs = data.funcs;
+						$scope.ModalPerfil(id);
+                    }).error(function (data) {
+                        Metronic.unblockUI();
+						$scope.MsgError("Sistema indisponivel");
+					});
+			}
+
+            $scope.ModalPerfil = function (id) {
+
+
+				$scope.opts = {
+					size: 'lg',
+					animation: true,
+					backdrop: false,
+					backdropClick: false,
+					dialogFade: false,
+					keyboard: true,
+					templateUrl: 'modalPerfil.html',
+					controller: ControllerPerfil,
+					resolve: {} // empty storage
+				};
+
+				var item = "";
+				$scope.Perfil.id = id;
+				item = $scope.Perfil;
+				item.empresa_id = $scope.empresa.id;
+				item.funcs = $scope.Funcs;
+
+				$scope.opts.resolve.item = function () {
+					return angular.copy({ item: item }); // pass name to Dialog
+				}
+
+				var modalInstance = $modal.open($scope.opts);
+
+				modalInstance.result.then(function (value) {
+					$scope.ObterPerfilPorID();
+				}, function () {
+				});
+			}
+
+            $scope.btnModalHome = function (item) {
+
+
+                $scope.opts = {
+                    size: 'lg',
+                    animation: true,
+                    backdrop: false,
+                    backdropClick: false,
+                    dialogFade: false,
+                    keyboard: true,
+                    templateUrl: 'modalHome.html',
+                    controller: ControllerHome,
+                    resolve: {} // empty storage
+                };
+                
+
+
+
+                $scope.opts.resolve.item = function () {
+                    return angular.copy({ item: item.id }); // pass name to Dialog
+                }
+
+                var modalInstance = $modal.open($scope.opts);
+
+                modalInstance.result.then(function (value) {
+                    
+                }, function () {
+                });
+            }
+
+            $scope.ExcluirPerfil = function (item) {
+                Metronic.blockUI({
+                    boxed: true
+                });
+				$http.post("../../ADM/ExcluirPerfil/" + item.id)
+                    .success(function (data) {
+                        Metronic.unblockUI();
+						$scope.ObterPerfilPorID();
+                    }).error(function (data) {
+                        Metronic.unblockUI();
+						$scope.MsgError("Sistema indisponivel");
+					});
+			}
+
+			$scope.AdicionarUsuario = function () {
+				$scope.DefaultUsuario(0);
+			}
+			$scope.DefaultUsuario = function (id) {
+
+				$http.get("../../ADM/ObterUsuarioDefault/" + id)
+					.success(function (data) {
+
+					    $scope.usuario = data.usuario;
+						$scope.ModalUsuario(data);
+					}).error(function (data) {
+						$scope.MsgError("Sistema indisponivel");
+					});
+
+			}
+			$scope.AlterarUsuario = function (item) {
+				$scope.DefaultUsuario(item.id);
+			}
+			$scope.ModalUsuario = function (data) {
+				$scope.opts = {
+					size: 'lg',
+					animation: true,
+					backdrop: false,
+					backdropClick: false,
+					dialogFade: false,
+					keyboard: true,
+					templateUrl: 'modalUsuario.html',
+					controller: ControllerUsuario,
+					resolve: {} // empty storage
+				};
+
+				item = data.usuario;
+				item.estabs = data.estabs;
+				item.empresa_id = $scope.empresa.id;
+				item.ListaPerfils = $scope.ListaPerfils;
+				item.ListaEstabelecimento = $scope.ListaEstabelecimento;
+
+				$scope.opts.resolve.item = function () {
+					return angular.copy({ item: item }); // pass name to Dialog
+				}
+
+				var modalInstance = $modal.open($scope.opts);
+
+				modalInstance.result.then(function (value) {
+				    $scope.ObterUsuariosPorID();
+				}, function () {
+				});
+			}
+			$scope.ExcluirUsuario = function (item) {
+				$http.post("../../ADM/ExcluirUsuario/" + item.id)
+					.success(function (data) {
+						$scope.ObterUsuariosPorID();
+					}).error(function (data) {
+						$scope.MsgError("Sistema indisponivel");
+					});
+			}
+
+			$scope.LoadListaHoldings = function () {
+				$http.get("../../ADM/ListaHoldings")
+					.success(function (data) {
+						$scope.ListaHoldings = data;
+					});
+			}
+
+			$scope.LoadListaUnidades = function () {
+			    $http.get("../../ADM/ListaUnidades/" + $scope.empresa.id)
+					.success(function (data) {
+					    $scope.ListaUnidades = data.objs;
+					});
+			}
+
+			$scope.LoadListaPagamentos = function () {
+			    $http.get("../../ADM/ListaPagamentos/" + $scope.empresa.id)
+					.success(function (data) {
+					    if (data != "")
+					    {
+					        $scope.ListaPagamentos = data.objs.bills;
+					    }
+					});
+			}
+
+
+			$scope.btnUploader = function (item) {
+			    $scope.opts = {
+			        size: 'lg',
+			        animation: true,
+			        backdrop: false,
+			        backdropClick: false,
+			        dialogFade: false,
+			        keyboard: true,
+			        templateUrl: 'modalUpload.html',
+			        controller: ModalUploaderCtrl,
+			        resolve: {}
+			    };
+
+
+
+			    $scope.opts.resolve.item = function () {
+			        return angular.copy({ id: item.id }); // pass name to Dialog
+			    }
+
+			    var modalInstance = $modal.open($scope.opts);
+
+			    modalInstance.result.then(function (value) {
+			        $scope.ObterPorID();
+			    }, function () {
+			        $scope.ObterPorID();
+			    });
+			};
+
+			$scope.btnUploaderCert = function (item) {
+
+
+			    $scope.opts = {
+			        size: 'lg',
+			        animation: true,
+			        backdrop: false,
+			        backdropClick: false,
+			        dialogFade: false,
+			        keyboard: true,
+			        templateUrl: 'modalUploadCert.html',
+			        controller: ModalUploaderCertCtrl,
+			        resolve: {}
+			    };
+
+
+			    $scope.opts.resolve.item = function () {
+			        return angular.copy({ id: item.id }); // pass name to Dialog
+			    }
+
+			    var modalInstance = $modal.open($scope.opts);
+
+			    modalInstance.result.then(function (value) {
+			        $scope.ObterPorID();
+			    }, function () {
+			        $scope.ObterPorID();
+			    });
+			};
+
+			if ('@ViewData["holding"]' != '') {
+			    $('#MestreEntidade').show();
+			    $("#DivFiltro").hide();
+			    $('#DivGrid').hide();
+			    key = '@ViewData["holding"]';
+			    $scope.fshowCadastro("Alterar");
+			    $scope.NJ = true;
+			} else {
+			    $('#MestreEntidade').hide();
+			    $scope.NJ = false;
+			};
+
+		    $scope.ModalUnidade = function (item) {
+		        $scope.opts = {
+		            size: 'lg',
+		            animation: true,
+		            backdrop: false,
+		            backdropClick: false,
+		            dialogFade: false,
+		            keyboard: true,
+		            templateUrl: 'modalUnidade.html',
+		            controller: ControllerUnidade,
+		            resolve: {}
+		        };
+
+		        if (item == null)
+		        {
+		            item = { id: 0, unidade: "", empresa_id: $scope.empresa.id };
+		        }
+		        else {
+		            item.active = true;
+		        }
+
+		        $scope.opts.resolve.item = function () {
+		            return angular.copy({ item: item });
+		        }
+
+		        var modalInstance = $modal.open($scope.opts);
+
+		        modalInstance.result.then(function (value) {
+		            item.active = false;
+		            $scope.LoadListaUnidades();
+		        }, function () {
+		            item.active = false;
+		            $scope.LoadListaUnidades();
+		        });
+		    }
+
+            $scope.SalvarConfigEmpresa = function () {
+                $http.post("../../ADM/SalvaConfig", { obj: $scope.Config })
+                    .success(function (data) {
+                        
+                        if (data.CDStatus == "OK") {
+                            $scope.showOK = true;
+                            $scope.Config = data.ConfigConta;
+                            $scope.msgOK = "Configurações salvo com sucesso";
+                        } else {
+                            $scope.showNOK = true;
+                            $scope.Erros = data.Erros;
+                            $scope.msgNOK = data.DSMessage;
+                        }
+
+                        $timeout(
+                            function () {
+                                $scope.showNOK = false;
+                                $scope.showOK = false;
+
+                            }, 8000);
+
+
+
+                    }).error(function (data) {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = "Sistema indisponivel";
+
+                    });
+            }
+
+            $scope.LoadContaContabil = function () {
+                $http.get("../../CG/ObterContaContabil")
+                    .success(function (data) {
+                        $scope.ListaContaContabil = data;
+                    });
+            }
+
+
+            $scope.LoadContaContabil();
+		    $scope.LoadListaHoldings();
+		}
+	]);
+
+	var ControllerEmpresas = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+	    $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+
+	    $scope.ListaCRT = [{ Value: "1", Text: "1 - Simples Nacional" }
+                 , { Value: "2", Text: "2 - Simples Nacional - excesso de sublimite da receita bruta" }
+                 , { Value: "3", Text: "3 - Regime Normal" }
+	    ];
+	    //Lista OpcaoSimples
+	    $scope.LoadListaOpcaoSimples = function () {
+	        $http.post("../../ADM/ListaOpcaoSimples")
+                .success(function (data) {
+                    $scope.ListaOpcaoSimples = data;
+                });
+	    }
+
+	    $scope.LoadListaOpcaoSimples();
+		$scope.estab = item.item;
+
+		$scope.LoadListaMunicipios = function () {
+			$http.get("../../ADM/ListaMunicipios")
+				.success(function (data) {
+					$scope.ListaMunicipios = data;
+				});
+		}
+		$scope.LoadListaMunicipios();
+
+		$scope.OK = function () {
+			$http.post("../../ADM/SalvaEstab", { estab: $scope.estab })
+			.success(function (data) {
+
+				if (data.CDStatus == "OK") {
+					$modalInstance.close(data.Estabs);
+				} else {
+				    $scope.showNOK = true;
+				    $scope.Erros = data.Erros;
+					$scope.msgNOK = data.DSMessage;
+				}
+
+				$timeout(
+					function () {
+						$scope.showNOK = false;
+						$scope.showOK = false;
+
+					}, 8000);
+
+
+
+			}).error(function (data) {
+				$scope.showNOK = true;
+				$scope.msgNOK = "Sistema indisponivel";
+
+			});
+        }
+
+
+
+		$scope.BuscaCEP = function (cep) {
+
+            var ender = "https://viacep.com.br/ws/" + cep.replace('-', '') + "/json/?callback=JSON_CALLBACK";
+
+
+			$http.jsonp(ender)
+			.success(function (data) {
+				$scope.CarregaCEP(data);
+			}).error(function () {
+				alert("Pesquisa de CEP Inátiva")
+			});
+
+		};
+
+		$scope.CarregaCEP = function (data) {
+			$scope.estab.Logradouro = data.logradouro;
+			$scope.estab.BAIRRO = data.bairro;
+            $scope.estab.MunicipioDesc = data.localidade;
+            $scope.estab.UF = data.uf;
+		};
+
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}
+
+	var ControllerPerfil = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+
+
+		$scope.perfil = item.item;
+
+		$scope.ListaTipoPermisao = [{ Value: "N", Text: "Nenhum" }, { Value: "T", Text: "Total" }, { Value: "C", Text: "Consulta" }];
+		$scope.BtnSalvar = "Salvar";
+		$scope.BtnSalvarAtivo = true;
+
+        $scope.OK = function () {
+            Metronic.blockUI({
+                boxed: true
+            });
+
+		    $scope.BtnSalvar = "Aguarde...";
+		    $scope.BtnSalvarAtivo = false;
+			$http.post("../../ADM/SalvaPerfil", {perfil: { id:$scope.perfil.id, codigo: $scope.perfil.Codigo, Descricao: $scope.perfil.Descricao,empresa_id : $scope.perfil.empresa_id }, dash: $scope.perfil.funcs })
+                .success(function (data) {
+                    Metronic.unblockUI();
+			        $scope.BtnSalvar = "Salvar";
+			        $scope.BtnSalvarAtivo = true;
+				if (data.CDStatus == "OK") {
+					$modalInstance.close(data);
+				} else {
+				    $scope.showNOK = true;
+				    $scope.msgNOK = data.DSMessage;
+				    $scope.Erros = data.Erros;
+
+				}
+
+
+				$timeout(
+					function () {
+						$scope.showNOK = false;
+						$scope.showOK = false;
+
+					}, 8000);
+
+
+
+                }).error(function (data) {
+                    Metronic.unblockUI();
+			        item.BtnSalvar = "Salvar";
+				    $scope.showNOK = true;
+				    $scope.msgNOK = "Sistema indisponivel";
+
+			});
+		}
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}
+
+	var ControllerUsuario = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+	    $scope.usuario = item.item;
+
+
+	    for (var i = 0; i < $scope.usuario.estabs.length; i++) {
+
+	        for (var y = 0; y < $scope.usuario.ListaEstabelecimento.length; y++) {
+	            if ($scope.usuario.estabs[i].estabelecimento_id == $scope.usuario.ListaEstabelecimento[y].id) {
+	                $scope.usuario.ListaEstabelecimento[y].valor = true;
+	                $scope.usuario.ListaEstabelecimento[y].valorLimiteCPAG = $scope.usuario.estabs[i].valorLimiteCPAG;
+	                $scope.usuario.ListaEstabelecimento[y].valorLimiteNFSE = $scope.usuario.estabs[i].valorLimiteNFSE;
+	                $scope.usuario.ListaEstabelecimento[y].Inativo = $scope.usuario.estabs[i].Inativo;
+	            }
+	        }
+	    };
+
+
+	    if ($scope.usuario.id != 0)
+	        $scope.usuario.senha = "Pd@890";
+
+	    $scope.ValidarSenha = function (usuario) {
+	        if (!usuario.alterarsenha)
+	            usuario.senha = "Pd@890";
+	        else
+	            usuario.senha = "";
+	    };
+
+
+
+		$scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+
+
+		$scope.OK = function () {
+		    $scope.estabelecimentos = [];
+
+
+		    for (var i = 0; i < $scope.usuario.ListaEstabelecimento.length; i++) {
+		        if ($scope.usuario.ListaEstabelecimento[i].valor != undefined)
+		            if ($scope.usuario.ListaEstabelecimento[i].valor)
+		                $scope.estabelecimentos.push(
+                            {
+                                estabelecimento_id: $scope.usuario.ListaEstabelecimento[i].id,
+                                valorLimiteCPAG: $scope.usuario.ListaEstabelecimento[i].valorLimiteCPAG,
+                                valorLimiteNFSE: $scope.usuario.ListaEstabelecimento[i].valorLimiteNFSE,
+                                Inativo: $scope.usuario.ListaEstabelecimento[i].Inativo
+                            });
+		    };
+
+		    Metronic.blockUI({
+		        boxed: true
+		    });
+
+
+		    $http.post("../../ADM/SalvaUsuario", {
+		        usuario: $scope.usuario,
+		        estabelecimentos : $scope.estabelecimentos })
+			.success(function (data) {
+
+			    Metronic.unblockUI();
+
+				if (data.CDStatus == "OK") {
+					$modalInstance.close(data);
+				} else {
+					$scope.showNOK = true;
+					$scope.Erros = data.Erros;
+					$scope.msgNOK = data.DSMessage;
+				}
+
+				$timeout(
+					function () {
+						$scope.showNOK = false;
+						$scope.showOK = false;
+
+					}, 8000);
+
+
+
+			}).error(function (data) {
+			    Metronic.unblockUI();
+				$scope.showNOK = true;
+				$scope.msgNOK = "Sistema indisponivel";
+
+			});
+		}
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}
+
+	var ModalUploaderCtrl = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+	    $scope.item = item;
+	    $scope.arquivo = "";
+
+	    $scope.someMsg = function () {
+	        $scope.showNOK = false;
+	        $scope.showOK = false;
+	    };
+
+	    $scope.ok = function () {
+	        var f = "";
+	        if (document.getElementById('newPhotos').files.length != 0) {
+	            f = document.getElementById('newPhotos').files[0];
+	        }
+
+	        var fd = new FormData();
+	        if (f != "") {
+	            fd.append("file", f);
+	        }
+	        fd.append("id", $scope.item.id);
+
+	        $http.post("../../../ADM/UploadLogo", fd, {
+	            withCredentials: true,
+	            headers: { 'Content-Type': undefined },
+	            transformRequest: angular.identity
+	        }).success(function (data) {
+	            if (data.CDStatus == "OK") {
+	                $scope.showOK = true;
+	                $scope.msgOK = data.DSMessage;
+	            } else {
+	                $scope.showNOK = true;
+	                $scope.msgNOK = data.DSMessage;
+	            };
+
+	            $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+	            //$modalInstance.close(value);
+	        }).error(function (data) {
+	            $scope.showNOK = true;
+	            $scope.msgNOK = "Sistema indisponivel";
+	        });
+	    };
+
+	    $scope.cancel = function () {
+	        $modalInstance.dismiss('cancel');
+	    };
+	}
+
+	var ModalUploaderCertCtrl = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+	    $scope.item = item;
+	    $scope.arquivo = "";
+	    $scope.cert = { senha: "", senhaconf: "" }
+
+
+	    $scope.someMsg = function () {
+	        $scope.showNOK = false;
+	        $scope.showOK = false;
+	    };
+
+	    $scope.ok = function () {
+	        if ($scope.cert.senha != $scope.cert.senha)
+	        {
+	            $scope.showNOK = true;
+	            $scope.msgNOK = "Senha digitada não confere.";
+	            return;
+	        }
+
+	        var f = "";
+	        if (document.getElementById('newPhotos').files.length != 0) {
+	            f = document.getElementById('newPhotos').files[0];
+	        }
+
+	        var fd = new FormData();
+	        if (f != "") {
+	            fd.append("file", f);
+	        }
+	        fd.append("id", $scope.item.id);
+	        fd.append("senha", $scope.cert.senha);
+
+	        $http.post("../../../ADM/UploadCert", fd, {
+	            withCredentials: true,
+	            headers: { 'Content-Type': undefined },
+	            transformRequest: angular.identity
+	        }).success(function (data) {
+	            if (data.CDStatus == "OK") {
+	                $scope.showOK = true;
+	                $scope.msgOK = data.DSMessage;
+	            } else {
+	                $scope.showNOK = true;
+	                $scope.msgNOK = data.DSMessage;
+	            };
+
+	            $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+	            //$modalInstance.close(value);
+	        }).error(function (data) {
+	            $scope.showNOK = true;
+	            $scope.msgNOK = "Sistema indisponivel";
+	        });
+	    };
+
+	    $scope.cancel = function () {
+	        $modalInstance.dismiss('cancel');
+	    };
+	}
+
+	var ControllerUnidade = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+	    $scope.unidade = item.item;
+
+
+	    $scope.someMsg = function () {
+	        $scope.showNOK = false;
+	        $scope.showOK = false;
+	    };
+
+
+
+	    $scope.ok = function () {
+
+	        Metronic.blockUI({
+	            boxed: true
+	        });
+
+	        $http.post("../../../ADM/AlterarUnidade",{
+	            unidade: { id: $scope.unidade.id, unidade: $scope.unidade.unidade, empresa_id: $scope.unidade.empresa_id }
+	        }
+	        ).success(function (data) {
+	            Metronic.unblockUI();
+	            if (data.CDStatus == "OK") {
+	                $scope.showOK = true;
+	                $scope.msgOK = data.DSMessage;
+
+	            } else {
+	                $scope.showNOK = true;
+	                $scope.msgNOK = data.DSMessage;
+	            };
+
+	            $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+	           $modalInstance.close();
+	        }).error(function (data) {
+	            Metronic.unblockUI();
+	            $scope.showNOK = true;
+	            $scope.msgNOK = "Sistema indisponivel";
+	        });
+	    };
+
+	    $scope.cancel = function () {
+	        $modalInstance.dismiss('cancel');
+	    };
+    }
+
+
+    var ControllerHome = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+                    Metronic.blockUI({
+                boxed: true
+            });
+        $scope.IdPerfil = item.item;
+        $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+        $scope.ObterHome = function () {
+            
+            $http.post("../../ADM/ObterHome", { idPerfil: $scope.IdPerfil })
+                .success(function (data) {
+                    Metronic.unblockUI();
+                    $scope.calendario = JSON.parse(data.CalendarioJson);
+                    $scope.saldo = JSON.parse(data.SaldosJson);
+                    $scope.notafiscal = JSON.parse(data.NotasJson);
+                    $scope.parcelas = JSON.parse(data.ParcelasJson);
+                });
+        }
+        $scope.ObterHome();
+
+        $scope.someMsg = function () {
+            $scope.showNOK = false;
+            $scope.showOK = false;
+        };
+        $scope.OK = function () {
+
+            Metronic.blockUI({
+                boxed: true
+            });
+            $http.post("../../../ADM/SalvarHome", {
+                "idPerfil": $scope.IdPerfil
+                , "calendarioJson": JSON.stringify($scope.calendario)
+                , "saldosJson": JSON.stringify($scope.saldo)
+                , "notasJson": JSON.stringify($scope.notafiscal)
+                , "parcelasJson": JSON.stringify($scope.parcelas)
+            }).success(function (data) {
+                Metronic.unblockUI();
+                if (data.CDStatus == "OK") {
+                    $scope.showOK = true;
+                    $scope.msgOK = data.DSMessage;
+                    $modalInstance.close();
+
+                } else {
+                    $scope.showNOK = true;
+                    $scope.msgNOK = data.DSMessage;
+
+                };
+
+                $timeout(
+                    function () {
+                        $scope.showNOK = false;
+                        $scope.showOK = false;
+
+                    }, 8000);
+
+            }).error(function (data) {
+                Metronic.unblockUI();
+                $scope.showNOK = true;
+                $scope.msgNOK = "Sistema indisponivel";
+            });
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+</script>

@@ -1,0 +1,96 @@
+﻿@model SoftFin.Web.Models.FuncionarioFuncao
+@{
+    ViewBag.Title = "Função";
+
+}
+
+
+
+<table id="jqgFuncionarioFuncao" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgFuncionarioFuncaoOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgFuncionarioFuncao').jqGrid({
+
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Nome', 'Descrição', 'Piso Salarial'],
+            //columns model
+            colModel: [
+                        { name: 'txtnome', index: 'Tipo', align: 'left', editable: false, width: '250', hidden: false },
+                        { name: 'txtdescricao', index: 'Tipo', align: 'left', editable: false, width: '450', hidden: false },
+                        { name: 'txtpiso', index: 'Piso', align: 'right', editable: false, width: '150', hidden: false, formatter: 'currency' }
+
+            ],
+            //pager for grid
+            pager: $('#jqgFuncionarioFuncaoOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgFuncionarioFuncao').jqGrid('navGrid', '#jqgFuncionarioFuncaoOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgFuncionarioFuncao').navButtonAdd('#jqgFuncionarioFuncaoOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgFuncionarioFuncao').navButtonAdd('#jqgFuncionarioFuncaoOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgFuncionarioFuncao").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgFuncionarioFuncao').navButtonAdd('#jqgFuncionarioFuncaoOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgFuncionarioFuncao").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    </script>
+
+

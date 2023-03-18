@@ -1,0 +1,94 @@
+﻿@model IEnumerable<SoftFin.Web.Models.Usuario>
+@{
+    ViewBag.Title = "Lista de Usuário";
+}
+
+
+
+<table id="jqgUsuarios" cellpadding="0" cellspacing="0"></table>
+
+<div   id="jqgUsuariosOpc" style="text-align:center;"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            QuickSidebar.init(); // init quick sidebar
+
+            $('#jqgUsuarios').jqGrid({
+                url: '@Url.Action("Listas")',
+                datatype: 'json',
+                mtype: 'POST',
+                colNames: ['Código', 'Login', 'Nome'],
+                colModel: [
+                            { name: 'Codigo', index: 'ID', align: 'left', editable: false, width: '200', hidden: true },
+                            {
+                                name: 'Login', index: 'CODIGO', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '465'
+                            },
+                            {
+                                name: 'Nome', index: 'NOME', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '465'
+                            }
+                ],
+                //pager for grid
+                pager: $('#jqgUsuariosOpc'),
+                //number of rows per page
+                rowNum: 12,
+                //initial sorting column
+                sortname: 'id',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+
+            });
+
+            $('#jqgUsuarios').jqGrid('navGrid', '#jqgUsuariosOpc',
+                { add: false, del: false, edit: false, search: false });
+
+            $('#jqgUsuarios').navButtonAdd('#jqgUsuariosOpc', { // custom edit button
+                caption: "Novo",
+                buttonicon: "ui-icon ui-icon-plus",
+                onClickButton: function () {
+                    window.location = "Create/";
+                },
+                position: "Last"
+            });
+
+            $('#jqgUsuarios').navButtonAdd('#jqgUsuariosOpc', { // custom edit button
+                caption: "Alterar",
+                buttonicon: "ui-icon ui-icon-pencil",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgUsuarios").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Edit/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+            $('#jqgUsuarios').navButtonAdd('#jqgUsuariosOpc', { // custom edit button
+                caption: "Excluir",
+                buttonicon: "ui-icon ui-icon-trash",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgUsuarios").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Delete/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+        });
+
+    </script>
+

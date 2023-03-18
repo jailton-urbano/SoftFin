@@ -1,0 +1,47 @@
+﻿<div id="Grid" class="container-fluid">
+    <div class="modal-header">
+        <h3>Edição de Parcela</h3>
+    </div>
+    <div class="modal-body">
+        <div class='row'>
+            <div class='col-md-1 form-group'>
+                <label>Parcela</label>
+                <input ng-disabled="true" type="text" class="form-control" ng-model="entidade.parcela" ui-number-mask="0">
+            </div>
+
+            <div class='col-md-3 form-group' datetimez ng-model="entidade.vencimento">
+                <label>Data de Vencimento</label>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.vencimento" ui-date-mask ng-disabled="ModoConsulta" />
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+            </div>
+            <div class='col-md-3 form-group' datetimez ng-model="entidade.vencimentoPrevisto">
+                <label>Data Prevista Pagar</label>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.vencimentoPrevisto" ui-date-mask ng-disabled="ModoConsulta" />
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+            </div>
+
+            <div class='col-md-3 form-group'>
+                <label>Histórico</label>
+                <input ng-disabled="ModoConsulta" type="text" id="txtparcelaHistorico" class="form-control" ng-model="entidade.historico" ng-maxlength="50" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Valor</label>
+                <input type="text" class="form-control" ng-model="entidade.valor" ui-number-mask="2">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+        <input class="btn btn-primary" type="button" ng-click="ok()" value="Salvar">
+        <button class="btn btn-transparent" ng-click="cancel()">Voltar</button>
+    </div>
+</div>

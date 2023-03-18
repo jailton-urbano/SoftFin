@@ -1,0 +1,125 @@
+﻿@model SoftFin.Web.Models.LoteDespesa
+@{
+    ViewBag.Title = "Despesa - Novo";
+}
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   @Html.ValidationSummary(true)
+  <fieldset>
+      
+      @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+      <br />
+      <div class='container'>
+            @Html.HiddenFor(x => x.id)
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.estabelecimento_id)  <br />
+            @Html.DropDownListFor(model => model.estabelecimento_id, (SelectList)ViewData["estabelecimento"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.estabelecimento_id)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.colaborador_id)  <br />
+            @Html.DropDownListFor(model => model.colaborador_id, (SelectList)ViewData["colaborador"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.colaborador_id)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.cliente_id)  <br />
+            @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.cliente_id)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.projeto_id)  <br />
+            @Html.DropDownListFor(model => model.projeto_id, (SelectList)ViewData["projeto"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.projeto_id)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.tipoDespesa_id)  <br />
+            @Html.DropDownListFor(model => model.tipoDespesa_id, (SelectList)ViewData["tipoDespesa"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.tipoDespesa_id)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.Data)  <br />
+            <input type='text' id='Data' name='Data' class='text-box single-line'  value='@Model.Data.Date.ToString("dd/MM/yyyy")' />
+            @Html.ValidationMessageFor(x => x.Data)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.valor)  <br />
+            @Html.TextBoxFor(x => x.valor)
+            @Html.ValidationMessageFor(x => x.valor)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.descricao)  <br />
+            @Html.TextBoxFor(x => x.descricao)
+            @Html.ValidationMessageFor(x => x.descricao)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.aprovador_id)  <br />
+            @Html.DropDownListFor(model => model.aprovador_id, (SelectList)ViewData["aprovador"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.aprovador_id)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.aprovado)  <br />
+            @Html.TextBoxFor(x => x.aprovado)
+            @Html.ValidationMessageFor(x => x.aprovado)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.lote_id)  <br />
+            @Html.DropDownListFor(model => model.lote_id, (SelectList)ViewData["lote"], "---Selecione---")
+            @Html.ValidationMessageFor(x => x.lote_id)
+        </div>
+      </div>
+</div>
+      @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+      <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+  </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#Data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+    function (event) {
+        "('#valor').val(filtraNumerosComVirgula("('#valor').val()));
+    });
+    $('#valor').blur(
+    function (event) {
+        formataValor(this, event);
+    });
+</script>
+<style type='text/css'>
+<!--
+#id {width:275.00px;}
+#estabelecimento_id {width:275.00px;}
+#Estabelecimento {width:275.00px;}
+#colaborador_id {width:275.00px;}
+#Colaborador {width:275.00px;}
+#cliente_id {width:275.00px;}
+#Cliente {width:275.00px;}
+#projeto_id {width:275.00px;}
+#Projeto {width:275.00px;}
+#tipoDespesa_id {width:275.00px;}
+#TipoDespesa {width:275.00px;}
+#Data {width:275.00px;}
+#valor {width:275.00px;}
+#descricao {width:275.00px;}
+#aprovador_id {width:275.00px;}
+#Aprovador {width:275.00px;}
+#aprovado {width:275.00px;}
+#lote_id {width:275.00px;}
+#LoteReembolso {width:275.00px;}
+-->
+</style>

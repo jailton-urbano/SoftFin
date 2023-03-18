@@ -1,0 +1,82 @@
+﻿@model SoftFin.GestorProcessos.Models.VisaoCampo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>VisaoCampo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TabelaCampo.Campo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TabelaCampo.Campo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Visao.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Visao.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Visivel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Visivel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Transferivel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Transferivel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PadraoSalva)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PadraoSalva)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReferenciaNgModel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReferenciaNgModel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReferenciaNgChange)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReferenciaNgChange)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

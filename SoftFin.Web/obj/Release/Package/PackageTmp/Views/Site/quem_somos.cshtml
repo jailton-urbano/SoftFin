@@ -1,0 +1,253 @@
+﻿@{
+    Layout = "";
+    }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="../../Content/site/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css?ver5">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/Site/css/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    @Html.Partial("_Escripts")
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                        @Html.Partial("_MenuCimaCima")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader menu_interna">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("_MenuCima")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <section>
+        <div class="head_fixo" style="background:url('../../Content/site/img/Quem-somos.png');height: 340px;;background-size: cover;background-position: center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="banner_fixo_simplicidade">
+                            <ul class="breadcrumb">
+                                <li><a href="./">Home</a></li>
+                                <li>Quem somos</li>
+                            </ul>
+
+
+                            <h2>Um pouco sobre<br> a SoftFin</h2>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <section>
+        <div class="content_internas_padrao">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="lateral_content_funcionalidade">
+                            <h2>História da empresa</h2>
+
+                            <p style="margin-top: 2em;text-align: justify;line-height: 29px;color: #3d3d3d;">A SoftFin nasceu para apoiar as micro e pequenas empresas em sua tarefa diária de administrar o Fluxo de Caixa e melhorar a gestão do negócio. Integrando informações e processos financeiros do dia a dia, do fluxo de caixa ao registro contábil, ajudamos você a ter mais tempo para cuidar de seu negócio. Somos uma Startup brasileira que foi criada e hoje é mantida por profissionais, executivos e investidores com vasta experiência em sistemas de gestão de negócios.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <img src="../../Content/site/img/img_somos_softfin.png" style="width:100%">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                @*<div class="executivo_somos">
+                    <div class="title_executivo_page">
+                        <h2>Nosso Profissionais</h2>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo1.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Rafael Souza</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo2.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Gabriela Dias</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo3.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Ana Souza</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo4.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Diego Silva</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo5.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Daniel Barbosa</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="img_executivo">
+                                <img src="../../Content/site/img/executivo6.png">
+                            </div>
+                            <div class="text_title_executivo">
+                                <h3>Junior Pedro</h3>
+                                <span>Presidente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+
+
+        <div class="bloco_missao_visao_valores">
+            <div class="container">
+
+                <div class="lateral_content_funcionalidade">
+                    <h2>Missão, Visão e Valores</h2>
+
+                    <p style="margin-top: 2em;text-align: justify;line-height: 29px;color: #3d3d3d;">Nossa missão, visão e valores podem ser resumidas num único tópico: Propósito! E para nós isso resume-se em ajudar as pessoas, sejam elas clientes, fornecedores, funcionários, parceiros ou qualquer um com quem nos relacionamos. Queremos as pessoas melhores, mais produtivas, mais engajadas e que todos possamos ter mais tempo e uma melhor qualidade de vida.</p>
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </div>
+
+
+
+        <div class="bloco_missao_visao_valores">
+            <div class="container">
+
+                <div class="lateral_content_funcionalidade">
+                    <h2>Diferenciais SoftFin</h2>
+
+                    <p style="margin-top: 2em;text-align: justify;line-height: 29px;color: #3d3d3d;">Existem centenas de sistemas financeiros e contábeis, milhares de empresas prestadoras de serviço e milhões de profissionais apoiando micro e pequenas empresas. Nosso diferencial está no fato de sermos uma empresa de tecnologia mais humana. Você pode ver a cara dos nossos líderes, estamos disponíveis para te atender por telefone e podemos te visitar para falarmos sobre o que podemos fazer por você. Oferecemos uma experiência de atendimento melhor, juntamente com a melhor tecnologia do mercado.</p>
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+
+            <img src="../../Content/site/img/predios_somos_softfin.png" style="width:100%">
+        </div>
+
+    </section>
+
+
+
+
+    @Html.Partial("_Experimente")
+    <section>
+        <div class="novidades_home">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="newslatter_text">
+                            <h2>SIMULE SEU INVESTIMENTO AGORA!</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="btn_simule_fixo_pages">
+                            <a href="simule">Simular Já <i class="fa fa-usd"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @Html.Partial("_Rodape")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/js/bootstrap.js"></script>
+    <script src="../../Content/site/js/owl.js"></script>
+    <script src="../../Content/site/js/scripts.js"></script>
+    <script src="../../Content/site/js/validacao_contact_form7.js"></script>
+    <script src="~/Content/Site/js/site.js"></script>
+</body>
+</html>

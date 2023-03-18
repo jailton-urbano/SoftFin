@@ -1,0 +1,473 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/ProjetoDespesa/ProjetoDespesaIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o banco movimento?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.descricao}} - {{item.data | date:'dd/MM/yyyy'}} - {{item.valor | number:2}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="Cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalSalvar.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Salvar o banco movimento?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{mensagem}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="Cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+
+        <div id="Grid" ng-show="showGrid">
+
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+
+                            <div class='container-fluid'>
+
+                                <div class='row'>
+                                    <div class='col-md-4 form-group'>
+                                        <label>Colaborador</label>
+                                        <select class="form-control" ng-model="Filter.Colaborador_id" ng-options="o.Value as o.Text for o in listColaboradores">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+
+                                    <div class='col-md-4 form-group'>
+                                        <label>Cliente</label>
+                                        <select class="form-control" ng-model="Filter.Cliente_id" ng-options="o.Value as o.Text for o in listClientes">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+
+                                    <div class='col-md-4 form-group'>
+                                        <label>Projeto</label>
+                                        <select class="form-control" ng-model="Filter.Projeto_id" ng-options="o.Value as o.Text for o in listProjetos">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+
+                                    <div class='col-md-4 form-group'>
+                                        <label>Tipo de Despesa</label>
+                                        <select class="form-control" ng-model="Filter.TipoDespesa_id" ng-options="o.Value as o.Text for o in listTipoDespesas">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+
+
+
+                                    <div class='col-md-2 form-group' datetimez ng-model="Filter.DataInicial">
+                                        <label>Data Inicial</label>
+                                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="Filter.DataInicial" ui-date-mask />
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class='col-md-2 form-group' datetimez ng-model="Filter.DataFinal">
+                                        <label>Data Final</label>
+                                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="Filter.DataFinal" ui-date-mask />
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+
+
+
+
+                                    <div class='col-md-2 form-group'>
+                                        <label>Valor Inicial</label>
+                                        <input type="text" ng-model="Filter.ValorInicial" class="form-control" ui-number-mask="2" />
+                                    </div>
+
+
+                                    <div class='col-md-2 form-group'>
+                                        <label>Valor Final</label>
+                                        <input type="text" ng-model="Filter.ValorFinal" class="form-control" ui-number-mask="2" />
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+                            
+                                <div class='col-md-12 form-group'>
+                                    <label>Descrição</label>
+                                    <input type="text" ng-model="Filter.Descricao" class="form-control">
+                                </div>
+        -
+                            <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Search() ">
+                                <span class="glyphicon glyphicon-search"></span> Pesquisar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="locate" />
+                        </div>
+
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                   <thead>
+                        <tr>
+                            <th>
+
+
+                                <button style="border-right-width: 0px; padding-right: 49px;"
+                                        ng-click="Search()"
+                                        title="Atualiza a lista na tela"
+                                        class="btn btn-warning">
+                                    <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                                </button>
+
+                                <button style="margin-top: 4px; padding-right: 72px;"
+                                        ng-click="New()"
+                                        title="Novo registro"
+                                        class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"></span> Novo
+                                </button>
+
+
+
+                               </th>
+                             <th>
+
+                         </th>
+
+                    </tr>
+                </thead>
+
+
+
+                <tbody>
+                    <tr dir-paginate="item in listProjetoDespesas|orderBy:sortKey:reverse|filter:locate|itemsPerPage:7">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detail(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Edit(item)"
+                                    title="Edita o lançamento"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Delete(item)"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="Order('colaborador_nome')" style="cursor:pointer"> Colaborador </span>
+                                / <span ng-click="Order('cliente_nome')"> Cliente </span>
+                                / <span ng-click="Order('projeto_nome')" style="cursor:pointer"> Projeto </span>
+                                / <span ng-click="Order('tipodespesa_nome')"> Tipo de Despesa </span><br />
+
+                                <label>{{item.colaborador_nome}} / {{item.cliente_nome}} / {{item.projeto_nome}} / {{item.tipodespesa_nome}}</label>
+
+                            </b>
+
+
+
+                            <br />
+
+
+                            
+                            <b>
+                                <span ng-click="Order('Data')" style="cursor:pointer">  Data  </span>
+                                / <span ng-click="Order('valor')"> valor </span>
+                                / <span ng-click="Order('descricao')"> Descrição </span><br />
+
+                                <label>{{item.Data | date:dd/MM/yyyy}} / {{item.valor}} / {{item.descricao}}</label>
+                                <br />
+
+                            </b>
+                            <br />
+
+
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="msgOK != ''" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK !=''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+            <div>
+                <div class='row'>
+                    <div class='col-md-9 form-group'>
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Save()"
+                                    class="btn btn-primary"
+                                    ng-show="!modeDetail">
+                                <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+                            </button>
+                        </span>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Back()"
+                                    class="btn btn-default">
+                                <span class="glyphicon glyphicon-log-out"></span> Voltar
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class='row'>
+
+
+                    <div class='col-md-4 form-group'>
+                        <label>Colaborador</label>
+                        <select class="form-control" ng-model="entidade.colaborador_id" ng-options="o.Value as o.Text for o in listColaboradores">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-4 form-group'>
+                        <label>Cliente</label>
+                        <select class="form-control" ng-model="entidade.cliente_id" ng-options="o.Value as o.Text for o in listClientes">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-4 form-group'>
+                        <label>Projeto</label>
+                        <select class="form-control" ng-model="entidade.projeto_id" ng-options="o.Value as o.Text for o in listProjetos">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+                    <div class='col-md-4 form-group'>
+                        <label>Tipo de Despesa</label>
+                        <select class="form-control" ng-model="entidade.tipoDespesa_id" ng-options="o.Value as o.Text for o in listTipoDespesas">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+
+
+
+                    <div class='col-md-4 form-group' datetimez ng-model="entidade.Data">
+                        <label>Data</label>
+                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ui-date-mask />
+                        <span class="add-on">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+
+
+                    <div class='col-md-4 form-group'>
+                        <label>Valor</label>
+                        <input type="text" ng-model="entidade.valor" class="form-control" ui-number-mask="2" />
+                    </div>
+
+
+
+                    <div class='col-md-12 form-group'>
+                        <label>Descrição</label>
+                        <input type="text" ng-model="entidade.descricao" class="form-control">
+                    </div>
+
+
+
+
+                </div>
+
+
+                <div class='row' ng-show="modeDetail == true">
+                    <div class='col-md-6 form-group'>
+                        <label>Razão</label><br />
+                        <input ng-disabled="modeDetail" type="text" ng-model="razaoconsulta" class="form-control" />
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Contas a Pagar</label>
+                        <input ng-disabled="modeDetail" type="text" ng-model="cpagconsulta" class="form-control" ng-maxlength="100" />
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <label>Nota Fiscal</label>
+                        <input ng-disabled="modeDetail" type="text" ng-model="nfconsulta" class="form-control" ng-maxlength="100" />
+                    </div>
+
+                </div>
+
+
+
+                <div class='row'>
+                    <div class='col-md-9 form-group'>
+                    </div>
+
+
+                    <div class='col-md-3 form-group'>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Save()"
+                                    class="btn btn-primary"
+                                    ng-show="!modeDetail">
+                                <span class="glyphicon glyphicon-floppy-disk"></span> Salvar      {{msgSalvar}}
+                            </button>
+                        </span>
+
+
+
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Back()"
+                                    class="btn btn-default">
+                                <span class="glyphicon glyphicon-log-out"></span> Voltar
+                            </button>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+

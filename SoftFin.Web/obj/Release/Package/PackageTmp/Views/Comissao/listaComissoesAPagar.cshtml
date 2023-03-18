@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "Comissões a Pagar";
+}
+
+
+@using (Html.BeginForm())
+{
+
+    <header></header>
+    <style>
+        .google-visualization-table-table th {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                Selecione a Data:
+                @Html.DropDownList("dataFiltro", (SelectList)ViewData["DataFiltro"], "---Selecione---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Data Inicial</label>
+                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Data Final</label>
+                <input type="text" name="dataFinal" class="form-control" id="dataFinal" value="@ViewData["DataFinal"]" />
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                Selecione a Pessoa:
+                @Html.DropDownList("pessoa", (SelectList)ViewData["Pessoa"], "---Todas---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-3 form-group'>
+                Selecione o Tipo de Pessoa:
+                @Html.DropDownList("tipoPessoa", (SelectList)ViewData["TipoPessoa"], "---Todas---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-3 form-group'>
+                Selecione o Status:
+                @Html.DropDownList("status", (SelectList)ViewData["StatusPagamento"], "---Todos---", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+
+
+<script src="https://www.google.com/jsapi"></script>
+
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#gerar').click(function () {
+
+            var tipoPessoa = 0;
+            var status = 0;
+            var pessoa = 0;
+
+            if ($("#dataFiltro").val() == "") {
+                alert("Selecione o tipo da data!");
+                return;
+            }
+
+            if ($("#dataInicial").val() == "") {
+                alert("Selecione a data inicial!");
+                return;
+            }
+
+            if ($("#dataFinal").val() == "") {
+                alert("Selecione a data final!");
+                return;
+            }
+
+            $('#indicator').show();
+
+            if ($("#status").val() == "") {
+                status = 0;
+            }
+            else {
+                status = $("#status").val();
+            }
+
+            if ($("#tipoPessoa").val() == "") {
+                tipoPessoa = 999999;
+            }
+            else {
+                tipoPessoa = $("#tipoPessoa").val();
+            }
+
+            if ($("#pessoa").val() == "") {
+                pessoa = 0;
+            }
+            else {
+                pessoa = $("#pessoa").val();
+            }
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: "geraListaComissoesAPagar",
+                data: {
+                    'dataInicial': $("#dataInicial").val(),
+                    'dataFinal': $("#dataFinal").val(),
+                    'pessoa': pessoa,
+                    'tipoPessoa': tipoPessoa,
+                    'status': status,
+                    'dataFiltro': $("#dataFiltro").val()
+                },
+                success: function (tabledata) {
+
+                    function pad(n, width, z) {
+                        z = z || '0';
+                        n = n + '';
+                        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                    }
+
+                    var totalBruto = 0;
+                    var totalPago = 0;
+                    var saldoPagar = 0;
+                    var linha = 0;
+
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Fornecedor');
+                    data.addColumn('string', 'Tipo');
+                    //data.addColumn('string', 'CNPJ/CPF');
+                    data.addColumn('string', 'Data Documento');
+                    data.addColumn('string', 'Vencimento Original');
+                    data.addColumn('string', 'Data Vencimento');
+                    data.addColumn('string', 'Status');
+                    data.addColumn('string', 'Conta Contábil');
+                    data.addColumn('string', 'Número');
+                    data.addColumn('number', 'Valor Total');
+                    data.addColumn('number', 'Valor Pago');
+                    data.addColumn('number', 'Saldo a Pagar');
+
+                    for (var i = 0; i < tabledata.length; i++) {
+                        data.addRow([tabledata[i].fornecedor,
+                                     tabledata[i].tipoFornecedor,
+                                     //tabledata[i].cnpj,
+                                     tabledata[i].dataDocumentoS,
+                                     tabledata[i].dataVencimentoOriginalS,
+                                     tabledata[i].dataVencimentoS,
+                                     tabledata[i].statusPagamentoS,
+                                     tabledata[i].contaContabil,
+                                     tabledata[i].numeroDocumentoS,
+                                     tabledata[i].valorBruto,
+                                     tabledata[i].valorPago,
+                                     tabledata[i].saldo]);
+
+                        totalBruto += tabledata[i].valorBruto;
+                        totalPago += tabledata[i].valorPago;
+                        saldoPagar += tabledata[i].saldo;
+                        linha = i;
+                    }
+
+                    data.addRow(["",
+                    "",
+                    //"",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "Total:",
+                    totalBruto,
+                    totalPago,
+                    saldoPagar]);
+
+                    linha += 1;
+
+                    if (tabledata.length > 0) {
+                        data.setProperty(linha, 7, 'style', 'font-weight: bold; ');
+                        data.setProperty(linha, 8, 'style', 'font-weight: bold; ');
+                        data.setProperty(linha, 9, 'style', 'font-weight: bold; ');
+                        data.setProperty(linha, 10, 'style', 'font-weight: bold; ');
+
+                        var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                        formatter.format(data, 8);
+                        formatter.format(data, 9);
+                        formatter.format(data, 10);
+                    }
+                    var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                    table.draw(data, { allowHtml: true });
+
+
+                    $('#indicator').hide();
+
+                    setTimeout(function () { $('.google-visualization-table').css("z-index", "1"); }, 500);
+
+
+
+                },
+                error: function () {
+                    alert("Ops...");
+                }
+            });
+        })
+    });
+
+</script>

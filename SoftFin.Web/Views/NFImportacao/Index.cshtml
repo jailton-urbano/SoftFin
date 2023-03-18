@@ -1,0 +1,170 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/NFImportacao/NFImportacaoIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade" ng-cloak>
+
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        @*<th></th>*@
+                        <th>Dados Nota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ListaNotas">
+                        @*<td style="width: 40px;">
+                            <button title="Iniciar importação" ng-click="Importa(item)" ng-show="!item.ExisteNF"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Importa
+                            </button>
+                        </td>*@
+
+                        <td>
+                            <b>
+                                CNPJ / None <br />
+                            </b>
+                            {{item.CNPJ}} / {{item.xNome}} 
+                            <br />
+                            <b>
+                                Chave / Valor <br />
+                            </b>
+                                {{item.chNFe}} / {{item.vNF |number:2}}
+                            <br />
+
+                            <b>
+                                Data Emissão <br />
+                            </b>
+                            {{item.dhEmi | date:'dd-MM-yyyy hh:mm:ss'}}
+                            <br />
+                            <b>
+                                Digito / Prototoco <br />
+                            </b>
+                            {{item.digVal}} / {{item.nProt}} <br />
+                            <b>
+                                Evento / Justificação <br />
+                            </b>
+                            {{item.xEvento}} / {{item.xJust}} <br />
+
+                            <b>
+                                XML <br />
+                            </b>
+                            {{item.xmlCompleto}}
+                            <br />
+
+                            <span class="label label-sm label-success" ng-show="item.ExistePessoas"> Pessoa já importada</span>
+                            <span class="label label-sm label-warning" ng-show="item.ExisteNF"> Lançado em Notas Fiscais</span>
+                            <span class="label label-sm label-info" ng-show="item.ExisteCPAG"> Lançado em Contas a Pagar</span>
+                            <span class="label label-sm label-danger" ng-show="!item.ExistePessoas"> Pessoa não importada</span>
+                            <span class="label label-sm label-danger" ng-show="!item.ExisteNF"> Não Lançado em Notas Fiscais</span>
+                            <span class="label label-sm label-danger" ng-show="!item.ExisteCPAG"> Não Lançado em Contas a Pagar</span>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+
+        <div class="container-fluid" ng-show="!showGrid">
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+
+            <div id="divImportacao">
+                <h4>Opções de Importação</h4>
+
+                <div class="row">
+
+                    <div class='col-md-2 form-group'>
+                        <label>Gerar Contas a Pagar</label>
+                        <select class="form-control" ng-model="GERACPAG"
+                                ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-md-12'>
+                        <ul class="nav nav-tabs">
+                            <li class="aba-pessoa active" id="liPessoa">
+                                <a href="#tabPessoa" data-toggle="tab">
+                                    Pessoas
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                            <li class="aba-nf" id="liNf">
+                                <a href="#tabnf" data-toggle="tab">
+                                    Nota Fiscal de Entrada
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                            <li class="aba-cpag" ng-show="GERACPAG" id="liCPAG">
+                                <a href="#tabCpag" data-toggle="tab" ng-click="AtualizaCPAG()">
+                                    Contas a Pagar
+                                    <span class="badge"></span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+
+
+                            <div id="tabPessoa" class="tab-pane fade active in" aria-expanded="true">
+
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading" ng-show="pessoa.id == 0">Prestador não cadastrado</div>
+                                    <div ng-include="'../../page/Pessoa/edit.html'"></div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tabnf">
+                                <div ng-include="'../../page/NF/edit.html'"></div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tabCpag">
+                                <div ng-include="'../../page/CPAG/edit.html'"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-primary" type="button" ng-click="OK()" value="Salvar">
+                            <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

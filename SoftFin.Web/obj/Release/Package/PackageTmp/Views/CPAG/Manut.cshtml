@@ -1,0 +1,966 @@
+﻿@{
+    ViewBag.Title = ViewData["Titulo"];
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318865";
+
+}
+
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+
+
+
+<div ng-app="SOFTFIN" class="container-fluid">
+
+    <div ng-controller="MestreCPAG">
+        <!--Mensagem Cabeçalho-->
+        <div id="divLoadinit" class="loading">Aguarde, carregando...</div>
+        <script type="text/javascript">setTimeout(function () { document.getElementById("divLoadinit").style.display = "none"; }, 1000);</script>
+        <!--Mensagem Cabeçalho Fim-->
+        <div class="button-row form-group">
+            <button class="btn btn-primary" ng-click="OK()" ng-hide="ShowbtnOK" type="submit">{{TitulobtnOK}}</button>
+            <a role="button" href="/CPAG/Index" class="btn btn-default">Voltar</a>
+        </div>
+
+        <!--Mensagem tipo Modal Salvar-->
+        <script type="text/ng-template" id="divModalSalvar.html">
+            <div>
+                <div class="modal-header">
+                    <h3 class="modal-title">Confirme.</h3>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja lançar o Contas a Pagar?
+                </div>
+                <div class="modal-footer">
+                    <button class="btn bkg" ng-click="Ok()">Sim</button>
+                    <button class="btn bkg" ng-click="Cancel()">Não</button>
+                </div>
+            </div>
+        </script>
+        <!--Mensagem tipo Modal Salvar Fim-->
+
+        <form name="frmDadosGerais" novalidate>
+            <div id="DivDadosGerais" class="panel panel-primary">
+                <div class="panel-heading">Dados do pagamento</div>
+                <div class="panel-body">
+                    <div class='row'>
+                        <div class='col-md-10 form-group'>
+                            <label>Código de Barras</label>
+                            <input type="text" class="form-control" name="LinhaDigitavel" id="LinhaDigitavel" value="@ViewBag.LinhaDigitavel" ng-model="CPAG.linhadigitavel" ng-disabled="ModoConsulta" />
+                            <span class="field-validation-error" name="LinhaDigitavelErro" id="LinhaDigitavelErro"></span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <br />
+                            <button class="btn btn-primary" name="Processar" id="Processar">
+                                <span class="glyphicon glyphicon-cog"></span> Processar
+                            </button>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-6 form-group'>
+                            <label>Fornecedor</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.pessoa_id" typeahead="o.Text as o.Text for o in ListaPessoas | filter:$viewValue | limitTo:8" class="form-control" required />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Data Lançamento</label>
+                            <input type="text" ng-model="CPAG.dataLancamento" class="form-control" disabled="disabled" />
+                        </div>
+
+                        <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataCompetencia">
+                            <label>Data Competência</label>
+                            <input data-format="MM/yyyy" type="text" ng-model="CPAG.dataCompetencia" class="form-control" />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataDocumento">
+                            <label>Data Documento</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAG.dataDocumento" ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataVencimentoOriginal">
+                            <label>Data de Vencimento</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAG.dataVencimentoOriginal" ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataVencimento">
+                            <label>Data Prevista Pagar</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAG.dataVencimento" ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            <label>Valor Bruto</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.valorBruto" ng-change="CPAGITEM.Valor = CPAG.valorBruto" class="form-control" ui-number-mask="2" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Número Documento</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.numeroDocumento" class="form-control" />
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Tipo Documento</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipodocumento_id" ng-options="o.Value as o.Text for o in ListaTipoDocumento" ng-change="MostraComplementoTipoDOC(true)" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Tipo Lançamento</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipolancamento" ng-options="o.Value as o.Text for o in ListaTipoLancamento" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Código Pagamento</label>
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.codigoPagamento" name="txtcodigoPagamento" class="form-control" required />
+                            <span class='help-block' ng-show='frmDadosGerais.txtcodigoPagamento.$error.required && frmDadosGerais.txtcodigoPagamento.$dirty'>Campo Obrigatório</span>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Banco/Conta</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Conta Contabil</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.ContaContabil" ng-options="o.Text as o.Text for o in ListaContaContabil" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="DivFGTS" name="DivFGTS" ng-show="showDivFGTS" class="panel panel-primary">
+
+            <div class="panel-heading">FGTS</div>
+            <div class='panel-body'>
+                <div class='container'>
+                    <form name="frmFGTS">
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                <label>Nome do Contribuinte</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSnomeContribuinte" name="txtFGTSnomeContribuinte" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSnomeContribuinte.$error.required && frmFGTS.txtFGTSnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>CNPJ</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTScnpj" name="txtFGTScnpj" class="form-control" ui-br-cnpj-mask required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTScnpj.$error.required && frmFGTS.txtFGTScnpj.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Código Receita</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTScodigoReceita" name="txtFGTScodigoReceita" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTScodigoReceita.$error.required && frmFGTS.txtFGTScodigoReceita.$dirty'>Campo Obrigatório</span>
+                            </div>
+                        </div>
+                        <div class='row'>
+
+                            <div class='col-md-4 form-group'>
+                                <label>Código Barras</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTScodigoBarras" name="txtFGTScodigoBarras" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTScodigoBarras.$error.required && frmFGTS.txtFGTScodigoBarras.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Identificação FGTS</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSidentificadorFgts" name="txtFGTSidentificadorFgts" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSidentificadorFgts.$error.required && frmFGTS.txtFGTSidentificadorFgts.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Lacre Conectividae Social</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSlacreConectividadeSocial" name="txtFGTSlacreConectividadeSocial" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSlacreConectividadeSocial.$error.required && frmFGTS.txtFGTSlacreConectividadeSocial.$dirty'>Campo Obrigatório</span>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Digito Lacre</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSdigitoLacre" name="txtFGTSdigitoLacre" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSdigitoLacre.$error.required && frmFGTS.txtFGTSdigitoLacre.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Data de Pagamento</label>
+                                <input id="txtFGTSDataPagamento" ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSdataPagamento" name="txtFGTSdataPagamento" class="form-control" required ui-date-mask />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSdataPagamento.$error.required && frmFGTS.txtFGTSdataPagamento.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                <label>Tipo Inscrição</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTStipoInscricao" name="txtFGTStipoInscricao" class="form-control" required />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTStipoInscricao.$error.required && frmFGTS.txtFGTStipoInscricao.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Pagamento</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.FGTSvalorPagamento" name="txtFGTSvalorPagamento" class="form-control" required ui-number-mask="2" />
+                                <span class='help-block' ng-show='frmFGTS.txtFGTSvalorPagamento.$error.required && frmFGTS.txtFGTSvalorPagamento.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="DivDARF" name="DivDARF" ng-show="showDivDARF" class="panel panel-primary">
+
+            <div class="panel-heading">DARF</div>
+            <div class='panel-body'>
+                <div class='container'>
+                    <form name="frmDARF">
+                        <div class='row'>
+                            <div class='col-md-5 form-group'>
+                                <label>Nome do Contribuinte</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFnomeContribuinte" name="txtDARFnomeContribuinte" class="form-control" required />
+                                <span class='help-block' ng-show='frmDARF.txtDARFnomeContribuinte.$error.required && frmDARF.txtDARFnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Periodo de Apuração</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFperiodoApuracao" name="txtDARFperiodoApuracao" class="form-control" required ui-date-mask />
+                                <span class='help-block' ng-show='frmDARF.txtDARFperiodoApuracao.$error.required && frmDARF.txtDARFperiodoApuracao.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>CNPJ</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFcnpj" name="txtDARFcnpj" class="form-control" ui-br-cnpj-mask required />
+                                <span class='help-block' ng-show='frmDARF.txtDARFcnpj.$error.required && frmDARF.txtDARFcnpj.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Código Receita</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFcodigoReceita" name="txtDARFcodigoReceita" class="form-control" required />
+                                <span class='help-block' ng-show='frmDARF.txtDARFcodigoReceita.$error.required && frmDARF.txtDARFcodigoReceita.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Numero Referencia</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFnumeroReferencia" name="txtDARFnumeroReferencia" class="form-control" required />
+                                <span class='help-block' ng-show='frmDARF.txtDARFnumeroReferencia.$error.required && frmDARF.txtDARFnumeroReferencia.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-1 form-group'>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Vencimento</label>
+                                <input id="txtdARFDataVencimento" ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFdataVencimento" name="txtDARFdataVencimento" class="form-control" required ui-date-mask />
+                                <span class='help-block' ng-show='frmDARF.txtDARFdataVencimento.$error.required && frmDARF.txtDARFdataVencimento.$dirty'>Campo Obrigatório</span>
+
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Principal</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFvalorPrincipal" name="txtDARFvalorPrincipal" class="form-control" required ui-number-mask="2" />
+                                <span class='help-block' ng-show='frmDARF.txtDARFvalorPrincipal.$error.required && frmDARF.txtDARFvalorPrincipal.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                        </div>
+
+                        <div class='row'>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Multa</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFmulta" name="txtDARFmulta" class="form-control" required ui-number-mask="2" />
+                                <span class='help-block' ng-show='frmDARF.txtDARFmulta.$error.required && frmDARF.txtDARFmulta.$dirty'>Campo Obrigatório</span>
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Juros Encargos</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFjurosEncargos" name="txtDARFjurosEncargos" class="form-control" required ui-number-mask="2" />
+                                <span class='help-block' ng-show='frmDARF.txtDARFjurosEncargos.$error.required && frmDARF.txtDARFjurosEncargos.$dirty'>Campo Obrigatório</span>
+
+                            </div>
+                            <div class='col-md-1 form-group'>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Total</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFvalorTotal" name="txtDARFvalorTotal" class="form-control" required ui-number-mask="2" />
+                                <span class='help-block' ng-show='frmDARF.txtDARFvalorTotal.$error.required && frmDARF.txtDARFvalorTotal.$dirty'>Campo Obrigatório</span>
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Pagamento</label>
+                                <input id="txtDarfDataPagamento" ng-disabled="ModoConsulta" type="text" ng-model="DARF.DARFdataPagamento" name="txtDARFdataPagamento" class="form-control" required ui-date-mask />
+                                <span class='help-block' ng-show='frmDARF.txtDARFdataPagamento.$error.required && frmDARF.txtDARFdataPagamento.$dirty'>Campo Obrigatório</span>
+
+                            </div>
+
+
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div id="DivGPS" name="DivGPS" ng-show="showDivGPS" class="panel panel-primary">
+
+            <div class="panel-heading">GPS</div>
+            <div class='panel-body'>
+
+                <div class="container">
+                    <form name="frmGPS">
+                        <div class='row'>
+                            <div class='col-md-5 form-group'>
+                                <label>Nome Contribuinte</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSnomeContribuinte" name="txtGPSnomeContribuinte" class="form-control" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSnomeContribuinte.$error.required && frmGPS.txtGPSnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Informações complementares</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSinformacoesComplementares" name="txtGPSinformacoesComplementares" class="form-control" required />
+                            </div>
+
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Arrecadação</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSdataArrecadacao" name="txtGPSdataArrecadacao" class="form-control" required ui-date-mask />
+                                <span class='help-block' ng-show='frmGPS.txtGPSdataArrecadacao.$error.required && frmGPS.txtGPSdataArrecadacao.$dirty'>Campo Obrigatório</span>
+
+
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Código Pagamento</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPScodigoPagamento" name="txtGPScodigoPagamento" class="form-control" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPScodigoPagamento.$error.required && frmGPS.txtGPScodigoPagamento.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                            <div class='col-md-2     form-group'>
+                                <label>Competencia</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPScompetencia" name="txtGPScompetencia" class="form-control" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPScompetencia.$error.required && frmGPS.txtGPScompetencia.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Identificador</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSidentificador" name="txtGPSidentificador" class="form-control" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSidentificador.$error.required && frmGPS.txtGPSidentificador.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Tributo</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSvalorTributo" name="txtGPSvalorTributo" class="form-control" ui-number-mask="2" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSvalorTributo.$error.required && frmGPS.txtGPSvalorTributo.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+
+                            <div class='col-md-3 form-group'>
+                                <label>Valor Outras Entidades</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSvalorAtualizacaoMonetaria" name="txtGPSvalorAtualizacaoMonetaria" class="form-control" ui-number-mask="2" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSvalorAtualizacaoMonetaria.$error.required && frmGPS.txtGPSvalorAtualizacaoMonetaria.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+
+                            <div class='col-md-3 form-group'>
+                                <label>Valor Atualização Monetária</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSvalorOutrasEntidades" name="txtGPSvalorOutrasEntidades" class="form-control" ui-number-mask="2" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSvalorOutrasEntidades.$error.required && frmGPS.txtGPSvalorOutrasEntidades.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Arrecadado</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.GPSvalorArrecadado" name="txtGPSvalorArrecadado" class="form-control" ui-number-mask="2" required />
+                                <span class='help-block' ng-show='frmGPS.txtGPSvalorArrecadado.$error.required && frmGPS.txtGPSvalorArrecadado.$dirty'>Campo Obrigatório</span>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Distribuição de custo por área</div>
+            <div class="panel-body">
+                <form id="frmItem">
+                    <div class='container-fluid'>
+                        <div class='row'>
+
+                            <div class='col-md-4 form-group'>
+                                <label>Unidade de Negócio</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAGITEM.UnidadeNegocio" ng-options="o.Text as o.Text for o in ListaUnidadeNegocio">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Histórico</label>
+                                <input ng-disabled="ModoConsulta" type="text" id="txtHistorico" class="form-control" ng-model="CPAGITEM.historico" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor</label>
+                                <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="CPAGITEM.Valor" ui-number-mask="2">
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>%</label>
+                                <input ng-disabled="ModoConsulta" type="text" id="txtPorcentagemLct" class="form-control" ng-model="CPAGITEM.PorcentagemLct" ui-number-mask="2" />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-10 form-group'>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <span class="input-group-btn">
+                                    <button ng-show="!ModoConsulta" type="button"
+                                            ng-click="fcAdiciona(CPAGITEM)"
+                                            name="btnAdicione" id="btnAdicione"
+                                            class="btn btn-success">
+                                        <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                    {{MsgDivValidacao}}
+                </div>
+            </div>
+            <div class='container-fluid'>
+                <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                <div id="Repositorio">
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Unidade de Negócio</th>
+                                <th>Histórico</th>
+                                <th>Valor</th>
+                                <th>Opções</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in CPAGITEMS">
+                                <td>{{item.UnidadeNegocio}}</td>
+                                <td>{{item.historico}}</td>
+                                <td>{{item.Valor | number:2}}</td>
+                                <td>
+
+                                    <button ng-show="!ModoConsulta"
+                                            type="button"
+                                            ng-click="fcExcluir($index)"
+                                            class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-minus"></span> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>Total</td>
+                                <td>{{ValorTotal | number:2}}</td>
+                                <td></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class='container-fluid' ng-show="!ModoConsulta">
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    <label>Repetir lançamento por meses seguintes: </label>
+                    <input type="text" ng-model="CPAG.RepetirLancamento" id="txtRepetirLancamento" class="form-control" required ui-number-mask="0" />
+                </div>
+            </div>
+        </div>
+
+        <div class="button-row form-group">
+                    <button class="btn btn-primary" ng-click="OK()" ng-hide="ShowbtnOK" type="submit">{{TitulobtnOK}}</button>
+                    <a role="button" href="/CPAG/Index" class="btn btn-default">Voltar</a>
+                </div>
+
+                <div class="alert alert-info">
+                    {{MsgDivDanger}}
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    Metronic.init(); // init metronic core components
+                    Layout.init(); // init current layout
+                    QuickSidebar.init(); // init quick sidebar
+
+                    //$('#txtDataDocumento,#txtDatVencimento,#txtDarfDataPagamento,#txtDarfDataPagamento,#txtDataPreVistaPagar,#txtFGTSDataPagamento,#txtdARFDataVencimento').datepicker({
+                    //    startDate: '-3d'
+                    //});
+                });
+            </script>
+
+            <script type="text/javascript">
+                var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks']);
+                //"$scope", "$http", "$location", "ancoraScroll", "$modal"
+
+                app.directive('datetimez', function() {
+                    return {
+                        restrict: 'A',
+                        require : 'ngModel',
+                        link: function(scope, element, attrs, ngModelCtrl) {
+                            
+                            element.datetimepicker({
+                                dateFormat:'dd/MM/yyyy',
+                                language: 'ptbr',
+                                pickTime: false,
+                                startDate: '01-11-2013',      // set a minimum date
+                                endDate: '01-11-2030'          // set a maximum date
+                            }).on('changeDate', function(e) {
+                                ngModelCtrl.$setViewValue(moment(e.localDate).format());
+                                scope.$apply();
+                            });
+                        }
+                    };  
+                });
+
+                app.controller('MestreCPAG', [
+                    '$scope', '$http', '$location', function ($scope, $http, $location) {
+                        //$scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+
+                        $scope.ModoConsulta = @ViewData["detail"].ToString().ToLower();
+                        $scope.ModoDelete   = @ViewData["delete"].ToString().ToLower();
+                        $scope.TitulobtnOK = "OK";
+                        $scope.ShowbtnOK = @(ViewData["btnOK"] != "OK"?"true":"false");
+                        $scope.ValorTotal = 0;
+                        $scope.id = @(ViewData["id"] == null?0:ViewData["id"]);
+                        $scope.showDivGPS = true;
+                        $scope.showDivDARF = true;
+                        $scope.showDivFGTS = true;
+                        $scope.ShowDivValidacao = false;
+                        $scope.CPAGITEM = {
+                            'id' : 0,
+                            'ContaContabil': null,
+                            'UnidadeNegocio': null,
+                            'Valor': 0,
+                            'PorcentagemLct': 0,
+                            'historico': null
+                        };
+
+                        $scope.CPAGITEMAUX = {};
+                        angular.copy($scope.CPAGITEM, $scope.CPAGITEMAUX);
+                        $scope.CPAGITEMS = [];
+
+                        $scope.CPAG = {
+                            'pessoa_id': null,
+                            'codigoPagamento': null,
+                            'dataLancamento': '@DateTime.Now.ToShortDateString()',
+                            'dataCompetencia': '@DateTime.Now.ToString("MM/yyyy")',
+                            'dataDocumento': null,
+                            'dataVencimentoOriginal': null,
+                            'dataVencimento': null,
+                            'dataBruto': null,
+                            'numeroDocumento': null,
+                            'tipolancamento': null,
+                            'situacaoPagamento': null,
+                            'dataPagamanto': null,
+                            'lotePagamentoBanco': null,
+                            'banco_id': null,
+                            'valorBruto': 0,
+                            'linhadigitavel': null
+                        };
+
+                        $scope.GPS = { 'GPSnomeContribuinte': null,
+                            'GPSdataArrecadacao': null,
+                            'GPScompetencia': null,
+                            'GPSvalorTributo': 0,
+                            'GPSvalorAtualizacaoMonetaria': 0,
+                            'GPSvalorOutrasEntidades': 0,
+                            'GPSvalorArrecadado': 0,
+                            'GPScodigoPagamento': null
+                        }
+
+                        $scope.DARF = {
+                            'DARFnomeContribuinte': null,
+                            'DARFperiodoApuracao': null,
+                            'DARFcnpj': null,
+                            'DARFcodigoReceita': null,
+                            'DARFnumeroReferencia': null,
+                            'DARFdataVencimento': null,
+                            'DARFvalorPrincipal': 0,
+                            'DARFmulta': 0,
+                            'DARFjurosEncargos': 0,
+                            'DARFvalorTotal': 0,
+                            'DARFdataPagamento': null,
+                        }
+
+
+                        $scope.LoadObtemEntidade = function (id) {
+                            $http.post("../../CPAG/ObtemEntidade", "{id:" + id + "}")
+                                .success(function (data) {
+                                    
+                                    $scope.CPAG = data;
+                                    $scope.CPAGITEMS = data.CPAGITEMVMs;
+
+                                    if ($scope.CPAG.tipodocumento_id == 66)
+                                        $scope.GPS = data.GPSVM;
+
+                                    if ($scope.CPAG.tipodocumento_id == 67)
+                                        $scope.DARF = data.DARFVM;
+
+                                    $scope.MostraComplementoTipoDOC(false);
+                                    $scope.SomaTotal();
+                                    $scope.$apply();
+
+                                });
+                        }
+
+                        $scope.MostraComplementoTipoDOC = function (carregaTela) {
+                            $scope.showDivFGTS = false;
+                            $scope.showDivDARF = false;
+                            $scope.showDivGPS = false;
+                            if ($scope.CPAG.tipodocumento_id == 68)
+                            {
+
+                                $scope.showDivFGTS = true;
+                                if (carregaTela == true)
+                                {
+                                    $scope.FGTS.FGTSnomeContribuinte = $scope.CPAG.pessoa_id.split(',')[0];
+                                    $scope.FGTS.FGTScnpj = $scope.CPAG.pessoa_id.split(',')[1];
+
+                                }
+                            }
+                            if ($scope.CPAG.tipodocumento_id == 67)
+                            {
+                                $scope.showDivDARF = true;
+                                if (carregaTela == true)
+                                {
+                                    $scope.DARF.DARFperiodoApuracao = $scope.CPAG.dataCompetencia;
+                                    $scope.DARF.DARFvalorPrincipal = $scope.CPAG.valorBruto;
+                                    $scope.DARF.DARFvalorTotal = $scope.CPAG.valorBruto;
+                                }
+                            }
+                            if ($scope.CPAG.tipodocumento_id == 66)
+                            {
+                                $scope.showDivGPS = true;
+                                if (carregaTela == true)
+                                {
+
+                                }
+
+                            }
+
+                        }
+
+
+                        $scope.OK = function () {
+                            $scope.MsgDivDanger= "";
+                            if ($scope.ModoDelete == true)
+                            {
+                                $scope.Excluir();
+                            }
+                            else
+                            {
+                                $scope.Salvar();
+                            }
+                        }
+
+                        $scope.Salvar = function () {
+
+                            if ($scope.frmDadosGerais.$valid) {
+                                $scope.CPAGAux = {};
+                                $scope.CPAGAux = $scope.CPAG;
+                                $scope.CPAGAux.CPAGITEMVMs = $scope.CPAGITEMS;
+
+                                if ($scope.CPAG.tipodocumento_id == 68)
+                                {
+                                    if ($scope.frmFGTS.$valid)
+                                    {
+                                        $scope.CPAGAux.FGTSVM = $scope.FGTS;
+
+                                    }
+                                    else
+                                    {
+                                        $scope.MsgDivDanger = 'Informe os campos obrigatórios de FGTS.';
+                                        return;
+                                    }
+                                }
+                                if ($scope.CPAG.tipodocumento_id == 67)
+                                {
+                                    if ($scope.frmDARF.$valid)
+                                    {
+                                        $scope.CPAGAux.DARFVM = $scope.DARF;
+
+                                    }
+                                    else
+                                    {
+                                        $scope.MsgDivDanger = 'Informe os campos obrigatórios de DARF.';
+                                        return;
+                                    }
+                                }
+                                if ($scope.CPAG.tipodocumento_id == 66)
+                                {
+                                    if ($scope.frmGPS.$valid)
+                                    {
+                                        $scope.CPAGAux.GPSVM = $scope.GPS;
+
+                                    }
+                                    else
+                                    {
+                                        $scope.MsgDivDanger = 'Informe os campos obrigatórios de GPS.';
+                                        return;
+                                    }
+                                }
+
+
+                                $http.post('../../CPAG/Salvar', $scope.CPAGAux)
+                                .success(function (data) {
+                                    if (data.CDMessage == "OK") {
+                                        $scope.MsgDivDanger = 'Salvo com sucesso.';
+                                    } else {
+                                        $scope.MsgDivDanger = data.DSErroReturn;
+                                    }
+
+                                })
+                                .error(function (data) {
+                                    $scope.MsgDivDanger = 'Sistema Indisponível';
+                                });
+                            } else {
+                                $scope.MsgDivDanger = 'Informe os campos obrigatórios.';
+                            }
+
+                        }
+
+
+                        $scope.Excluir = function () {
+                            $scope.MsgDivDanger= "";
+                            $http.post('../../CPAG/Excluir',"{id : " +  $scope.CPAG.id + "}")
+                            .success(function (data) {
+                                if (data.CDMessage == "OK") {
+                                    $scope.ShowbtnOK = true;
+                                    $scope.MsgDivDanger = 'Documento excluido com sucesso.';
+                                } else {
+                                    $scope.MsgDivDanger = data.DSErroReturn;
+                                }
+
+                            })
+                            .error(function (data) {
+                                $scope.MsgDivDanger = 'Sistema Indisponível';
+                            });
+                        }
+
+                        $scope.Loader = function (isCarregar, msg) {
+                            if (msg == undefined) { msg = "Aguarde, carregando..."; }
+                            $scope.ShowLoad = isCarregar;
+                            $scope.MsgDivLoad = msg;
+                        }
+
+                        $scope.Loader(false);
+
+
+
+
+                        $scope.LoadListaTipoDocumento = function () {
+                            $http.post("../../CPAG/ListaTipoDocumento")
+                                .success(function (data) {
+                                    $scope.ListaTipoDocumento = data;
+                                });
+                        }
+
+                        $scope.LoadListaTipoLancamento = function () {
+                            $http.post("../../CPAG/ListaTipoLancamento")
+                                .success(function (data) {
+                                    $scope.ListaTipoLancamento = data;
+                                });
+                        }
+
+                        $scope.LoadListaBanco = function () {
+                            $http.post("../../CPAG/ListaBanco")
+                                .success(function (data) {
+                                    $scope.ListaBanco = data;
+                                });
+                        }
+
+                        $scope.LoadListaContaContabil = function () {
+                            $http.post("../../CPAG/ListaContaContabil")
+                                .success(function (data) {
+                                    $scope.ListaContaContabil = data;
+                                });
+                        }
+
+                        $scope.LoadListaUnidadeNegocio = function () {
+                            $http.post("../../CPAG/ListaUnidadeNegocio")
+                                .success(function (data) {
+                                    $scope.ListaUnidadeNegocio = data;
+                                });
+                        }
+
+                        $scope.LoadListaCliente = function () {
+                            $http.post("../../CPAG/ListaCliente")
+                                .success(function (data) {
+                                    $scope.ListaCliente = data;
+                                });
+                        }
+
+                        $scope.LoadListaFornecedor = function () {
+                            $http.post("../../CPAG/ListaFornecedor")
+                                .success(function (data) {
+                                    $scope.ListaFornecedor = data;
+                                });
+                        }
+
+                        $scope.LoadListaPessoas = function () {
+                            $http.post("../../CPAG/ListaPessoas")
+                                .success(function (data) {
+                                    $scope.ListaPessoas = data;
+                                });
+                        }
+
+                        $scope.fcAdiciona = function (obj) {
+                            $scope.ShowDivValidacao = false;
+                            //$scope.SomaTotal();
+
+
+                            if ($scope.CPAG.valorBruto == $scope.ValorTotal) {
+                                $scope.MsgDivValidacao = "Valor total atingido. ";
+                                $scope.ShowDivValidacao = true;
+                                return;
+                            }
+
+
+                            if ($scope.CPAG.valorBruto == 0)
+                            {
+                                $scope.MsgDivValidacao = "Informe o valor bruto. ";
+                                $scope.ShowDivValidacao = true;
+                                return;
+                            }
+
+
+                            if (obj.Valor > $scope.CPAG.valorBruto)
+                            {
+                                $scope.MsgDivValidacao = "Valor bruto não pode ser menor que o informado na parcela. ";
+                                $scope.ShowDivValidacao = true;
+                                return;
+                            }
+                            if (obj.Valor == 0) {
+                                if (obj.PorcentagemLct == 0) {
+                                    $scope.MsgDivValidacao = "Informe o valor ou a porcentagem. ";
+                                    $scope.ShowDivValidacao = true;
+                                    return;
+                                }
+                                if (obj.PorcentagemLct > 100) {
+                                    $scope.MsgDivValidacao = "Porcentagem tem que estar entre 0 e 100.";
+                                    $scope.ShowDivValidacao = true;
+                                    return;
+                                }
+
+                                obj.Valor = parseFloat((($scope.CPAG.valorBruto / 100) * obj.PorcentagemLct).toFixed(2));
+
+                                if ((obj.Valor + $scope.ValorTotal) > $scope.CPAG.valorBruto) {
+                                    $scope.MsgDivValidacao = "Valor supera 100%.";
+                                    $scope.ShowDivValidacao = true;
+                                    return;
+                                }
+
+                            } else {
+                                if ((obj.Valor + $scope.ValorTotal) > $scope.CPAG.valorBruto) {
+                                    $scope.MsgDivValidacao = "Valor supera 100%.";
+                                    $scope.ShowDivValidacao = true;
+                                    return;
+                                }
+
+                            }
+
+                            if ($scope.CPAGITEM.UnidadeNegocio == null) {
+                                $scope.MsgDivValidacao = "Informe a Unidade.";
+                                $scope.ShowDivValidacao = true;
+                                return;
+                            }
+
+                            if ($scope.CPAGITEM.historico == null) {
+                                $scope.MsgDivValidacao = "Informe o histórico.";
+                                $scope.ShowDivValidacao = true;
+                                return;
+                            }
+
+
+                            $scope.objAux = {};
+                            angular.copy(obj, $scope.objAux);
+                            if ($scope.CPAGITEMS == null)
+                                $scope.CPAGITEMS = [];
+
+                            $scope.CPAGITEMS.push($scope.objAux);
+
+                            $scope.SomaTotal();
+
+
+                        }
+
+                        $scope.fcExcluir = function (id) {
+                            $scope.CPAGITEMS.splice(id, 1);
+
+                            $scope.SomaTotal();
+                        }
+                        $scope.SomaTotal = function () {
+                            $scope.ValorTotal = 0;
+
+                            angular.forEach($scope.CPAGITEMS, function (value) {
+                                $scope.ValorTotal += value.Valor;
+                            });
+                        }
+
+
+                        $scope.CodigoBarras = function () {
+                            $http.post("../../CPAG/codigoBarras", "{LinhaDigitavel:'" + $scope.CPAG.linhadigitavel + "'}")
+                                .success(function (data) {
+                                    if (data.Erro != "")
+                                    {
+                                        $scope.CPAG.linhadigitavel = data.LinhaDigitavel;
+                                        $scope.CPAG.linhadigitavel = data.Vencimento;
+                                        $scope.CPAG.linhadigitavel = data.dataVencimento;
+
+                                    };
+                                });
+                        }
+
+
+
+
+                        $scope.LoadListaTipoDocumento();
+                        $scope.LoadListaBanco();
+                        $scope.LoadListaCliente();
+                        $scope.LoadListaFornecedor();
+                        $scope.LoadListaPessoas();
+                        $scope.LoadListaContaContabil();
+                        $scope.LoadListaTipoLancamento();
+                        $scope.LoadListaUnidadeNegocio();
+                        $scope.LoadObtemEntidade($scope.id);
+                    }
+                ]);
+
+
+
+            </script>
+
+
+

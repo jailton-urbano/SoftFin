@@ -1,0 +1,12 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\bin\Debug\SoftFin.Migrate.NFe.WebService.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\bin\Debug\SoftFin.Migrate.NFe.WebService.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\bin\Debug\SoftFin.Migrate.NFe.WebService.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\bin\Debug\SoftFin.Migrate.NFe.WebService.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.csprojAssemblyReference.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.csproj.CoreCompileInputs.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Migrate.NFe.WebService\obj\Debug\SoftFin.Migrate.NFe.WebService.pdb

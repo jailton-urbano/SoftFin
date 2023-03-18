@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Gera Ficha de Ponto";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/209118286-Como-emitir-uma-folha-de-Ponto";
+}
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal" class="form-control" id="dataFinal" value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Usuário</label>
+                @Html.DropDownList("usuario_id", (SelectList)ViewData["usuario"], "---Selecione---", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-1 form-group'>
+                <button class="btn btn-primary" type="button" id="listar" name="listar">
+                    <span class="glyphicon glyphicon-search"></span> Listar</button>
+            </div>
+            <div class='col-md-1 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Gerar PDF</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+
+    <br />
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#gerar').click(function () {
+        if ($("#usuario_id").val() == "") {
+            alert("Selecione um usuário");
+            return;
+        }
+        if ($("#dataInicial").val() == "") {
+            alert("Informe a data inicial");
+            return;
+        }
+        if ($("#dataFinal").val() == "") {
+            alert("Informe a data final");
+            return;
+        }
+        window.location = "geraFolhaPontoPDF?dataInicial=" + $("#dataInicial").val() + "&dataFinal=" + $("#dataFinal").val() + "&usuario=" + $("#usuario_id").val();
+    });
+    $('#listar').click(function () {
+
+        if ($("#usuario_id").val() == "") {
+            alert("Selecione um usuário");
+            return;
+        }
+        if ($("#dataInicial").val() == "") {
+            alert("Informe a data inicial");
+            return;
+        }
+        if ($("#dataFinal").val() == "") {
+            alert("Informe a data final");
+            return;
+        }
+
+        $('#indicator').show();
+
+        $.ajax(
+            {
+                url: "Pesquisa",
+                data: {
+                    'dataInicial': $("#dataInicial").val(),
+                    'dataFinal': $("#dataFinal").val(),
+                    'usuario': $("#usuario_id").val(),
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    montaTabela(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+    function montaTabela(jsonData) {
+
+        var table = '                    <table class="table table-striped table-bordered table-hover">';
+        table += '                        <thead>';
+        table += '                            <tr>';
+        table += '                                <th class="center" width="20%">Usuário</th>';
+        table += '                                <th class="center" width="10%">Data</th>';
+        table += '                                <th class="center" width="7%">Ponto1</th>';
+        table += '                                <th class="center" width="7%">Ponto2</th>';
+        table += '                                <th class="center" width="7%">Ponto3</th>';
+        table += '                                <th class="center" width="7%">Ponto4</th>';
+        table += '                                <th class="center" width="7%">Ponto5</th>';
+        table += '                                <th class="center" width="7%">Ponto6</th>';
+        table += '                                <th class="center" width="7%">Ponto7</th>';
+        table += '                                <th class="center" width="7%">Ponto8</th>';
+        table += '                                <th class="center" width="14%">Comentários</th>';
+        table += '                            </tr>';
+        table += '                        </thead>';
+        table += '                        <tbody>';
+
+        $.each(jsonData, function (index, item) {
+
+            table += '<tr>';
+            table += '<td class="active">' + item.usuario + '</td>';
+            table += '<td class="active">' + item.data + '</td>';
+            table += '<td class="active">' + item.ponto1 + '</td>';
+            table += '<td class="active">' + item.ponto2 + '</td>';
+            table += '<td class="active">' + item.ponto3 + '</td>';
+            table += '<td class="active">' + item.ponto4 + '</td>';
+            table += '<td class="active">' + item.ponto5 + '</td>';
+            table += '<td class="active">' + item.ponto6 + '</td>';
+            table += '<td class="active">' + item.ponto7 + '</td>';
+            table += '<td class="active">' + item.ponto8 + '</td>';
+            table += '<td class="active">' + item.comentarios + '</td>';
+            table += '</tr>';
+        });
+        table += '                        </tbody>';
+        table += '                     </table>';
+
+        $('div#Lista').html(table);
+    }
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+

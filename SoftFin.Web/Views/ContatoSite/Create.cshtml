@@ -1,0 +1,137 @@
+﻿@model SoftFin.Web.Models.ContatoSite
+@{
+    ViewBag.Title = "Entrar em contato com nosso atendimento";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.Data)
+            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.Email)
+                    @Html.TextBoxFor(x => x.Email)
+                    @Html.ValidationMessageFor(x => x.Email)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.Telefone)
+                    @Html.TextBoxFor(x => x.Telefone)
+                    @Html.ValidationMessageFor(x => x.Telefone)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.Nome)
+                    @Html.TextBoxFor(x => x.Nome)
+                    @Html.ValidationMessageFor(x => x.Nome)
+                </div>
+            </div>            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.Assunto)
+                    @Html.TextBoxFor(x => x.Assunto)
+                    @Html.ValidationMessageFor(x => x.Assunto)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    @Html.LabelFor(x => x.Mensagem)
+                    @Html.TextAreaFor(x => x.Mensagem)
+                    @Html.ValidationMessageFor(x => x.Mensagem)
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Enviar" />
+        </div>
+
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+</script>
+<style type='text/css'>
+    <!--
+    #Email {
+        width: 475.00px;
+    }
+
+    #Telefone {
+        width: 475.00px;
+    }
+
+    #Assunto {
+        width: 475.00px;
+    }
+
+    #Mensagem {
+        width: 475.00px;
+    }
+
+    #agencia {
+        width: 70.00px;
+    }
+
+    #agenciaDigito {
+        width: 40.00px;
+    }
+
+    #contaCorrente {
+        width: 100.00px;
+    }
+
+    #contaCorrenteDigito {
+        width: 30.00px;
+    }
+
+    #nossoNumero {
+        width: 275.00px;
+    }
+
+    #numeroDocumento {
+        width: 275.00px;
+    }
+
+    #TextoBoleto01 {
+        width: 275.00px;
+    }
+
+    #TextoBoleto02 {
+        width: 275.00px;
+    }
+
+    #TextoBoleto03 {
+        width: 275.00px;
+    }
+
+    #observacao {
+        width: 600.00px;
+    }
+
+    #principal {
+        width: 275.00px;
+    }
+
+    #estabelecimento_id {
+        width: 275.00px;
+    }
+
+    #Estabelecimento {
+        width: 275.00px;
+    }
+
+    #EmiteBoleto {
+        width: 80.00px;
+    }
+    #carteira {
+        width: 70.00px;
+    }
+    -->
+</style>

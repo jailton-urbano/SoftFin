@@ -1,0 +1,107 @@
+﻿    <div>
+        <div class="modal-header">
+            <h3>Detalhar o Processo ?</h3>
+        </div>
+        <div class="modal-body">
+            <h3>{{Lista.Obj.Processo}}</h3>
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    <label>Data Inicio</label><br />
+                    {{Lista.Obj.InicioProcesso |date:'dd/MM/yyyy h:mma'}}
+                </div>
+                <div class='col-md-3 form-group'>
+                    <label>Data Fim</label><br />
+                    {{Lista.Obj.FimProcesso |date:'dd/MM/yyyy h:mma'}}
+                </div>
+                <div class='col-md-2 form-group'>
+                    <label>Cancelado</label><br />
+                    {{Lista.Obj.Cancelado}}
+                </div>
+                <div class='col-md-4 form-group'>
+                    <label>Usuário Cancelamento</label><br />
+                    {{Lista.Obj.UsuarioCancelado}}
+                </div>
+
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    <label>Motivo</label><br />
+                    {{Lista.Obj.Motivo}}
+                </div>
+
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Atividade / Condição Entrada
+                        </th>
+                        <th>
+                            Função
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in Lista.Obj.Dets">
+                        <td>
+                            {{item.Atividade}} /  {{item.CondicaoEntrada}}
+                        </td>
+                        <td>
+                            {{item.Funcao}}
+                        </td>
+
+                        <td>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Usuário
+                                        </th>
+                                        <th>
+                                            Situação
+                                        </th>
+                                        <th>
+                                            Inicio/Fim
+                                        </th>
+                                        <th>
+                                            Motivo
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="itemExec in item.Execs">
+
+                                        <td>
+                                            {{itemExec.Usuario}}
+                                        </td>
+                                        <td>
+                                            {{itemExec.Status}}
+                                        </td>
+                                        <td>
+                                            {{itemExec.DataInicio | date:'dd/MM/yyyy h:mma'}} / {{itemExec.DataFim | date:'dd/MM/yyyy h:mma'}}
+                                        </td>
+                                        <td>
+                                            {{itemExec.Motivo}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="Cancel()" title="Saida da opção">
+                <span class="glyphicon glyphicon-log-out"></span>
+                Voltar
+            </button>
+        </div>
+    </div>
+
+

@@ -1,0 +1,154 @@
+﻿<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script src="~/Scripts/angular/chart/angular-chart.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/Cobranca/CobrancaIndex.js"></script>
+
+
+<div ng-app="SOFTFIN" id="DivTotal">
+
+    <script type="text/ng-template" id="modalEmail.html">
+        <div>
+            <div class="modal-header">''
+                <h3>Enviar Email de Cobrança</h3>
+                
+            </div>
+
+            <div class="modal-body">
+                <div class='row'>
+                    <div class='col-md-12 form-group'>
+                        <label>Titulo </label>
+                        <input type='text' ng-model='Titulo' class='form-control' ng-maxlength="200" />
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-12 form-group'>
+                        <label>Texto </label>
+                        <textarea ng-model='Texto' class='form-control' ng-maxlength="2000"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" ng-click="OK()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Enviar
+                </button>
+                <button class="btn btn-" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </script>
+    <div ng-controller="MestreEntidade">
+
+        <div class="modal-footer">
+
+            <button style="border-right-width: 0px; padding-right: 49px;"
+                    ng-click="Pesquisar()"
+                    title="Atualiza a lista na tela"
+                    class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+
+        </div>
+        <div class="row">
+            <div class='col-md-3 form-group'>
+                <label>Filtro : </label>
+                <input type="text" class="form-control" ng-model="procurar" />
+            </div>
+            <table class="table table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width:120px">
+                            <span style="cursor: pointer;"> Enviar </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Ordem </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Cliente </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Email  </span>
+                        </th>
+                        <th>
+                            <span style="cursor: pointer;"> Tipo </span>
+                        </th>
+                        <th style="text-align: right;">
+                            <span style="cursor: pointer;"> Vencimento </span>
+                        </th>
+                        <th style="text-align: right;">
+                            <span style="cursor: pointer;"> Valor </span>
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in Lista|filter:procurar|orderBy:sortKey:reverse">
+
+                        <td>
+                            <select class="form-control" ng-model="item.Enviar"
+                                    ng-options="o.Value as o.Text for o in ListaSimNao">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </td>
+                        <td>
+                            {{item.Numero}}
+                        </td>
+                        <td>
+                            {{item.Cliente}}
+                        </td>
+                        <td>
+                            {{item.Email}}
+                        </td>
+                        <td>
+                            {{item.Tipo}}
+                        </td>
+                        <td style="text-align: right;">
+                            {{item.Vencimento  | date:'dd/MM/yyyy'}} 
+                        </td>
+                        <td style="text-align: right;">
+                            {{item.Valor | number:2}} 
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-9 form-group'>
+            </div>
+            <div class='col-md-3 form-group'>
+                <span class="input-group-btn">
+                    <button type="button"
+                            ng-click="Enviar()"
+                            class="btn btn-primary"
+                            ng-show="!ModoConsulta">
+                        <span class="glyphicon glyphicon-envelope"></span> Enviar Email de Cobrança
+                    </button>
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

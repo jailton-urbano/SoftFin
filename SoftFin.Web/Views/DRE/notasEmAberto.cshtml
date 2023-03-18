@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Lista Notas Fiscais em Aberto";
+}
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraNotasEmAberto",
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('number', 'Número NFS');
+                data.addColumn('string', 'Emissão');
+                data.addColumn('string', 'Vencimento');
+                data.addColumn('string', 'Cliente');
+                data.addColumn('number', 'Valor Bruto');
+                data.addColumn('number', 'Valor Líquido');
+                data.addColumn('number', 'Valor Recebido');
+                data.addColumn('number', 'Saldo Receber');
+                data.addColumn('string', 'Status');
+                data.addColumn('number', 'Dias Atraso');
+
+                for (var i = 0; i < tabledata.length; i++) {
+
+                    data.addRow([
+                                 tabledata[i].numeroNfse,
+                                 tabledata[i].dataEmissaoS,
+                                 tabledata[i].dataVencimentoS,
+                                 tabledata[i].razaoTomador,
+                                 tabledata[i].valorNfse,
+                                 tabledata[i].valorLiquido,
+                                 tabledata[i].valorRecebido,
+                                 tabledata[i].saldoReceber,
+                                 tabledata[i].textoRecebimento,
+                                 tabledata[i].diasAtraso,
+                    ]);
+                }
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                formatter.format(data, 4);
+                formatter.format(data, 5);
+                formatter.format(data, 6);
+                formatter.format(data, 7);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, { allowHtml: true, showRowNumber: true });
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+</script>

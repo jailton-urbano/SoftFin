@@ -1,0 +1,337 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/SBI/SBIIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir Saldo Bancário Inicial?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                         <div class='col-md-12 form-group'>
+                             <label>  {{entidade.DataInicial | date:'dd/MM/yyyy'}} - {{entidade.Ano}} - {{entidade.saldoInicial}} - {{entidade.nomeBanco}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="Cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalSalvar.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Salvar o banco movimento?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{mensagem}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="OK()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+
+        <div id="Grid" ng-show="showGrid">
+
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+
+                            <div class='container-fluid'>
+
+                                <div class='row'>
+                                    <div class='col-md-4 form-group'>
+                                        <label>Projeto</label>
+                                        <select class="form-control"
+                                                ng-model="Filter.banco_id"
+                                               
+                                                ng-options="o.Value as o.Text for o in listBancos">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Search() ">
+                                <span class="glyphicon glyphicon-search"></span> Pesquisar
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel-body'>
+                <form class="form-search">
+
+
+                    <div class='col-md-3 form-group'>
+                        <label>Pesquisa : </label>
+                        <input type="text" class="form-control" ng-model="locate" ng-disabled="Filter.banco_id === null" />
+                    </div>
+
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+
+
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Search()" ng-disabled="Filter.banco_id === null"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="New()" ng-disabled="Filter.banco_id === null"
+                                    title="Novo registro"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+
+
+                        </th>
+                        <th>
+
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in listProjetos|orderBy:sortKey:reverse|filter:locate|itemsPerPage:7">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detail(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Edit(item)"
+                                    title="Edita o lançamento"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Delete(item)"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                              
+                                <span ng-click="Order('Ano')" style="cursor:pointer"> Ano </span>/
+                                <label>{{item.Ano}}</label>
+
+                                <br />
+                                <span ng-click="Order('saldoInicial')" style="cursor:pointer"> Saldo Inicial</span>/
+
+                                <label>{{item.saldoInicial}}</label><br />
+
+                                <span ng-click="Order('nomeBanco')" style="cursor:pointer"> Banco Nome</span>/
+
+                                <label>{{item.nomeBanco}}</label><br />
+                              
+                            </b>
+
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            @*/ {{item.valor | number:2}}*@
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+            <div>
+                <div class='row'>
+                    <div class='col-md-9 form-group'>
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Save()"
+                                    class="btn btn-primary"
+                                    ng-show="!modeDetail">
+                                <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+                            </button>
+                        </span>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Back()"
+                                    class="btn btn-default">
+                                <span class="glyphicon glyphicon-log-out"></span> Voltar
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>Banco</label>
+                        <select class="form-control"
+                                ng-model="Filter.banco_id"
+                                ng-options="o.Value as o.Text for o in listBancos">
+                            <option value="">--Selecione--</option>
+                        </select>
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        <label>Ano</label>
+                        <input ng-disabled="modeDetail" data-format="yyyy" type="text" ng-model="entidade.Ano" class="form-control" ng-maxlength="350" />
+                    </div>
+
+
+
+                    <div class='col-md-2 form-group'>
+                        <label>Saldo Inicial</label>
+                        <input ng-disabled="modeDetail" type="text" ng-model="entidade.saldoInicial" class="form-control" required ng-maxlength="100" ui-number-mask="0" />
+                    </div>
+
+               
+
+                </div>
+
+
+
+                <div class='row'>
+                    <div class='col-md-9 form-group'>
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Save()"
+                                    class="btn btn-primary"
+                                    ng-show="!modeDetail">
+                                <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+                            </button>
+                        </span>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-click="Back()"
+                                    class="btn btn-default">
+                                <span class="glyphicon glyphicon-log-out"></span> Voltar
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="alert alert-info" ng-show="msgOK != ''">
+                {{msgOK}}
+            </div>
+
+            <div class="alert alert-danger" ng-show="msgNOK != ''">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in errors">{{item}}</li>
+                </ul>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+

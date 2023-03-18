@@ -1,0 +1,127 @@
+﻿@model SoftFin.Web.Models.Pagamento
+@{
+    ViewBag.Title = "Pagamentos - Inclusão";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205667719-Como-registrar-um-pagamento";
+
+}
+
+<h3>Contas a Pagar</h3>
+<div class='container-fluid'>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Valor</th>
+                <th>Data Documento</th>
+                <th>Data Vencimento</th>
+                <th>Fornecedor</th>
+                <th>Conta Contábil</th>
+                <th>Situação</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>@Model.documentoPagarMestre.numeroDocumento</td>
+            <td>R$ @Model.documentoPagarMestre.valorBruto.ToString("n")</td>
+            <td>@Model.documentoPagarMestre.dataDocumento.ToShortDateString()</td>
+            <td>@Model.documentoPagarMestre.dataVencimento.ToShortDateString()</td>
+            <td>@Model.documentoPagarMestre.Pessoa.nome</td>
+            <td>@Model.documentoPagarMestre.PlanoDeConta.descricao</td>
+            <td id="DIVSituacao"></td>
+        </tr>
+    </table>
+</div>
+
+<h3>Pagamentos</h3>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.documentoPagarMestre_ID)
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    Data de Pagamento:
+                    <input type="text" id="dataPagamento" name="dataPagamento" value="@Model.dataPagamento.Date.ToString("dd/MM/yyyy")" class="form-control" />
+                    @Html.ValidationMessageFor(x => x.dataPagamento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    Banco/conta:
+                    @Html.DropDownListFor(x => x.banco_ID, (SelectList)ViewData["banco"], "--Selecione--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.banco_ID)
+                </div>
+                <div class='col-md-4 form-group'>
+                    Histórico:
+                    @Html.TextBoxFor(x => x.historico, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.historico)
+                </div>
+                <div class='col-md-3 form-group'>
+                    Valor Pago:
+                    @Html.TextBoxFor(x => x.valorPagamento, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorPagamento)
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<h3>Pagamentos</h3>
+
+<div id="DivPagamentos">
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#dataPagamento').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataPagamento').keyup(
+          function (event) {
+              formataData(this, event);
+          });
+
+        $('#valorPagamento').attr('maxlength', '18');
+        $('#valorPagamento').keyup(
+          function (event) {
+              formataValor(this, event);
+          });
+        CarregaParcelas();
+    });
+
+
+    function CarregaParcelas() {
+        $.ajax({
+            url: '@Url.Action("pagamentos")',
+            data: { id: $("#documentoPagarMestre_ID").val() },
+            type: "POST",
+            success: function (data) {
+                $("#DivPagamentos").html(data.obj);
+                $("#DIVSituacao").html(data.situacao);
+            }
+
+        });
+
+    };
+    function Remove(id) {
+        $.ajax({
+            url: '@Url.Action("Delete")',
+            data: { id: id },
+                    type: "POST",
+                    success: function (data) {
+                        CarregaParcelas();
+                    }
+
+                });
+    }
+
+
+</script>

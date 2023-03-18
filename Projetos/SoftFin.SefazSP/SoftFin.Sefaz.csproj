@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DBE3DED7-65F3-4115-B357-F8AB63BD061D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SoftFin.Sefaz</RootNamespace>
+    <AssemblyName>SoftFin.Sefaz</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NFeConsultaDest.cs" />
+    <Compile Include="NFeDownload.cs" />
+    <Compile Include="NFeCartaCorrecao.cs" />
+    <Compile Include="NFeConsultaProtocolo.cs" />
+    <Compile Include="NFeDistribuicaoDFe.cs" />
+    <Compile Include="NFeAutorizacao.cs" />
+    <Compile Include="NFeCancelamento.cs" />
+    <Compile Include="NFeInutilizacao.cs" />
+    <Compile Include="NFeStatus.cs" />
+    <Compile Include="Service References\srvsNFeDistribuicaoDFe\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeAutorizacao\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeConsultaDestinatario\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeConsulta\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeInutilizacao\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeRecepcaoEvento\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeRetornoAutorizacao\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\srwsNFeStatusServico\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\DataSources\System.Xml.Linq.XElement.datasource" />
+    <None Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
+    <None Include="Service References\srvsNFeDistribuicaoDFe\NFeDistribuicaoDFe.wsdl" />
+    <None Include="Service References\srvsNFeDistribuicaoDFe\SoftFin.Sefaz.srvsNFeDistribuicaoDFe.nfeDistDFeInteresseResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeAutorizacao\nfeautorizacao4.wsdl" />
+    <None Include="Service References\srwsNFeAutorizacao\SoftFin.Sefaz.srwsNFeAutorizacao.nfeAutorizacaoLoteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeAutorizacao\SoftFin.Sefaz.srwsNFeAutorizacao.nfeAutorizacaoLoteZipResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeConsultaDestinatario\cadconsultacadastro4.wsdl" />
+    <None Include="Service References\srwsNFeConsultaDestinatario\SoftFin.Sefaz.srwsNFeConsultaDestinatario.consultaCadastroResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeConsulta\nfeconsultaprotocolo4.wsdl" />
+    <None Include="Service References\srwsNFeConsulta\SoftFin.Sefaz.srwsNFeConsulta.nfeConsultaNFResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeInutilizacao\nfeinutilizacao4.wsdl" />
+    <None Include="Service References\srwsNFeInutilizacao\SoftFin.Sefaz.srwsNFeInutilizacao.nfeInutilizacaoNFResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeRecepcaoEvento\nferecepcaoevento4.wsdl" />
+    <None Include="Service References\srwsNFeRecepcaoEvento\SoftFin.Sefaz.srwsNFeRecepcaoEvento.nfeRecepcaoEventoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeRetornoAutorizacao\nferetautorizacao4.wsdl" />
+    <None Include="Service References\srwsNFeRetornoAutorizacao\SoftFin.Sefaz.srwsNFeRetornoAutorizacao.nfeRetAutorizacaoLoteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\srwsNFeStatusServico\nfestatusservico4.wsdl" />
+    <None Include="Service References\srwsNFeStatusServico\SoftFin.Sefaz.srwsNFeStatusServico.nfeStatusServicoNFResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SoftFin.NFe.DTO\SoftFin.NFe.DTO.csproj">
+      <Project>{b7ce9a82-d516-472f-87e8-0f09785c05fa}</Project>
+      <Name>SoftFin.NFe.DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoftFin.Utils\SoftFin.Utils.csproj">
+      <Project>{848d86ae-e105-4269-aecd-c43d71c1a340}</Project>
+      <Name>SoftFin.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\srvsNFeDistribuicaoDFe\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeAutorizacao\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeConsultaDestinatario\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeConsulta\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeInutilizacao\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeRecepcaoEvento\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeRetornoAutorizacao\" />
+    <WCFMetadataStorage Include="Service References\srwsNFeStatusServico\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeAutorizacao\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeAutorizacao\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeAutorizacao\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsulta\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsulta\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsulta\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRetornoAutorizacao\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRetornoAutorizacao\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRetornoAutorizacao\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsultaDestinatario\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsultaDestinatario\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsultaDestinatario\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeInutilizacao\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeInutilizacao\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeInutilizacao\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRecepcaoEvento\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRecepcaoEvento\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRecepcaoEvento\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeStatusServico\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeStatusServico\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeStatusServico\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srvsNFeDistribuicaoDFe\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srvsNFeDistribuicaoDFe\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srvsNFeDistribuicaoDFe\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeStatusServico\nfestatusservico4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeInutilizacao\nfeinutilizacao4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsulta\nfeconsultaprotocolo4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeAutorizacao\nfeautorizacao4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRecepcaoEvento\nferecepcaoevento4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeConsultaDestinatario\cadconsultacadastro4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srwsNFeRetornoAutorizacao\nferetautorizacao4.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\srvsNFeDistribuicaoDFe\NFeDistribuicaoDFe.disco" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

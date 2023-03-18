@@ -1,0 +1,102 @@
+﻿@model SoftFin.Web.Models.ImportacaoArquivo
+@{
+    ViewBag.Title = "Upload Arquivo Excel/CSV";
+
+}
+
+
+@using (Html.BeginForm("Import", "Pessoa", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    
+    
+    if (ViewData["Importado"] == null)
+    {
+        <div class='container'>
+            <input type="hidden" id="id" name="id" value="@ViewData["id"]" />
+            <input type="hidden" id="logopadrao" name="logopadrao" value=""/>
+            <div class='row'>
+                <div class='col-md-12 form-group'>
+                    <label>Arquivo CSV Somente (*.csv), formato UTF8, Separado por Ponto e Virgula(;), CPF/CNPJ é chave e Máximo de 5-Mega</label>
+                    <input type="file" name="NomeArquivoAnexo" id="NomeArquivoAnexo" />
+                </div>
+            </div>
+        </div>
+        <div class="button-row form-group">
+            <button class="btn btn-primary" type="submit">
+                <span class="glyphicon glyphicon-ok"></span> Carregar
+            </button>
+            @Html.ActionLink("Voltar", "/Index", new object(), new { @class = "btn btn-default", role = "button" })
+        </div>
+        <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+            <img src="~/Content/images/loading_bar_animated.gif" />
+        </div>
+    }
+    else
+    {
+        <div class='container'>
+            <div class='row'>
+                <div class='span8'>
+                    <label>@Model.Situacao</label>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    <label>Total de Linhas</label>
+                </div>
+                <div class='col-md-4 form-group'>
+                    <label>@Model.TotalLinhas</label>
+                </div>
+            </div>
+            
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    <label>Total de Erros</label>
+                </div>
+                <div class='col-md-4 form-group'>
+                    <label>@Model.TotalErros</label>
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    <label>Total de Linhas Importadas</label>
+                </div>
+                <div class='col-md-4 form-group'>
+                    <label>@Model.TotalImportadas</label>
+                </div>
+            </div>
+            @foreach (var item in Model.LinhasErros)
+            {
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        <label>@item.Key</label>
+                    </div>
+                    <div class='col-md-8 form-group'>
+                        <label>@item.Value</label>
+                    </div>
+                </div>
+            }
+        </div>
+    
+        <div class="button-row form-group">
+            
+            @Html.ActionLink("Voltar", "/Index", new object(), new { @class = "btn btn-default", role = "button" })
+        </div>
+    }
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('Form').on('submit', function (e) {
+        $('#indicator').show();
+    });
+</script>

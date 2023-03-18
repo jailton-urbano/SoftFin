@@ -1,0 +1,88 @@
+﻿@model SoftFin.Web.Models.Despesa
+@{
+    ViewBag.Title = "Despesa - Excluir";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.colaborador_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.colaborador_id, (SelectList)ViewData["colaborador"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.colaborador_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.cliente_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.cliente_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.projeto_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.projeto_id, (SelectList)ViewData["projeto"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.projeto_id)
+                </div>
+            </div>
+            <div class='row'>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.tipoDespesa_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.tipoDespesa_id, (SelectList)ViewData["tipoDespesa"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tipoDespesa_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.Data)
+                    <br />
+                    <input type='text' id='Data' name='Data' class='form-control'  value='@Model.Data.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.Data)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    <br />
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+
+            </div>
+            <div class='row'>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    <br />
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+
+            </div>
+
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+<script>
+    $('input[type!=hidden]').attr('disabled', 'disabled')
+    $('select').attr('disabled', 'disabled')
+</script>
+

@@ -1,0 +1,9 @@
+﻿@Html.DevExpress().ReportViewer(settings =>{
+    // The following settings are necessary for a Report Viewer.
+    settings.Name = "UnReport";
+    settings.Report = (Sistema1.Reports.UnidadeNegocioReport)ViewData["Report"];
+    // Callback and export route values specify the corresponding controllers and their actions.
+    // These settings are necessary as well.
+    settings.CallbackRouteValues = new { Controller="UnidadeNegocio", Action="ReportViewerPartial" };
+    settings.ExportRouteValues = new { Controller = "UnidadeNegocio", Action = "ExportReportViewerPartial" };
+    }).GetHtml()

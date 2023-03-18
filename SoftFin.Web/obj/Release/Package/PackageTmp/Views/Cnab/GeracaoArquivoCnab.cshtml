@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Geração Arquivo Cnab";
+}
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial" class="datepicker" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal" class="datepicker" id="dataFinal" value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                Banco/Conta:
+                @Html.DropDownList("banco", (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+
+    <button class="btn btn-primary" type="button" id="selecionar" name="selecionar">
+        <span class="glyphicon glyphicon-check"></span> Seleciona Todos
+    </button>
+
+    <div id="Lista">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+    <div id="Emissao">
+        <button class="btn btn-primary" type="submit">Gerar Arquivo</button>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#pesquisa').click(function () {
+            $('#indicator').show();
+            $.ajax(
+                {
+                    url: "ConsultaCNAB",
+                    data: {
+                        'dataInicial': $("#dataInicial").val(),
+                        'dataFinal': $("#dataFinal").val(),
+                        'banco': $("#banco").val(),
+                    },
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (data) {
+                        carregaListaNotas(data);
+                        $('#indicator').hide();
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                }
+            );
+
+        });
+
+        $('#selecionar').click(function () {
+            $('input').prop('checked', true);
+        });
+
+    });
+
+
+
+    function carregaListaNotas(jsonData) {
+        var table = '<table width="600" cellpadding="5" class="table table-hover table-bordered"><thead><tr><th scope="col">Autorizar</th><th scope="col">Cliente</th><th scope="col">Data Lançamento</th><th scope="col">Competencia</th><th scope="col">Vencimento</th><th scope="col">Valor</th><th scope="col">Tipo Doc.</th><th scope="col">Banco</th><th scope="col">Erro</th></tr></thead><tbody>';
+        $.each(jsonData, function (index, nota) {
+            table += '<tr>';
+            table += "<td class='edit' field='name' user_id=" + nota.id + ">";
+
+            if (nota.erro == "")
+                table += "<input type='checkbox' name='cpg" + nota.id + "' value='checked' />";
+            
+
+            table += '</td><td class="edit" field="name" user_id="' + nota.id + '">' + nota.pessoa + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.dataLancamento + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.dataCompetencia + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.dataVencimento + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '"><a href="../DocumentoPagarMestre/Detail/' + nota.id + '" target="_blank" >' + nota.valorBruto + '</a></td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.tipodocumento + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.banco + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + ' style="color:#ae1616">' + nota.erro + '</td>';
+
+            table += '</tr>';
+        });
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+
+</script>

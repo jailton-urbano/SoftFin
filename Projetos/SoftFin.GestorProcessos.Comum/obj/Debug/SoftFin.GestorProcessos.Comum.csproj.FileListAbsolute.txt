@@ -1,0 +1,11 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\bin\Debug\SoftFin.GestorProcessos.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\bin\Debug\SoftFin.GestorProcessos.Comum.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.csprojAssemblyReference.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\bin\Debug\SoftFin.GestorProcessos.Comum.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\bin\Debug\SoftFin.GestorProcessos.Comum.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.csproj.CoreCompileInputs.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.GestorProcessos.Comum\obj\Debug\SoftFin.GestorProcessos.Comum.pdb

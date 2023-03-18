@@ -1,0 +1,109 @@
+﻿@using MvcCheckBoxList.Model
+@model SoftFin.Web.Models.AtividadeUsuarioView
+
+@{
+    ViewBag.Title = "Atividade - Excluir";
+
+}
+
+
+<fieldset>
+
+    
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+            <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.estabelecimento_id)
+            @Html.HiddenFor(x => x.projeto_id)
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.Projeto.nomeProjeto)
+                    <br />
+                    @Html.DisplayFor(x => x.Projeto.nomeProjeto)
+                </div>
+            </div> 
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.predescessora_id)
+                    @Html.DropDownListFor(model => model.predescessora_id, (SelectList)ViewData["predescessora"], "---Selecione---",  new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.predescessora_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.sucessora_id)
+                    @Html.DropDownListFor(model => model.sucessora_id, (SelectList)ViewData["sucessora"], "---Selecione---",  new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.sucessora_id)
+                </div>                
+            </div>
+            <div class="row">
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.sequencia)
+                    @Html.TextBoxFor(x => x.sequencia, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.sequencia)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataInicial)
+                    
+                    <input type='text' id='DataInicial' name='DataInicial' class='form-control'  
+                        value='@(Model.DataInicial.HasValue ? Model.DataInicial.Value.ToString("dd/MM/yyyy") : "")' 
+                         />
+                    @Html.ValidationMessageFor(x => x.DataInicial)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataFinal)
+                    
+                    <input type='text' id='DataFinal' name='DataFinal' class='form-control'  
+                        value='@(Model.DataFinal.HasValue ? Model.DataFinal.Value.ToString("dd/MM/yyyy") : "")' 
+                         />
+                    @Html.ValidationMessageFor(x => x.DataFinal)
+                </div>
+
+                <div class='col-md-2 form-group'>
+
+                    @Html.LabelFor(x => x.qtdHoras)
+
+                    @Html.TextBoxFor(x => x.qtdHoras, null, new { @class = "form-control" })
+
+                    @Html.ValidationMessageFor(x => x.qtdHoras)
+                </div>
+            </div>
+            <div class="row">
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.ListaUsuario) <br />
+                    @Html.CheckBoxListFor(x => x.ListaUsuarioVal, 
+                                e => e.ListaUsuario, 
+                                e => e.Key,
+                                e => e.Key,
+                                e => e.Value,
+                                MvcCheckBoxList.Model.Position.Vertical)
+
+          
+
+                    @Html.ValidationMessageFor(x => x.ListaUsuario)
+                </div>
+
+            </div>
+
+        </div>	 
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+</fieldset>
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $("input[type!=hidden]").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+    });
+</script>
+

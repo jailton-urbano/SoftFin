@@ -1,0 +1,48 @@
+﻿@model SoftFin.Web.Models.AtendimentoTipoHistorico
+@{
+    ViewBag.Title = "Atendimento Tipo Histórico - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <br />
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                @Html.LabelFor(x => x.codigo)
+                @Html.TextBoxFor(x => x.codigo)
+                @Html.ValidationMessageFor(x => x.codigo)
+            </div>
+            <div class='col-md-3 form-group'>
+                @Html.LabelFor(x => x.descricao)
+                @Html.TextBoxFor(x => x.descricao)
+                @Html.ValidationMessageFor(x => x.descricao)
+            </div>
+
+        </div>
+
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+
+@section scripts{
+    
+}
+<script>
+    $(document).ready(function () {
+        $("fieldset input").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    
+</script>

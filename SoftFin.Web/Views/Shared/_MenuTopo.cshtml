@@ -1,0 +1,52 @@
+﻿<div class="container">
+    <div class="navbar">
+        <div class="navbar-inner">
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                <ul class="nav">
+
+                @foreach (var item in SoftFin.Web.Negocios.Acesso.RetornaFuncionalidadesPrincipais(SoftFin.Web.Negocios.Acesso.UsuarioLogado()))
+                {
+                    if (SoftFin.Web.Negocios.Acesso.RetornaFuncionalidadesPorId(SoftFin.Web.Negocios.Acesso.UsuarioLogado(), item.id).Count() > 0)
+                    {
+                        <li class="sidebar-toggler-wrapper">
+                            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                            <div class="sidebar-toggler">
+                            </div>
+                            <!-- END SIDEBAR TOGGLER BUTTON -->
+                        </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">@item.Descricao
+                        </a>
+                        <ul class="dropdown-menu">
+
+
+                        @foreach (var itemMenu in SoftFin.Web.Negocios.Acesso.RetornaFuncionalidadesPorId(SoftFin.Web.Negocios.Acesso.UsuarioLogado(), item.id))
+                        {
+                            if (itemMenu.Descricao.Equals("-"))
+                            {
+                                <li class="divider"></li>
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty( itemMenu.NomeRelatorio))
+                                {
+                                    <li><a href="#">@Html.ActionLink(itemMenu.Descricao, itemMenu.NomeAction, itemMenu.NomeController)</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="#">@Html.ActionLink(itemMenu.Descricao, itemMenu.NomeAction, itemMenu.NomeController, new { name = itemMenu.NomeRelatorio, descricao=itemMenu.Descricao }, new { a="a" })</a></li>
+                                }
+                            }
+                        }
+                        </ul>
+                    </li>
+                }
+                        
+                }        
+                </ul>
+
+            } 
+        </div>
+    </div>
+</div>

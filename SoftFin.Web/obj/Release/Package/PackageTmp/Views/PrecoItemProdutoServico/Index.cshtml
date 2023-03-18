@@ -1,0 +1,156 @@
+﻿    @model SoftFin.Web.Models.PrecoItemProdutoServico
+@{
+    ViewBag.Title = "Configura Tabela de Preços";
+}
+
+
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+    <div class='panel-heading'>
+      <h4 class='panel-title'>
+        <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+          Filtros:
+        </a>
+      </h4>
+    </div>
+   <div id='collapseOne' class='panel-collapse collapse in'>
+     <div class='panel-body'>
+       <form class='form-search'>
+           <div class="container-fluid">
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.TabelaPrecoItemProdutoServico_ID)
+                        @Html.DropDownListFor(model => model.TabelaPrecoItemProdutoServico_ID, (SelectList)ViewData["Tabela"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.TabelaPrecoItemProdutoServico_ID)
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.ItemProdutoServico_ID)
+                        @Html.DropDownListFor(model => model.ItemProdutoServico_ID, (SelectList)ViewData["Item"], "---Selecione---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.ItemProdutoServico_ID)
+                    </div>
+                </div>
+               <div class='row'>
+                   <div class="col-md-4 form-group">
+                       @Html.Label("Descrição:")
+                       @Html.TextBox("descricao", null, new { @class = "form-control" })
+                   </div>
+                   <div class="col-md-4 form-group">
+                       @Html.Label("Preço:")
+                       @Html.TextBox("preco", null, new { @class = "form-control" })
+                   </div>
+               </div>
+                <div class='row'>
+                    <div class="col-md-10 form-group">
+                        <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                            <span class="glyphicon glyphicon-search"></span> Pesquisar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<table id="jqgItem" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgItemOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgItem').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Tabela', 'Item', 'Descrição', 'Preço'],
+            //columns model
+            colModel: [
+                        { name: 'txtTabela', index: 'tabela', align: 'left', editable: false, width: '250', hidden: false },
+                        { name: 'txtItem', index: 'item', align: 'left', editable: false, width: '250', hidden: false },
+                        { name: 'txtDescricao', index: 'descricao', align: 'left', editable: false, width: '250', hidden: false },
+                        { name: 'txtPreco', index: 'preco', align: 'left', editable: false, width: '250', hidden: false, formatter: 'currency' }
+            ],
+            //pager for grid
+            pager: $('#jqgItemOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'tabela',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgItem').jqGrid('navGrid', '#jqgItemOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgItem').navButtonAdd('#jqgItemOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgItem').navButtonAdd('#jqgItemOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgItem").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgItem').navButtonAdd('#jqgItemOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgItem").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")' ;
+                        caminho += '?TabelaPrecoItemProdutoServico_ID=';
+                        caminho += $('#TabelaPrecoItemProdutoServico_ID').val();
+                        caminho += '&ItemProdutoServico_ID=';
+                        caminho += $('#ItemProdutoServico_ID').val();
+                        caminho += '&descricao=';
+                        caminho += $('#descricao').val();
+                        caminho += '&preco=';
+                        caminho += $('#preco').val();
+                        jQuery("#jqgItem").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+                    });
+    </script>
+
+

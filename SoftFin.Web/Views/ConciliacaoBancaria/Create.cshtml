@@ -1,0 +1,182 @@
+﻿@model SoftFin.Web.Models.LanctoExtrato
+@{
+    ViewBag.Title = "Conciliação Bancaria - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />  
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.banco_id)
+                    
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---")
+                    @Html.ValidationMessageFor(x => x.banco_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.planoDeConta_id)
+                    
+                    @Html.DropDownListFor(model => model.planoDeConta_id, (SelectList)ViewData["planoDeConta"], "---Selecione---")
+                    @Html.ValidationMessageFor(x => x.planoDeConta_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    
+                    @Html.TextBoxFor(x => x.valor)
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.origemmovimento_id)
+                    
+                    @Html.DropDownListFor(model => model.origemmovimento_id, (SelectList)ViewData["origemmovimento"])
+                    @Html.ValidationMessageFor(x => x.origemmovimento_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tipoDeMovimento_id)
+                    
+                    @Html.DropDownListFor(model => model.tipoDeMovimento_id, (SelectList)ViewData["tipoDeMovimento"], "---Selecione---")
+                    @Html.ValidationMessageFor(x => x.tipoDeMovimento_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tipoDeDocumento_id)
+                    
+                    @Html.DropDownListFor(model => model.tipoDeDocumento_id, (SelectList)ViewData["tipoDeDocumento"], "---Selecione---")
+                    @Html.ValidationMessageFor(x => x.tipoDeDocumento_id)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeDeNegocio_id)
+                    
+                    @Html.DropDownListFor(model => model.unidadeDeNegocio_id, (SelectList)ViewData["unidadeDeNegocio"], "---Selecione---")
+                    @Html.ValidationMessageFor(x => x.unidadeDeNegocio_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.IndicadorDeMovimento)
+                    @Html.DropDownListFor(x => x.IndicadorDeMovimento, (SelectList)ViewData["IndicadorDeMovimento"]) 
+
+                    @Html.ValidationMessageFor(x => x.IndicadorDeMovimento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    
+                    <input type='text' id='data' name='data' class='text-box single-line'  value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.historico)
+                    
+                    @Html.TextBoxFor(x => x.historico)
+                    @Html.ValidationMessageFor(x => x.historico)
+                </div>
+
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $('#data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          $('#valor').val(filtraNumerosComVirgula($('#valor').val()));
+      });
+    $('#valor').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>
+<style type='text/css'>
+    <!--
+    #id {
+        width: 275.00px;
+    }
+
+    #empresa_id {
+        width: 275.00px;
+    }
+
+    #Empresa {
+        width: 275.00px;
+    }
+
+    #banco_id {
+        width: 275.00px;
+    }
+
+    #Banco {
+        width: 275.00px;
+    }
+
+    #planoDeConta_id {
+        width: 275.00px;
+    }
+
+    #PlanoDeConta {
+        width: 275.00px;
+    }
+
+    #origemmovimento_id {
+        width: 275.00px;
+    }
+
+    #OrigemMovimento {
+        width: 275.00px;
+    }
+
+    #tipoDeMovimento_id {
+        width: 275.00px;
+    }
+
+    #TipoMovimento {
+        width: 275.00px;
+    }
+
+    #tipoDeDocumento_id {
+        width: 275.00px;
+    }
+
+    #TipoDocumento {
+        width: 275.00px;
+    }
+
+    #unidadeDeNegocio_id {
+        width: 275.00px;
+    }
+
+    #UnidadeNegocio {
+        width: 275.00px;
+    }
+
+    #IndicadorDeMovimento {
+        width: 275.50px;
+    }
+
+    #data {
+        width: 275.00px;
+    }
+
+    #historico {
+        width: 275.00px;
+    }
+
+    #valor {
+        width: 275.00px;
+    }
+    -->
+</style>

@@ -1,0 +1,41 @@
+﻿@model SoftFin.Web.Models.Holding
+@{
+    ViewBag.Title = "Holding - Alterar";
+}
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   @Html.ValidationSummary(true)
+  <fieldset>
+      
+      @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+      <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+        <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigo)
+            @Html.TextBoxFor(x => x.codigo, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.codigo)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.nome)
+            @Html.TextBoxFor(x => x.nome, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.nome)
+        </div>
+      </div>
+      </div>
+      @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+      <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+  </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

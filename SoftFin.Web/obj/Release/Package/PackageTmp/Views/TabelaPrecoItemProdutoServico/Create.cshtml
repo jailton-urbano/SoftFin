@@ -1,0 +1,33 @@
+﻿@model SoftFin.Web.Models.TabelaPrecoItemProdutoServico
+@{
+    ViewBag.Title = "Tabela de Preço - Novo";
+}
+
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Tabela de Preço</legend>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />
+        <div>
+            Tabela de Preço Item:
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.descricao)
+            @Html.ValidationMessageFor(x => x.descricao)
+        </div>
+        <br>
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

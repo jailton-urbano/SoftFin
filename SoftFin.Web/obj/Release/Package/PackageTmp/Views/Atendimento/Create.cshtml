@@ -1,0 +1,96 @@
+﻿@model SoftFin.Web.Models.Atendimento
+@{
+    ViewBag.Title = "Atendimento - Novo";
+
+}
+
+
+@using (Html.BeginForm("Create", "Atendimento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.usuario)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.pessoas_ID)
+                    
+                    @Html.DropDownListFor(model => model.pessoas_ID, (SelectList)ViewData["pessoas"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoas_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.atendimentocategoria_id)
+                    
+                    @Html.DropDownListFor(model => model.atendimentocategoria_id, (SelectList)ViewData["atendimentocategoria"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.atendimentocategoria_id)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataAbertura)
+                    
+                    <input type='text' id='dataAbertura' name='dataAbertura' class='form-control'  
+                        value='@Model.dataAbertura.ToString()' 
+                        readonly="readonly" />
+                    @Html.ValidationMessageFor(x => x.dataAbertura)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.Contato)
+                    
+                    @Html.TextBoxFor(x => x.Contato, null , new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Contato)
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.titulo)
+                    
+                    @Html.TextBoxFor(x => x.titulo, null , new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.titulo)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    
+                    @Html.TextAreaFor(x => x.descricao,new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.NomeArquivoAnexo) 
+                    <input type="file" name="NomeArquivoAnexo" id="NomeArquivoAnexo" class = "form-control"/>
+                    <br />Somente(*.jpg,*.jpeg,*.xls,*.xlsx,*.doc,*.docx,*.rar,*.zip;*.pdf;*.txt)Max(3-Mega)
+                    @Html.ValidationMessageFor(x => x.NomeArquivoAnexo)
+                </div>
+            </div>
+        </div>
+        <br />
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    </fieldset>
+}
+
+<div class="alert alert-info">
+    @ViewBag.msg
+</div>
+
+<script>
+    //$('#dataAbertura').datepicker({ dateFormat: 'dd/mm/yy' });
+    //$('#dataFechamento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#dataApontamento').datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+
+</script>
+    

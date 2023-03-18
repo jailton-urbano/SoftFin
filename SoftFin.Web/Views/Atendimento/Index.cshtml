@@ -1,0 +1,195 @@
+﻿@model SoftFin.Web.Models.Atendimento
+@{
+    ViewBag.Title = "Lista de Atendimentos/Suporte";
+
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse out'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Reclamante/Cliente:")
+                                <br />
+                                @Html.DropDownList("pessoas_ID", (SelectList)ViewData["pessoas"],"--Selecione--", new { @class = "form-control" })
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Categoria:")
+                                <br />
+                                @Html.DropDownList("atendimentocategoria_id", (SelectList)ViewData["atendimentocategoria"],"--Selecione--", new { @class = "form-control" })
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Data Abertura:")
+                                <br />
+                                @Html.TextBox("dataAbertura","", null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Status:")
+                                <br />
+                                @Html.DropDownList("atendimentostatus_id", (SelectList)ViewData["atendimentostatus"],"--Selecione--", new { @class = "form-control" })
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Data Fechamento:")
+                                <br />
+                                @Html.TextBox("dataFechamento", null, new { @class = "form-control" })
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.Label("Titulo:")
+                                <br />
+                                @Html.TextBox("titulo", null, new { @class = "form-control" })
+                            </div>
+                        </div>   
+                       <div class='row'>
+                            <div class="col-md-10 form-group">
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                                <a href='@Url.Action("Excel")'>
+                                <img src='~/Content/images/icoExcel.gif' /></a>
+                            </div>
+                        </div>                     
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<table id="jqgPessoa" cellpadding="0" cellspacing="0"></table>
+<div id="jqgPessoaOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jqgPessoa').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Reclamante/Cliente', 'Categoria', 'Abertura', 'Status', 'Fechamento', 'Titulo'],
+            //columns model
+            colModel: [
+                        { name: 'txtpessoas_ID', index: 'pessoas_ID', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtatendimentocategoria_id', index: 'atendimentocategoria_id', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtdataAbertura', index: 'dataAbertura', align: 'left', editable: false, width: '120', hidden: false },
+                        { name: 'txtatendimentostatus_id', index: 'atendimentostatus_id', align: 'right', editable: false, width: '120', hidden: false },
+                        { name: 'txtdataFechamento', index: 'dataFechamento', align: 'right', editable: false, width: '120', hidden: false },
+                        { name: 'txttitulo', index: 'titulo', align: 'right', editable: false, width: '250', hidden: false }
+            ],
+            //pager for grid
+            pager: $('#jqgPessoaOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgPessoa').jqGrid('navGrid', '#jqgPessoaOpc',
+            { add: false, del: false, edit: false, search: false });
+
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Atualizar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Historico/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Status",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")';
+            caminho += '?pessoas_ID=';
+            caminho += $('#pessoas_ID').val();
+            caminho += '&atendimentocategoria_id=';
+            caminho += $('#atendimentocategoria_id').val();
+            caminho += '&dataAbertura=';
+            caminho += $('#dataAbertura').val();
+            caminho += '&atendimentostatus_id=';
+            caminho += $('#atendimentostatus_id').val();
+            caminho += '&dataFechamento=';
+            caminho += $('#dataFechamento').val();
+            caminho += '&titulo=';
+            caminho += $('#titulo').val();
+            jQuery("#jqgPessoa").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+        });
+
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#dataAbertura').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataFechamento').datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+</script>

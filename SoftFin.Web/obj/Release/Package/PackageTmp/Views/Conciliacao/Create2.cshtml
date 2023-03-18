@@ -1,0 +1,559 @@
+﻿@{
+    ViewBag.Title = "Conciliação";
+}
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/moment.pt-br.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery.ui.datepicker-pt-BR.js"></script>
+<script src="~/Content/assets/global/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="~/Scripts/Views/Conciliacao/ConciliacaoIndex.js"></script>
+
+<div ng-app="SOFTFIN" ng-controller="MestreCPAG">
+    <script type="text/ng-template" id="modalExcluirOFX.html">
+        <div>
+            <div class="modal-header">
+                <h3>Excluir Lançamento do extrato importado?</h3>
+            </div>
+            <div class="modal-body">
+                <label>Descrição: {{item.descricao}}</label><br />
+                <label>Valor: {{item.Valor|number:2}}</label>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-info" ng-show="showOK">
+                    {{msgOK}}
+                </div>
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+
+                </div>
+                <input class="btn btn-primary" type="button" ng-click="ok()" value="OK">
+                <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalExcluirSelecionadosOFX.html">
+        <div>
+            <div class="modal-header">
+                <h3>Excluir os lançamentos selecionados do extrato importado?</h3>
+            </div>
+
+            <div class="modal-footer">
+                <div class="alert alert-info" ng-show="showOK">
+                    {{msgOK}}
+                </div>
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+
+                </div>
+                <input class="btn btn-primary" type="button" ng-click="ok()" value="OK" ng-hide="emConsulta">
+                <button class="btn btn-success" ng-click="cancel()" ng-disabled="emConsulta">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalConciliarSelecionadosAuto.html">
+        <div>
+            <div class="modal-header">
+                <h3>Conciliar os lançamentos selecionados?</h3>
+            </div>
+
+            <div class="modal-footer">
+                <div class="alert alert-info" ng-show="showOK">
+                    {{msgOK}}
+                </div>
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+
+                </div>
+                <input class="btn btn-primary" type="button" ng-click="ok()" value="OK" ng-hide="emConsulta">
+                <button class="btn btn-success" ng-click="cancel()" ng-disabled="emConsulta">Voltar</button>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalUpload.html">
+        <div>
+            <div class="modal-header">
+                <h3>Selecione o arquivo para upload (.txt ou .ofx)</h3>
+            </div>
+            <div class="modal-body">
+                <div class='container-fluid'>
+                    <div class="row">
+                        <div class='col-md-3 form-group'>
+                            <label> Arquivo </label>
+                            <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Upload
+                    </button>
+                    <button class="btn btn-" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-6 form-group'>
+
+                <label>Banco/Conta</label>
+                <select ng-disabled="ModoConsulta" class="form-control" ng-model="filtro.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" required>
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+
+            <div class='col-md-2 form-group' datetimez ng-model="filtro.data">
+                <label>Data</label>
+                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-init="filtro.data = '@System.DateTime.Now.ToString("o")'" ng-model="filtro.data" ui-date-mask />
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                </span>
+            </div>
+            <div class='col-md-4 form-group'>
+
+                <a href="#" id="pesquisa" name="pesquisa" class="btn btn-primary" ng-click="Pesquisar()" ng-disabled="filtro.banco_id == undefined"
+                   style="margin-top: 22px;">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisa
+                </a>
+                <a href="#" id="pesquisa" name="pesquisa" class="btn btn-success" ng-click="UploadOFX()"
+                   style="margin-top: 22px;">
+                    <span class="glyphicon glyphicon-upload"></span> Upload OFX
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class='alert alert-info'>
+        {{msgGeral}}
+    </div>
+    <div class="panel-body" id="Principal">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="aba-conciliar active">
+                <a href="#ListaConciliarAuto" data-toggle="tab">
+                    Conciliação Automática
+                    <span class="badge"></span>
+                </a>
+            </li>
+            <li class="aba-conciliar ">
+                <a href="#conciliar" data-toggle="tab">
+                    Lançamentos a Conciliar
+                    <span class="badge"></span>
+                </a>
+            </li>
+            <li class="aba-conciliado ">
+                <a href="#conciliado" data-toggle="tab">
+                    Lançamentos Conciliados
+                    <span class="badge"></span>
+                </a>
+            </li>
+            <li class="aba-consultaconciliado">
+                <a href="#consultaconciliado" data-toggle="tab">
+                    Consulta Conciliados
+                    <span class="badge"></span>
+                </a>
+            </li>
+        </ul>
+
+
+        <!-- Tab panes -->
+        <div class="tab-content" ng-show="showPrincipal">
+
+
+
+            <div class="tab-pane fade in active" id="ListaConciliarAuto">
+                <div id="indicator" style="text-align: center;" ng-show="!showAuto" class="loading_img">
+                    <img src="~/content/images/loading_bar_animated.gif" />
+                </div>
+                <a ng-click="ConciliaTodosAuto()" class="btn btn-default btn-xs btn-primary" href="#" ng-show="showAuto">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Conciliar todos os selecionados
+                </a>
+                <table class="table table-striped table-bordered table-hover" ng-show="showAuto">
+
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="center" width="50%">
+                                Extrato Bancário <br />
+                                <a ng-click="MarcaTodosAuto()" class="btn btn-default btn-xs btn-success" href="#">
+                                    <span class="glyphicon glyphicon-check"></span>
+                                    Selecionar Todos
+                                </a>
+
+                            </th>
+                            <th colspan="2" class="center" width="50%">Banco Movimento</th>
+                            <th class="center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd credito" ng-show="ListaConciliarAuto == null">
+                            <td colspan="5">Aguarde...</td>
+                        </tr>
+                        <tr class="odd credito" ng-show="ListaConciliarAuto.length == 0">
+                            <td colspan="5">Não foram encontrados resultados</td>
+                        </tr>
+                        <tr class="odd credito" ng-repeat="item in ListaConciliarAuto">
+                            <td>
+
+                                <input type="checkbox" ng-click="Marcachk(item)" ng-checked="item.selecionado" />
+                                {{item.descricaoOFX}} {{item.selecionado}}
+                            </td>
+                            <td class="right">
+                                {{item.valorOFX}}
+                            </td>
+                            <td>
+                                {{item.descricaoCC}}
+                            </td>
+                            <td class="right">
+                                {{item.valorCC}}
+                            </td>
+                            <td class="center col-actions">
+                                <a ng-click="ConciliarAuto(item)" class="btn btn-default btn-xs btn-primary" href="#">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    Conciliar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane fade out" id="conciliar">
+                <div id="indicator" style="text-align: center;" ng-show="!showNaoConciliado" class="loading_img">
+                    <img src="~/content/images/loading_bar_animated.gif" />
+                </div>
+                <div ng-show="showNaoConciliado">
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <a name="btnConciliar" id="btnConciliar" class="btn btn-primary" ng-click="Conciliar()" href="#">Conciliar</a>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class='alert alert-info'>
+                                {{msgConciliar}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-default painel-extrato">
+                                <div class="panel-heading">
+                                    Extrato bancário
+                                    <span class="badge"></span>
+                                    <br />
+                                    <a ng-click="MarcaTodosOFX()" class="btn btn-default btn-xs btn-success" href="#">
+                                        <span class="glyphicon glyphicon-check"></span>
+                                        Selecionar Todos
+                                    </a>
+                                    <a ng-click="ExcluirTodosOFX()" class="btn btn-default btn-xs btn-danger" href="#">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        Excluir Todos OFX Selecionados
+                                    </a>
+
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body" id="divextrato">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Descrição</th>
+                                                <th>Valor</th>
+                                                <th>Opção</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="Extrato" ng-repeat="item in ListaLanctoExtratos">
+                                            <tr class="odd credito">
+                                                <td>
+                                                    <label>
+                                                        <input type="checkbox" ng-click="MarcaOFX(item)" ng-checked="item.selecionado" />
+                                                        {{item.descricao}}
+                                                    </label>
+                                                </td>
+                                                <td class="right">
+                                                    {{item.Valor|number:2}}
+                                                </td>
+                                                <td class="center col-actions">
+                                                    <a ng-click="ExcluirOFX(item)" class="btn btn-default btn-xs btn-danger" href="#">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                        Excluir
+                                                    </a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+                        </div>
+                        <!-- /.col-lg-6 -->
+                        <div class="col-lg-6">
+                            <div class="panel panel-default painel-movimento">
+                                <div class="panel-heading">
+                                    Banco movimento
+                                    <span class="badge"></span>
+                                </div>
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a href="#lancamentos" data-toggle="tab">Movimentos</a> </li>
+                                        <li><a href="#inclusao" data-toggle="tab">Incluir movimento</a> </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+
+                                        <div class="tab-pane fade in active" id="lancamentos">
+
+                                            <div class="row">
+                                                <div class='col-md-6 form-group' datetimez ng-model="dataCC">
+                                                    <label>Data</label>
+                                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="dataCC" ui-date-mask />
+                                                    <span class="add-on">
+                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <br />
+                                                    <a class="btn btn-primary" ng-click="PesquisarBM(1)" href="#">Pesquisar</a>
+                                                </div>
+                                            </div>
+                                            @*<div class="row">
+                                                    <div class="col-md-6 form-group">
+                                                        <a class="btn btn-primary" ng-click="PesquisarBM(3)" href="#">Compativel Anterior</a>
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <a class="btn btn-primary" ng-click="PesquisarBM(2)" href="#">Compativel Posterior</a>
+                                                    </div>
+                                                </div>*@
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Descrição</th>
+                                                        <th>Valor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="odd credito" ng-show="ListaBancoMovimentoConciliacaoVLWs == null">
+                                                        <td colspan="2">Aguarde...</td>
+                                                    </tr>
+                                                    <tr class="odd credito" ng-show="ListaBancoMovimentoConciliacaoVLWs.length == 0">
+                                                        <td colspan="2">Não foram encontrados resultados</td>
+                                                    </tr>
+                                                    <tr class="odd credito" ng-repeat="item in ListaBancoMovimentoConciliacaoVLWs" ng-show="ListaBancoMovimentoConciliacaoVLWs.length > 0">
+                                                        <td>
+                                                            <label>
+                                                                <input type="checkbox" ng-click="MarcaExt(item)" />
+                                                                {{item.Descricao}}
+                                                            </label>
+                                                        </td>
+                                                        <td class="right">
+                                                            {{item.Valor}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="inclusao">
+                                            <h4>Incluir movimento</h4>
+
+                                            <fieldset>
+                                                <div class='container-fluid'>
+                                                    <input data-val="true" data-val-number="The field id must be a number." data-val-required="The id field is required." id="id" name="id" type="hidden" value="0" />
+                                                    <div class='row'>
+                                                        <div class='form-group'>
+                                                            <label for="planoDeConta_id">
+                                                                Plano de Contas
+                                                            </label>
+
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="BM.planoDeConta_id" ng-options="o.Value as o.Text for o in ListaContaContabil" required>
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+
+                                                        <div class='form-group'>
+                                                            <label for="tipoDeDocumento_id">
+                                                                Tipo de Documento
+                                                            </label>
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="BM.tipoDeDocumento_id" ng-options="o.Value as o.Text for o in ListaTipoDocumento" ng-change="MostraComplementoTipoDOC(true)" required>
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row'>
+                                                        <div class='form-group'>
+                                                            <label for="unidadeDeNegocio_id">
+                                                                Unidade de negócio
+                                                            </label>
+                                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="BM.unidadeDeNegocio_id" ng-options="o.Value as o.Text for o in ListaUnidadeNegocio" ng-change="MostraComplementoTipoDOC(true)" required>
+                                                                <option value="">--Selecione--</option>
+                                                            </select>
+
+                                                        </div>
+                                                        <div class='form-group'>
+                                                            <label for="historico">
+                                                                Histórico
+                                                            </label>
+                                                            <input class="form-control" ng-model="BM.historico" data-val="true" data-val-length="The field Historico must be a string with a maximum length of 35." data-val-length-max="35" id="historico" name="historico" type="text" value="" maxlength="35" />
+                                                            <span class="field-validation-valid" data-valmsg-for="historico" data-valmsg-replace="true"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="button-row form-group">
+                                                    <a href="#" id="btnConciliaBM" name="btnConciliaBM" class="btn btn-primary" ng-click="SalvaBM()">Incluir</a>
+                                                </div>
+                                                <div class='alert alert-info'>
+                                                    {{msgBM}}
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+                        </div>
+                        <!-- /.col-lg-6 -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade in out" id="conciliado">
+                <div id="indicator" style="text-align: center;" ng-show="!showConciliado" class="loading_img">
+                    <img src="~/content/images/loading_bar_animated.gif" />
+                </div>
+                <div ng-show="showConciliado">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="center" width="50%">Extrato Bancário</th>
+                                <th colspan="2" class="center" width="50%">Banco Movimento</th>
+                                <th class="center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd credito" ng-show="ListaConciliados == null">
+                                <td colspan="5">Aguarde...</td>
+                            </tr>
+                            <tr class="odd credito" ng-show="ListaConciliados.length == 0">
+                                <td colspan="5">Não foram encontrados resultados</td>
+                            </tr>
+
+                            <tr class="odd credito" ng-repeat="item in ListaConciliados">
+                                <td class="right">
+                                    <span ng-repeat="item2 in item.ConciliadoDet">
+                                        {{item2.descricao}} <br />
+                                    </span>
+                                </td>
+                                <td class="right">
+                                    {{item.valorOFX}}
+                                </td>
+
+                                <td class="right">
+                                    <span ng-repeat="item2 in item.ConciliadoCC">
+                                        {{item2.descricao}} <br />
+                                    </span>
+                                </td>
+                                <td class="right">
+                                    {{item.valorCC}}
+                                </td>
+                                <td class="center col-actions">
+                                    <a ng-click="Excluir(item)" class="btn btn-default btn-xs btn-danger" href="#">
+                                        Excluir
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade in" id="consultaconciliado">
+                <div id="indicator" style="text-align: center;" ng-show="!showConciliadoPeriodo" class="loading_img">
+                    <img src="~/content/images/loading_bar_animated.gif" />
+                </div>
+                <div ng-show="showConciliadoPeriodo">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th colspan="1" class="center" width="20%">Data</th>
+                                <th colspan="1" class="center" width="30%">Total Lançamentos no Extrato</th>
+                                <th colspan="1" class="center" width="30%">Total Itens Conciliados</th>
+                                <th colspan="1" class="center" width="30%">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd credito" ng-show="ListaConsultaConciliados == null">
+                                <td colspan="4">Aguarde...</td>
+                            </tr>
+                            <tr class="odd credito" ng-show="ListaConsultaConciliados.length == 0">
+                                <td colspan="4">Não foram encontrados resultados</td>
+                            </tr>
+                            <tr class="odd credito" ng-repeat="item in ListaConsultaConciliados">
+                                <td>
+                                    <div>
+                                        {{item.data}}
+                                    </div>
+                                </td>
+                                <td class="center">
+                                    {{item.lancamentos}}
+                                </td>
+                                <td class="center">
+                                    {{item.totnaoconc}}
+                                </td>
+                                <td class="right">
+                                    <div class="progress progress-striped active">
+
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow={{item.porc}} aria-valuemin="0" aria-valuemax="100" style="width:{{item.porc}}%">
+                                            <span class="sr-only">{{item.porc}}</span>{{item.porc}}%
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.tab-content-->
+    </div>
+</div>
+

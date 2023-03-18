@@ -1,0 +1,102 @@
+﻿@model SoftFin.Web.Models.RegistroPontoView2
+@{
+    ViewBag.Title = "Registro Ponto - Novo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205621099-Como-incluir-um-Registro-de-Ponto";
+
+}
+
+<span></span>
+
+@using (Html.BeginForm())
+{
+
+    <div class="button-row form-group">
+        <button class="btn btn-primary" type="submit">
+            <span class="glyphicon glyphicon-plus"></span> Incluir
+        </button>
+    </div>
+
+    <fieldset>
+
+        <div class='container-fluid'>
+            <div class="form-group">
+                <div class='row'>
+                    @{
+                        var datastr = ((DateTime)ViewData["dateTimeBrasilia"]).ToShortDateString();
+                        var horastr = ((DateTime)ViewData["dateTimeBrasilia"]).ToShortTimeString();
+                    }
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.data)
+                        <input type='text' id='data' name='data' class='form-control' disabled
+                               value='@datastr' />
+                        @Html.ValidationMessageFor(x => x.data)
+                    </div>
+                    <div class='col-md-6 form-group'>
+                        @Html.LabelFor(x => x.comentarios)
+                        <input type='text' id='comentarios' name='comentarios' class='form-control'
+                               value='@Model.comentarios' />
+                        @Html.ValidationMessageFor(x => x.comentarios)
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class="col-md-2">
+                        <label>Ponto</label>
+                        <div class="input-icon">
+                            <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                            <input type="text" id="ponto" name="ponto" class="form-control timepicker timepicker-default" disabled value='@horastr'>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Pontos Hoje</h3>
+
+
+                <div class='row'>
+                    <div class="col-md-4">
+                        
+                        @foreach (string item in (List<string>)ViewData["Lista"])
+                        {
+                            <div class="input-icon">
+                                <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                                <input type="text"  disabled class="form-control timepicker timepicker-default" value='@item'>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="button-row form-group">
+            <button class="btn btn-primary" type="submit" name="rbutton" id="rbutton">
+                <span class="glyphicon glyphicon-plus"></span> Incluir
+            </button>
+        </div>
+
+    </fieldset>
+}
+<div class="alert alert-info">
+    @ViewBag.msg
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+
+
+        $("Form").submit(function (event) {
+            $("button").attr("disabled", true);
+
+        });
+
+
+
+    });
+
+
+
+</script>

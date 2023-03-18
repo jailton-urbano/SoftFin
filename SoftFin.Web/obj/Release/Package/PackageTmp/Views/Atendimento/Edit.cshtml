@@ -1,0 +1,88 @@
+﻿@model SoftFin.Web.Models.Atendimento
+@{
+    ViewBag.Title = "Atendimento - Alteração de Status";
+
+}
+
+@using (Html.BeginForm("Edit", "Atendimento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.usuario)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    <b>@Html.LabelFor(x => x.pessoas_ID)</b>
+                    @Html.ValueFor(model => model.Pessoa.nome)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.atendimentocategoria_id)
+                    @Html.ValueFor(model => model.AtendimentoCategoria.descricao)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataAbertura)
+                    @Html.ValueFor(x => x.dataAbertura)
+                </div>
+            </div>
+                    <br />
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Contato)
+                    
+                    @Html.ValueFor(x => x.Contato)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.titulo)
+                    
+                    @Html.ValueFor(x => x.titulo)
+                </div>            
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    
+                    @Html.ValueFor(x => x.descricao)
+                </div>
+
+            </div>
+                    <br />
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.usuario)
+                    
+                    @Html.ValueFor(x => x.usuario)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.atendimentostatus_id)
+                    
+                    @Html.DropDownListFor(model => model.atendimentostatus_id, (SelectList)ViewData["atendimentostatus"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.atendimentostatus_id)
+                </div>
+
+            </div>
+        </div>
+        <br />
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    </fieldset>
+}
+
+<div class="alert alert-info">
+    @ViewBag.msg
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    //$('#dataAbertura').datepicker({ dateFormat: 'dd/mm/yy' });
+    //$('#dataFechamento').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+    

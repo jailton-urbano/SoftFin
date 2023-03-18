@@ -1,0 +1,104 @@
+﻿
+@model SoftFin.Web.Models.BancoMovimento
+@{
+    ViewBag.Title = "Benco Movimento - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.banco_id)
+                    
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---")
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.planoDeConta_id)
+                    
+                    @Html.DropDownListFor(model => model.planoDeConta_id, (SelectList)ViewData["planoDeConta"], "---Selecione---")
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    
+                    @Html.TextBoxFor(x => x.valor)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.origemmovimento_id)
+                    
+                    @Html.DropDownListFor(model => model.origemmovimento_id, (SelectList)ViewData["origemmovimento"])
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tipoDeMovimento_id)
+                    
+                    @Html.DropDownListFor(model => model.tipoDeMovimento_id, (SelectList)ViewData["tipoDeMovimento"], "---Selecione---")
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tipoDeDocumento_id)
+                    
+                    @Html.DropDownListFor(model => model.tipoDeDocumento_id, (SelectList)ViewData["tipoDeDocumento"], "---Selecione---")
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeDeNegocio_id)
+                    
+                    @Html.DropDownListFor(model => model.unidadeDeNegocio_id, (SelectList)ViewData["unidadeDeNegocio"], "---Selecione---")
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.IndicadorDeMovimento)
+                    @Html.DropDownListFor(x => x.IndicadorDeMovimento, (SelectList)ViewData["IndicadorDeMovimento"]) 
+
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(model => model.data)
+                    
+                    <input type='text' id='data' name='data' class='text-box single-line'  value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+               </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.historico)
+                    
+                    @Html.TextBoxFor(x => x.historico)
+
+                </div>
+
+            </div>
+        </div>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+
+@section scripts{
+    
+}
+<script>
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+
+    
+</script>
+
+
+    <style type="text/css">
+    <!--
+    #historico {width:300px;}
+    #data {width:80px;} 
+    #banco_id {width:290px;}      
+    #IndicadorDeMovimento   {width:20px;}                                                        
+    -->
+    </style>

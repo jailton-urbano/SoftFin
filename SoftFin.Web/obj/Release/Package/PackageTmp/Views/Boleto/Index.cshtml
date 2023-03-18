@@ -1,0 +1,537 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/Views/Boleto/BoletoIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+
+
+        <script type="text/ng-template" id="modalSalvar.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Gerar o boleto?</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>Pessoa:</b> {{item.Pessoa}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>Vencimento:</b> {{item.DataVencimento | date:'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label><b>Valor:</b> {{item.Valor | number:2}}</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>NFSe:</b> {{item.numeroNfse}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>OV:</b> {{item.Numero}}</label>
+                            </div>
+
+
+                        </div>
+
+                        <div class='row'>
+
+                            <div class='col-md-6 form-group'>
+                                <label>Banco</label>
+                                <select class="form-control" ng-model="item.idbanco" ng-options="o.Value as o.Text for o in ListaBancos" ng_change="LoadBanco()">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-4 form-group'>
+                                <label>Nosso Número</label>
+                                <input type='text' ng-disabled='true' ng-model='item.nossoNumero' class='form-control' ng-maxlength="20" />
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Carteira</label>
+                                <input type='text' ng-disabled='true' ng-model='item.carteira' class='form-control' ng-maxlength="20" />
+                            </div>
+                        </div>
+                        <div class='row'>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Multa</label>
+                                <input type='text' ng-disabled='false' ng-model='item.Multa' class='form-control' ng-maxlength="20" ui-number-mask="2" />
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Juros Mora dia</label>
+                                <input type='text' ng-disabled='false' ng-model='item.JurosMora' class='form-control' ng-maxlength="20" ui-number-mask="2" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Código Transmissão</label>
+                                <input type='text' ng-disabled='ModoConsulta' ng-model='item.CodigoTransmissao' class='form-control' ng-maxlength="30" />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>Texto Boleto 01</label>
+                                <input type='text' ng-disabled='false' ng-model='item.TextoBoleto01' class='form-control' ng-maxlength="40" />
+                            </div>
+                            <div class='col-md-12 form-group'>
+                                <label>Texto Boleto 02</label>
+                                <input type='text' ng-disabled='false' ng-model='item.TextoBoleto02' class='form-control' ng-maxlength="40" />
+                            </div>
+                            <div class='col-md-12 form-group'>
+                                <label>Texto Boleto 03</label>
+                                <input type='text' ng-disabled='false' ng-model='item.TextoBoleto03' class='form-control' ng-maxlength="40" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success" ng-show="showOK">
+                        {{msgOK}} <br />
+                        <a href='{{url}}'
+                           target="_blank">
+                            Download do Boleto
+                        </a>
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" ng-show="showBTNOK" ng-disabled="item.idbanco == 0">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalHistorico.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Histórico de geração de Arquivo</h3>
+                </div>
+                <div class="modal-body">
+
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridhistorico"></dir-pagination-controls>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Data
+                                </th>
+                                <th>
+                                    Arquivo
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item2 in objs|itemsPerPage:5" pagination-id="gridhistorico">
+                                <td>{{item2.DataGeracao |date:'dd/MM/yyyy'}}</td>
+                                <td>{{item2.Caminho}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="5" boundary-links="true" pagination-id="gridhistorico"></dir-pagination-controls>
+                </div>
+                <div class="modal-footer">
+
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+
+        <script type="text/ng-template" id="modalEmail.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Enviar o boleto pelo Email</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>Pessoa:</b> {{item.Pessoa}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>Vencimento:</b> {{item.DataVencimento | date:'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label><b>Valor:</b> {{item.Valor | number:2}}</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>NFSe:</b> {{item.numeroNfse}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>OV:</b> {{item.Numero}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>Número Documento:</b> {{item.NumeroDoc}}</label>
+                            </div>
+
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label><b>Email</b></label>
+                                <input type='text' ng-disabled='false' ng-model='item.Email' class='form-control' ng-maxlength="240" />
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success" ng-show="showOK">
+                        {{msgOK}} <br />
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" ng-show="showBTNOK">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalCancelar.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Cancelar o Boleto</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>Pessoa:</b> {{item.Pessoa}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>Vencimento:</b> {{item.DataVencimento | date:'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label><b>Valor:</b> {{item.Valor | number:2}}</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label><b>NFSe:</b> {{item.numeroNfse}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>OV:</b> {{item.Numero}}</label>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label><b>Número Documento:</b> {{item.NumeroDoc}}</label>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success" ng-show="showOK">
+                        {{msgOK}} <br />
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" ng-show="showBTNOK">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalGerarArquivoCNAB.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Gerar o arquivo CNAB?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='row'>
+
+                        <div class='col-md-6 form-group'>
+                            <label>Banco</label>
+                            <select class="form-control" ng-model="idbanco" ng-options="o.Value as o.Text for o in ListaBancos">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success" ng-show="showOK">
+                        {{msgOK}} <br />
+                        <a href='{{url}}'
+                           target="_blank">
+                            Download do Arquivo
+                        </a>
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" ng-show="showBTNOK" ng-disabled="item.idbanco == 0">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="true">
+
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search'>
+                                <div class='container'>
+
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataIni">
+                                            <label>Data Vencimento</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataFim">
+                                            <label>Data Vencimento</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+
+                                        <div class='col-md-4 form-group'>
+                                            <label>Tipo de Vinculo</label>
+                                            <select class="form-control"
+                                                    ng-change="ListaBoleto = [];"
+                                                    ng-model="filtro.TipoVinculo" ng-options="o.Value as o.Text for o in ListaTipoBoleto">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisa() ">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+
+
+                            <button style="border-right-width: 0px; padding-right: 102px;"
+                                    ng-click="Pesquisa()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 28px;"
+                                    ng-show="EditAccess"
+                                    ng-click="GerarArquivoCNAB()"
+                                    title="Gerar Arquivo CNAB"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Gerar Arquivo CNAB
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 102px;"
+                                    ng-click="Historico()"
+                                    title="Gerar Arquivo CNAB"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Histórico
+                            </button>
+
+                        </th>
+                        <th>Dados</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaBoleto|itemsPerPage:7">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 79px;"
+                                    ng-show="filtro.TipoVinculo == 1 && EditAccess"
+                                    ng-click="GerarBoleto(item)"
+                                    
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-list-alt"></span> Gerar Boleto
+                            </button>
+
+
+                            <a href='{{item.URL}}'
+                               ng-show="filtro.TipoVinculo != 1"
+                               class="btn btn-success" target="_blank" style="margin-top: 4px; padding-right: 131px;">
+                                <span class="glyphicon glyphicon-open-file"></span> Abrir
+                            </a>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 58px;"
+                                    ng-show="filtro.TipoVinculo != 1"
+                                    ng-click="EnvioPorEmail(item)"
+                                    title="Envio email"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Enviar Por Email
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 60px;"
+                                    type="button"
+                                    ng-show="filtro.TipoVinculo != 1  && EditAccess"
+                                    ng-click="CancelarBoleto(item)"
+                                    title="Cancela Boleto"
+                                    @*ng-disabled="item.Modulo != 'Manual'"*@
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Cancelar Boleto
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('DataVencimento')"> Data </span>
+                                / <span ng-click="ordenar('Pessoa')"> Pessoa </span>
+                                / <span ng-click="ordenar('Email')"> Email </span>
+                                / <span ng-click="ordenar('Valor')">Valor </span>
+                            </b>
+                            <br />
+                            <label>{{item.DataVencimento | date:'dd/MM/yyyy'}} / {{item.Pessoa}} / {{item.Email}} / {{item.Valor | number:2}}</label>
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('numeroNfe')"> NFSe </span> / <span ng-click="ordenar('Numero')"> OV </span>
+                            </b>
+                            <br />
+                            <label>{{item.numeroNfe | limpazero}} {{item.numeroNfse | limpazero}} - {{item.serieNfe}} / {{item.Numero}} </label>
+                            <br />
+                            <div ng-show="filtro.TipoVinculo != 1">
+                                <b>
+                                    <span ng-click="ordenar('NumeroDoc')"> Numero Documento </span>
+                                    / <span ng-click="ordenar('CnabGerado')"> CNAB Gerado</span>
+                                    / <span ng-click="ordenar('CnabCancelado')"> CNAB Cancelado</span>
+
+                                </b>
+                                <br />
+                                <label>
+                                    {{item.NumeroDoc}}
+                                    / {{item.CnabGerado | yesNo}}
+                                    / {{item.CnabCancelado | yesNo}}
+                                </label>
+                                <br />
+                            </div>
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "Lançamento Extrato não Conciliado";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+                    <span class="glyphicon glyphicon-cog"></span> Gerar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <table>
+        <tr>
+            <th>Resultado</th>
+        </tr>
+        <tr>
+            <td style="width: 100%;">
+                <div id="table_div"></div>
+            </td>
+        </tr>
+    </table>
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Detalhamento</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <table>
+                            <tr>
+                                <td style="width: 100%;">
+                                    <div id="detail_div"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnSeleciona">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $('#table_div').html("");
+
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "SaldoDiario",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+
+            },
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Banco');
+                data.addColumn('string', 'Data');
+                data.addColumn('string', 'Descricao');
+                
+                data.addColumn('number', 'Valor');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].Banco,
+                        tabledata[i].Data,
+                            tabledata[i].Descricao,
+                                
+                                 tabledata[i].Valor]);
+
+                    data.setProperty(i, 0, 'style', 'font-weight: bold;');
+                    data.setProperty(i, 3, 'style', 'font-weight: bold;');
+                }
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+
+                formatter.format(data, 3);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                $('#indicator').hide();
+
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+
+
+</script>

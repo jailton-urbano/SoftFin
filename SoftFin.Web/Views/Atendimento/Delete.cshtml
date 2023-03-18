@@ -1,0 +1,70 @@
+﻿@model SoftFin.Web.Models.Projeto
+
+@{
+    ViewBag.Title = "Projeto - Excluir";
+
+}
+
+
+<fieldset>
+
+
+    @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.projeto_id)
+                    @Html.DropDownListFor(model => model.projeto_id, (SelectList)ViewData["projeto"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.projeto_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.codigoProjeto)
+                    @Html.TextBoxFor(x => x.codigoProjeto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigoProjeto)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.nomeProjeto)
+                    @Html.TextBoxFor(x => x.nomeProjeto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.nomeProjeto)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataInicial)
+                    <input type='text' id='dataInicial' name='dataInicial' class='form-control'  value='@Model.dataInicial.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.dataInicial)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataFinal)
+                    <input type='text' id='dataFinal' name='dataFinal' class='form-control'  value='@Model.dataFinal.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.dataFinal)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.totalHoras)
+                    @Html.TextBoxFor(x => x.totalHoras, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.totalHoras)
+                </div>
+            </div>
+        </div>
+		 
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+
+</fieldset>
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $("input[type!=hidden]").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+    });
+
+</script>
+

@@ -1,0 +1,35 @@
+﻿@model SoftFin.Web.Models.CategoriaPessoa
+@{
+    ViewBag.Title = "Categoria - Novo";
+}
+
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Categoria Pessoa</legend>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />
+        <div>
+            Categoria Pessoa:
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.Descricao)
+            @Html.ValidationMessageFor(x => x.Descricao)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

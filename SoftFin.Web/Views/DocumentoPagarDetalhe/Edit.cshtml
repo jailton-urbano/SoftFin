@@ -1,0 +1,64 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarDetalhe
+@{
+    ViewBag.Title = "Documento Pagar Detalhe - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div>
+            @Html.LabelFor(x => x.planoDeConta_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.planoDeConta_id,(SelectList)ViewData["PlanoDeContas"],"--Selecione--")
+            @Html.ValidationMessageFor(x => x.planoDeConta_id)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.historico)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.historico)
+            @Html.ValidationMessageFor(x => x.historico)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.unidadenegocio_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.unidadenegocio_id,(SelectList)ViewData["UnidadeDeNegocio"],"--Selecione--")
+            @Html.ValidationMessageFor(x => x.unidadenegocio_id)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.valor)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.valor)
+            @Html.ValidationMessageFor(x => x.valor)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.percentual)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.percentual)
+            @Html.ValidationMessageFor(x => x.percentual)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

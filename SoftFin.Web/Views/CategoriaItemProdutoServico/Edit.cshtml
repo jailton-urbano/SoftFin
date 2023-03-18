@@ -1,0 +1,35 @@
+﻿@model SoftFin.Web.Models.CategoriaItemProdutoServico
+@{
+    ViewBag.Title = "Categoria - Edição";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div>
+            Tipo:
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.descricao)
+            @Html.ValidationMessageFor(x => x.descricao)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

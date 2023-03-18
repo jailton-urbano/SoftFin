@@ -1,0 +1,6 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Release\SoftFin.NFSe.DTO.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\bin\Release\SoftFin.NFSe.DTO.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Release\SoftFin.NFSe.DTO.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Release\SoftFin.NFSe.DTO.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Release\SoftFin.NFSe.DTO.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.NFSe.DTO\obj\Release\SoftFin.NFSe.DTO.pdb

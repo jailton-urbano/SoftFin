@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4DA6D88-D40D-4C49-B5BF-0B479424A3B3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SoftFin.API.DTO</RootNamespace>
+    <AssemblyName>SoftFin.API.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTO\BaseDTORetorno.cs" />
+    <Compile Include="DTO\DTOContaContabilLancamento.cs" />
+    <Compile Include="DTO\DTOContaContabilLancamentoGetParams.cs" />
+    <Compile Include="DTO\DTOContaContabilLancamentoRetorno.cs" />
+    <Compile Include="DTO\DTOContrato.cs" />
+    <Compile Include="DTO\DTOContratoItemUnidade.cs" />
+    <Compile Include="DTO\DTOContratoItem.cs" />
+    <Compile Include="DTO\DTOException.cs" />
+    <Compile Include="DTO\DTOFechamentoCaixa.cs" />
+    <Compile Include="DTO\DTOFechamentoCaixaDetalhe.cs" />
+    <Compile Include="DTO\DTOFechamentoCaixaGetParams.cs" />
+    <Compile Include="DTO\DTOFechamentoCaixaRetorno.cs" />
+    <Compile Include="DTO\DTOGenericoRetorno.cs" />
+    <Compile Include="DTO\DTOID.cs" />
+    <Compile Include="DTO\DTOLojaParams.cs" />
+    <Compile Include="DTO\DTOParcelaContrato.cs" />
+    <Compile Include="DTO\DTODeParaItem.cs" />
+    <Compile Include="DTO\DTOUnidadeNegocio.cs" />
+    <Compile Include="DTO\DTOPessoa.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

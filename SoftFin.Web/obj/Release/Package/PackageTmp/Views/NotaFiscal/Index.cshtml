@@ -1,0 +1,372 @@
+﻿@model SoftFin.Web.Models.NotaFiscalFiltro
+@{
+    ViewBag.Title = "Nota Fiscal de Serviços";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205621079-Emiss%C3%A3o-NFS-manual-outros-sistemas";
+}
+
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.razaoTomador)
+
+                                @Html.TextBoxFor(x => x.razaoTomador, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.razaoTomador)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.cnpj)
+
+                                @Html.TextBoxFor(x => x.cnpj, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.cnpj)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.cpf)
+
+                                @Html.TextBoxFor(x => x.cpf, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.cpf)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroRpsIni)
+
+                                @Html.TextBoxFor(x => x.numeroRpsIni, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.numeroRpsIni)
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroRpsFim)
+
+                                @Html.TextBoxFor(x => x.numeroRpsFim, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.numeroRpsFim)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataEmissaoRpsIni)
+
+                                <input type='text' id='dataEmissaoRpsIni' name='dataEmissaoRpsIni' class='form-control' />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoRpsIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataEmissaoRpsFim)
+
+                                <input type='text' id='dataEmissaoRpsFim' name='dataEmissaoRpsFim' class='form-control' />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoRpsFim)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroNfseIni)
+
+                                @Html.TextBoxFor(x => x.numeroNfseIni, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.numeroNfseIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroNfseFim)
+
+                                @Html.TextBoxFor(x => x.numeroNfseFim, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.numeroNfseFim)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                Emissão NFS-e Inicial
+                                <br />
+                                <input type='text' id='dataEmissaoNfseIni' name='dataEmissaoNfseIni' class='form-control' value='@ViewData["DataInicial"]' />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoNfseIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                Emissão NFS-e Final
+                                <br />
+                                <input type='text' id='dataEmissaoNfseFim' name='dataEmissaoNfseFim' class='form-control' value='@ViewData["DataFinal"]' />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoNfseFim)
+                            </div>
+                        </div>
+                        <div class='row'>
+
+                            <div class='col-md-2 form-group'>
+                                Vencimento NFS-e Inicial
+                                <br />
+                                <input type='text' id='dataVencimentoNfseIni' name='dataVencimentoNfseIni' class='form-control' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoNfseIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                Vencimento NFS-e Final
+                                <br />
+                                <input type='text' id='dataVencimentoNfseFim' name='dataVencimentoNfseFim' class='form-control' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoNfseFim)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.unidadeNegocio_id)
+
+                                @Html.DropDownListFor(model => model.unidadeNegocio_id, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.unidadeNegocio_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.situacaoPrefeitura_id)
+
+                                @Html.DropDownListFor(model => model.situacaoPrefeitura_id, (SelectList)ViewData["situacaoPrefeitura"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.situacaoPrefeitura_id)
+                            </div>
+                        </div>
+                    </div>
+                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                    <a href='@Url.Action("Excel")'>
+                    <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+</div>
+
+</div>
+
+<table id="jqgImposto" cellpadding="0" cellspacing="0"></table>
+<div id="jqgImpostoOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgImposto').jqGrid({
+            //url from wich data should be requested
+            //url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+
+
+            colNames: ['Tipo RPS', 'Série RPS', 'Número RPS', 'Emissão RPS', 'Número NFS-e', 'Emissão NFS-e', 'Vencimento NFS-e', 'Tomador', 'Valor NFS-e', 'Códido Serviço', 'Situação', 'Unidade Négócio'],
+            //columns model
+            colModel: [
+                        { name: 'txttipoRps', index: 'tipoRps', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtserieRps', index: 'serieRps', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtnumeroRps', index: 'numeroRps', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtdataEmissaoRps', index: 'dataEmissaoRps', align: 'center', editable: false, width: '80', hidden: false },
+                        { name: 'txtnumeroNfse', index: 'situacaoRps', align: 'center', editable: false, width: '80', hidden: false },
+                        { name: 'txtdataEmissaoNfse', index: 'numeroNfse', align: 'center', editable: false, width: '80', hidden: false },
+                        { name: 'txtdataVencimentoNfse', index: 'dataVencimentoNfse', align: 'center', editable: false, width: '80', hidden: false },
+                        { name: 'txtrazaoTomador', index: 'razaoTomador', align: 'left', editable: false, width: '160', hidden: false },
+                        { name: 'txtvalorNfse', index: 'valorNfse', align: 'right', editable: false, width: '90', formatter: 'currency', hidden: false },
+                        { name: 'txtcodigoServico', index: 'codigoServico', align: 'center', editable: false, width: '80', hidden: false },
+                        { name: 'txtsituacao', index: 'situacao', align: 'left', editable: false, width: '120', hidden: false },
+                        { name: 'txtUnidade', index: 'Unidade', align: 'center', editable: false, width: '100', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgImpostoOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'codigo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgImposto').jqGrid('navGrid', '#jqgImpostoOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Detalhe",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/Detail/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Boleto",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-note",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.open("../Recebimento/SeletorBanco/" + gr, "_blank");
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Novo",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "../NotaFiscal/Create2/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Alterar",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/Edit/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")';
+            caminho += '?razaoTomador=';
+            caminho += $('#razaoTomador').val();
+            caminho += '&cnpj=';
+            caminho += $('#cnpj').val();
+            caminho += '&cpf=';
+            caminho += $('#cpf').val();
+            caminho += '&situacaoPrefeitura_id=';
+            caminho += $('#situacaoPrefeitura_id').val();
+            caminho += '&codigoServico_id=';
+            caminho += $('#codigoServico_id').val();
+            caminho += '&numeroRpsIni=';
+            caminho += $('#numeroRpsIni').val();
+            caminho += '&numeroRpsFim=';
+            caminho += $('#numeroRpsFim').val();
+            caminho += '&dataEmissaoRpsIni=';
+            caminho += $('#dataEmissaoRpsIni').val();
+            caminho += '&dataEmissaoRpsFim=';
+            caminho += $('#dataEmissaoRpsFim').val();
+            caminho += '&numeroNfseIni=';
+            caminho += $('#numeroNfseIni').val();
+            caminho += '&numeroNfseFim=';
+            caminho += $('#numeroNfseFim').val();
+            caminho += '&dataEmissaoNfseIni=';
+            caminho += $('#dataEmissaoNfseIni').val();
+            caminho += '&dataEmissaoNfseFim=';
+            caminho += $('#dataEmissaoNfseFim').val();
+            caminho += '&dataVencimentoNfseIni=';
+            caminho += $('#dataVencimentoNfseIni').val();
+            caminho += '&dataVencimentoNfseFim=';
+            caminho += $('#dataVencimentoNfseFim').val();
+            caminho += '&codigoServico=';
+            caminho += $('#codigoServico').val();
+            caminho += '&unidadeNegocio_id=';
+            caminho += $('#unidadeNegocio_id').val()
+
+            jQuery("#jqgImposto").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+        });
+
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Cancelamento",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/Cancelamento/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Baixar",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-cancel",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/BaixaPerda/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Enviar Nota Fiscal Prefeitura",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-circle-arrow-n",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/NFXMLEnvio/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgImposto').navButtonAdd('#jqgImpostoOpc', { // custom edit button
+            title: "Consultar e atualizar Nota Fiscal Emitida a Prefeitura",
+            caption: "",
+            buttonicon: "ui-icon ui-icon-circle-arrow-s",
+            onClickButton: function () {
+                var gr = jQuery("#jqgImposto").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "../NotaFiscal/NFXMLConsulta/" + gr;
+                }
+                else {
+                    alert("Selecione um registro.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    $('#cnpj').attr('maxlength', '18');
+    $('#cnpj').attr('style', 'text-align:right');
+    $('#cnpj').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      });
+    $('#cpf').attr('maxlength', '14');
+    $('#cpf').attr('style', 'text-align:right');
+    $('#cpf').keydown(
+      function (event) {
+          formataCPF(this, event);
+      });
+    $('#dataEmissaoRpsIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoRpsFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoNfseIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoNfseFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimentoNfseIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimentoNfseFim').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+

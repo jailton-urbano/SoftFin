@@ -1,0 +1,58 @@
+﻿ @model SoftFin.Web.Models.TipoDocumento
+@{
+    ViewBag.Title = "Tipo Documento - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div>
+            @Html.LabelFor(x => x.codigo)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.codigo)
+            @Html.ValidationMessageFor(x => x.codigo)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.descricao)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.descricao)
+            @Html.ValidationMessageFor(x => x.descricao)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.historicoPadrao)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.historicoPadrao)
+            @Html.ValidationMessageFor(x => x.historicoPadrao)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.Inativo)
+        </div>
+        <div>
+            @Html.CheckBoxFor(x => x.Inativo)
+            @Html.ValidationMessageFor(x => x.Inativo)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

@@ -1,0 +1,39 @@
+﻿@model SoftFin.Web.Models.TabelaPrecoItemProdutoServico
+@{
+    ViewBag.Title = "Tabela de Preço - Exclusão";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+        @Html.ValidationSummary(true)
+    <fieldset>
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div>
+            ID:@Html.ValueFor(x => x.id)<br />
+        </div>
+        <div>
+            Tipo:
+        </div>
+        <div>
+            <input type="text" name="tipo" value="@Model.descricao" readonly="readonly" />
+        </div>
+
+        <div class="alert alert-info">
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

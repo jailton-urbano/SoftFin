@@ -1,0 +1,42 @@
+﻿@model SoftFin.Web.Models.CategoriaProfissional
+@{
+    ViewBag.Title = "Categoria Profissional - Excluir";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='container-fluid'>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.categoria)
+                    @Html.TextBoxFor(x => x.categoria, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.categoria)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+        </div>
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $("fieldset input").attr("disabled", "disabled");
+        $("select").attr("disabled", "disabled");
+    });
+</script>

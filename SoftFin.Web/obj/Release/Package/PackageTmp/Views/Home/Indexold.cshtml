@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205097615-Antes-de-utilizar";
+}
+<html>
+<body>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="portlet light portlet-fit bordered calendar">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class=" icon-layers font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">Calendário</span>
+
+                    </div>
+
+                </div>
+                <div id="calendar" class="has-toolbar"> </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-3">
+ 
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        
+                        <th colspan="2">Legenda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background-color: #4B77BE"></td>
+                        <td>Pendente sem atraso ou Pendente de Importação</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1BBC9B"></td>
+                        <td>Pago ou Importado</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #F7CA18"></td>
+                        <td>Pago Parciamente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #D91E18"></td>
+                        <td>Em atraso</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #b200ff"></td>
+                        <td>Item que precisa de sua atenção</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="row">
+
+            <div id="divSaldos">
+
+            </div>
+
+        <div class="col-md-12">
+            <div class="col-md-12 col-sm-12'">
+                <select id="gerar" name="gerar">
+                    <option value="1">Mês</option>
+                    <option value="2">Semana</option>
+                    <option value="3">Dia</option>
+                </select>
+                <br />
+            </div>
+            <br />
+            <div class='col-md-12 col-sm-12'>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Notas Fiscais (qtd)</div>
+                    <div class="panel-body" id="DivNotas"></div>
+                </div>
+            </div>
+            <div class='col-md-12 col-sm-12'>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Contratos (qtd)</div>
+                    <div class="panel-body" id="DivParcelaContratos"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    var Calendar = function () {
+
+
+        return {
+            //main function to initiate the module
+            init: function () {
+                //
+                Calendar.initCalendar();
+            },
+
+            initCalendar: function () {
+
+                if (!jQuery().fullCalendar) {
+                    console.log("Exit no jQuery().fullCalendar");
+                    return;
+                }
+
+                var date = new Date();
+                var d = date.getDate();
+                var m = date.getMonth();
+                var y = date.getFullYear();
+
+                var h = {};
+
+                if (Metronic.isRTL()) {
+                    if ($('#calendar').parents(".portlet").width() <= 720) {
+                        $('#calendar').addClass("mobile");
+                        h = {
+                            right: 'title, prev, next',
+                            center: '',
+                            left: 'month'
+                        };
+                    } else {
+                        $('#calendar').removeClass("mobile");
+                        h = {
+                            right: 'title',
+                            center: '',
+                            left: 'month'
+                        };
+                    }
+                } else {
+                    if ($('#calendar').parents(".portlet").width() <= 720) {
+                        $('#calendar').addClass("mobile");
+                        h = {
+                            left: 'title, prev, next',
+                            center: '',
+                            right: 'month'
+                        };
+                    } else {
+                        $('#calendar').removeClass("mobile");
+                        h = {
+                            left: 'title',
+                            center: '',
+                            right: 'month'
+                        };
+                    }
+                }
+
+                $('#calendar').fullCalendar('destroy'); // destroy the calendar
+                $('#calendar').fullCalendar({ //re-initialize the calendar
+                    header: h,
+                    defaultView: 'month', // change default view with available options from http://arshaw.com/fullcalendar/docs/views/Available_Views/
+                    slotMinutes: 15,
+                    editable: false,
+                    droppable: false, // this allows things to be dropped onto the calendar !!!
+                    events: evs
+                });
+
+            }
+
+        };
+
+    }();
+    var evs = "";
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            url: "../../Home/GetCalendar/",
+
+            success: function (tabledata) {
+                
+                evs = tabledata;
+
+                Calendar.init();
+            }
+        });
+
+
+
+        $.ajax({
+            type: 'GET',
+            dataType: "json",
+            url: "../../Home/getSaldos/",
+
+            success: function (data) {
+                var table = "";
+                $.each(data, function (datacol, item) {
+
+                    table += "<h4>" + item.banco + "</h4>";
+                    table += "<div class='row widget-row'>";
+                    table += "<div class='col-md-3'>";
+                    table += "<!-- BEGIN WIDGET THUMB -->";
+                    table += "<div class='widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered'>";
+                    table += "<h4 class='widget-thumb-heading'>Saldo Inicial</h4>";
+                    table += "<div class='widget-thumb-wrap'>";
+                    table += "<i class='widget-thumb-icon bg-" + item.carsaldoInicial + " icon-arrow-left'></i>";
+                    table += "<div class='widget-thumb-body'>";
+                    table += "<span class='widget-thumb-subtitle'>R$</span>";
+                    table += "<span class='widget-thumb-body-stat' data-counter='counterup' data-value='0'>" + item.saldoInicial + "</span>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "<!-- END WIDGET THUMB -->";
+                    table += "</div>";
+                    table += "<div class='col-md-3'>";
+                    table += "<!-- BEGIN WIDGET THUMB -->";
+                    table += "<div class='widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered'>";
+                    table += "<h4 class='widget-thumb-heading'>Débitos</h4>";
+                    table += "<div class='widget-thumb-wrap'>";
+                    table += "<i class='widget-thumb-icon bg-red icon-arrow-down'></i>";
+                    table += "<div class='widget-thumb-body'>";
+                    table += "<span class='widget-thumb-subtitle'>R$</span>";
+                    table += "<span class='widget-thumb-body-stat' data-counter='counterup' data-value='0'>" + item.saldoDedito + "</span>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "<!-- END WIDGET THUMB -->";
+                    table += "</div>";
+                    table += "<div class='col-md-3'>";
+                    table += "<!-- BEGIN WIDGET THUMB -->";
+                    table += "<div class='widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered'>";
+                    table += "<h4 class='widget-thumb-heading'>Crédito</h4>";
+                    table += "<div class='widget-thumb-wrap'>";
+                    table += "<i class='widget-thumb-icon bg-blue icon-arrow-up'></i>";
+                    table += "<div class='widget-thumb-body'>";
+                    table += "<span class='widget-thumb-subtitle'>R$</span>";
+                    table += "<span class='widget-thumb-body-stat' data-counter='counterup' data-value='0'>" + item.saldoCredito + "</span>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "<!-- END WIDGET THUMB -->";
+                    table += "</div>";
+                    table += "<div class='col-md-3'>";
+                    table += "<!-- BEGIN WIDGET THUMB -->";
+                    table += "<div class='widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered'>";
+                    table += "<h4 class='widget-thumb-heading'>Saldo Final</h4>";
+                    table += "<div class='widget-thumb-wrap'>";
+                    table += "<i class='widget-thumb-icon bg-" + item.carsaldoFinal + " icon-arrow-right'></i>";
+                    table += "<div class='widget-thumb-body'>";
+                    table += "<span class='widget-thumb-subtitle'>R$</span>";
+                    table += "<span class='widget-thumb-body-stat' data-counter='counterup' data-value='0'>" + item.saldoFinal + "</span>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "</div>";
+                    table += "<!-- END WIDGET THUMB -->";
+                    table += "</div>";
+                    table += "</div>";
+                });
+
+                $('#divSaldos').html(table);
+            }
+        });
+
+
+
+
+        //$('.selectpicker').selectpicker({
+        //    style: 'btn-default',
+        //    size: false
+        //});
+    });
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        function ParcelaContratos() {
+            $('#indicator').show();
+
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                url: "../../Home/GetParcelaContratos/" + $("#gerar").val(),
+
+                success: function (tabledata) {
+                    $("#spanPessoas").html(tabledata.Pessoas)
+                    $("#spanContratos").html(tabledata.Contratos)
+                    $("#spanConciliacao").html(tabledata.Conciliacao)
+                    $("#spanNfe").html(tabledata.Nfe)
+                    $("#spanAReceber").html(tabledata.AReceber)
+                    $("#spanAPagar").html(tabledata.APagar)
+                    $("#spanPagamentosEfetuados").html(tabledata.PagamentosEfetuados)
+                    $("#spanRecebimentosEmAtraso").html(tabledata.RecebimentosEmAtraso)
+
+
+                    var data = google.visualization.arrayToDataTable([
+                        ['Parcelas', tabledata.Texto, { role: 'style' }],
+                        ['Pendente', tabledata.Pendente, '#f0f4c3'],
+                        ['Liberada', tabledata.Liberada, '#b2dfdb'],
+                        ['Emitidas', tabledata.Emitida, '#bbdefb'],
+                        ['Canceladas', tabledata.Cancelada, '#ef5350']
+                    ]);
+
+                    var dataNF = google.visualization.arrayToDataTable([
+                        ['Notas', tabledata.Texto, { role: 'style' }],
+                        ['Emitidas', tabledata.NotasEmitidas, '#bbdefb'],
+                        ['Em Aberto', tabledata.NaoRecebidas, '#ef5350'],
+                        ['Recebidas', tabledata.Recebidas, '#b2dfdb'],
+                        ['Rec. Parcial', tabledata.RecebidasParcialmente, '#f0f4c3']
+                    ]);
+
+                    var dataCP = google.visualization.arrayToDataTable([
+                        ['Pagamentos', tabledata.Texto, { role: 'style' }],
+                        ['À Pagar', tabledata.Pagamentos, '#bbdefb'],
+                        ['Pagos', tabledata.Pagos, '#b2dfdb'],
+                        ['Em Aberto', tabledata.NaoPagos, '#ef5350'],
+                        ['Pagos Parcial', tabledata.PagosParcialmente, '#f0f4c3']
+                    ]);
+
+                    var dataCaixa = google.visualization.arrayToDataTable([
+                        ['Caixa', tabledata.Texto, { role: 'style' }],
+                        ['Entradas', tabledata.EntradaCaixa, '#bbdefb'],
+                        ['Saidas', tabledata.SaidaCaixa, '#ef5350']
+                    ]);
+
+                    var options = {
+                        legend: 'none',
+                        title: 'Parcelas de Contratos',
+                        bars: 'horizontal', // Required for Material Bar Charts.
+                        series: {
+                            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+                            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+                        },
+                        axes: {
+                            x: {
+                                distance: { label: 'parsecs' }, // Bottom x-axis.
+                                brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
+                            }
+                        },
+
+                        is3D: true,
+                        bar: { groupWidth: "80%" },
+                        animation: {
+                            duration: 1000,
+                            easing: 'linear',
+                            "startup": true
+                        }
+
+                    };
+
+                    var chart = new google.visualization.BarChart(document.getElementById('DivParcelaContratos'));
+                    chart.draw(data, options);
+
+                    var options = {
+                        legend: 'none',
+                        title: 'Notas Fiscais',
+                        bars: 'horizontal', // Required for Material Bar Charts.
+                        series: {
+                            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+                            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+                        },
+                        axes: {
+                            x: {
+                                distance: { label: 'parsecs' }, // Bottom x-axis.
+                                brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
+                            }
+                        },
+
+                        is3D: true,
+                        bar: { groupWidth: "80%" },
+                        animation: {
+                            duration: 1000,
+                            easing: 'linear',
+                            "startup": true
+                        }
+                    };
+                    var chart2 = new google.visualization.BarChart(document.getElementById('DivNotas'));
+                    chart2.draw(dataNF, options);
+
+                    var options = {
+                        legend: 'none',
+                        title: 'Contas a Pagar',
+                        bars: 'horizontal', // Required for Material Bar Charts.
+                        series: {
+                            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+                            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+                        },
+                        axes: {
+                            x: {
+                                distance: { label: 'parsecs' }, // Bottom x-axis.
+                                brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
+                            }
+                        },
+
+                        is3D: true,
+                        bar: { groupWidth: "80%" },
+                        animation: {
+                            duration: 1000,
+                            easing: 'linear',
+                            "startup": true
+                        }
+                    };
+                    var chart3 = new google.visualization.BarChart(document.getElementById('DivCP'));
+                    chart3.draw(dataCP, options);
+
+                    var options = {
+                        legend: 'none',
+                        title: 'Caixa',
+                        bars: 'horizontal', // Required for Material Bar Charts.
+                        series: {
+                            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+                            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+                        },
+                        axes: {
+                            x: {
+                                distance: { label: 'parsecs' }, // Bottom x-axis.
+                                brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
+                            }
+                        },
+
+                        is3D: true,
+                        bar: { groupWidth: "80%" },
+                        animation: {
+                            duration: 1000,
+                            easing: 'linear',
+                            "startup": true
+                        }
+                    };
+                    var chart4 = new google.visualization.BarChart(document.getElementById('DivCaixa'));
+                    chart4.draw(dataCaixa, options);
+
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    $('#indicator').hide();
+                    alert("Ops...");
+                }
+            });
+        }
+        ParcelaContratos();
+    }
+
+    $('#gerar').change(function () {
+        drawChart();
+    });
+
+</script>

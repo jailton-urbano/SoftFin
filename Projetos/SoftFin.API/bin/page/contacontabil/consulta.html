@@ -1,0 +1,74 @@
+﻿<div class="container-fluid">
+    <br />
+    <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" ng-click="cancel()">&times;</button>
+        <h4 class="modal-title"><span class="glyphicon glyphicon-subtitles"></span> Impacto Contábil</h4>
+    </div>
+
+    <div class="modal-body">
+
+        <div id="Grid">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridMunicipios"></dir-pagination-controls>
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+
+                        <th><span ng-click="ordenar('contaContabil')"> Conta Contábil </span> </th>
+                        <th style="text-align:right"><span ng-click="ordenar('debito')"> Débito </span></th>
+                        <th style="text-align:right"><span ng-click="ordenar('credito')"> Crédito </span></th>
+                        <th><span ng-click="ordenar('unidade')"> Unidade </span></th>
+                        <th><span ng-click="ordenar('data')"> Data </span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaCC|filter:procurar|itemsPerPage:5|orderBy:sortKey:reverse" pagination-id="gridMunicipios">
+
+                        <td>
+                            {{item.contaContabil}}
+                        </td>
+                        <td style="text-align:right">
+                            {{item.debito |number:2}}
+                        </td>
+                        <td style="text-align:right">
+                            {{item.credito |number:2}}
+                        </td>
+                        <td>
+                            {{item.unidade}}
+                        </td>
+                        <td>
+                            {{item.data  |date:'dd/MM/yyyy'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridMunicipios"></dir-pagination-controls>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <div class="button-row form-group">
+            <button class="btn btn-default" ng-click="cancel()" type="submit">
+                <span class="glyphicon glyphicon-log-out"></span>
+                Voltar
+            </button>
+        </div>
+    </div>
+
+</div>

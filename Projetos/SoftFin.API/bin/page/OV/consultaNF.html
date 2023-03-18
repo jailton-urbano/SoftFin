@@ -1,0 +1,92 @@
+﻿<div id="Grid" class="container-fluid">
+    <div class='panel-body'>
+        <form class="form-search">
+            <div class='container'>
+
+                <div class='col-md-3 form-group'>
+                    <label>Pesquisa : </label>
+                    <input type="text" class="form-control" ng-model="procurar" />
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV2"></dir-pagination-controls>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <button style="border-right-width: 0px; padding-right: 49px;"
+                            ng-click="Pesquisa()"
+                            class="btn btn-primary">
+                        <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                    </button>
+                </th>
+                <th>Identificação</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr ng-show="ListaOV.length == 0">
+                <td colspan="2">{{MsgPesquisa}}</td>
+            </tr>
+            <tr dir-paginate="item in ListaOV|filter:procurar|itemsPerPage:7|orderBy:sortKey:reverse" pagination-id="gridOV2">
+                <td style="width: 40px;">
+                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                            ng-click="Selecionar(item)"
+                            class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span> Selecionar
+                    </button>
+                </td>
+
+                <td>
+                    <b>
+                        <span ng-click="ordenar('Numero')">Ordem</span>
+                        / <span ng-click="ordenar('contrato')"> Contrato </span>
+                        / <span ng-click="ordenar('descricaocontrato')">Descrição </span>
+                        / <span ng-click="ordenar('nome')">Nome </span>
+                    </b>
+                    <br />
+                    {{item.Numero}} /
+                    {{item.contrato}} /
+                    {{item.descricaocontrato}}
+                    / {{item.nome}}
+                    <br />
+                    <b>
+                        <span ng-click="ordenar('data')">Data </span>
+                        / <span ng-click="ordenar('numeroparcela')">Parcela </span>
+                        / <span ng-click="ordenar('valor')">Valor Total </span>
+
+
+                    </b>
+                    <br />
+                    {{item.data | date:'dd/MM/yyyy'}} / {{item.numeroparcela}} / {{item.valor | number:2}}
+                    <br />
+                    <b>
+                        <span ng-click="ordenar('unidade')">Unidade </span> / <span ng-click="ordenar('banco')">Banco </span>  / <span ng-click="ordenar('operacao')">Operação</span>
+                    </b>
+                    <br />
+                    {{item.unidade}} / {{item.banco}} / {{item.operacao}}
+                    <br />
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridOV2"></dir-pagination-controls>
+
+
+
+
+    <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+        {{msgOK}}
+    </div>
+    <div class="alert alert-danger" ng-show="showNOK">
+        {{msgNOK}}
+        <ul>
+            <li ng-repeat="item in Erros">{{item}}</li>
+        </ul>
+    </div>
+</div>

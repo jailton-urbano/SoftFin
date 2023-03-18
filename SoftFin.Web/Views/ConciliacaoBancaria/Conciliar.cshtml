@@ -1,0 +1,417 @@
+﻿@model SoftFin.Web.Models.LanctoExtrato
+@{
+    ViewBag.Title = "Conciliação Bancaria";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <input type="hidden" id="txtBancoMovimento" name="txtBancoMovimento" value="" />
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    @Html.DisplayFor(x => x.data)
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.idLancto)
+                    @Html.DisplayFor(x => x.idLancto)
+                    @Html.ValidationMessageFor(x => x.idLancto)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.DisplayFor(x => x.descricao)
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+            <br />
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.banco.nomeBanco)
+                    @Html.DisplayFor(x => x.banco.nomeBanco)
+                    @Html.ValidationMessageFor(x => x.banco.nomeBanco)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Valor)
+                    @Html.DisplayFor(x => x.Valor)
+                    @Html.ValidationMessageFor(x => x.Valor)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Tipo)
+                    @Html.DisplayFor(x => x.Tipo)
+                    @Html.ValidationMessageFor(x => x.Tipo)
+                </div>
+            </div>
+            <br />
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Conciliado)
+                    @if (Model.Conciliado)
+                    {
+                        <span>SIM</span>                    }
+                    else
+                    {
+                        <span>NÃO</span>        
+                    }
+                    @Html.ValidationMessageFor(x => x.Conciliado)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.DataConciliado)
+                    @Html.DisplayFor(x => x.DataConciliado)
+                    @Html.ValidationMessageFor(x => x.DataConciliado)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.UsuConciliado)
+                    @Html.DisplayFor(x => x.UsuConciliado)
+                    @Html.ValidationMessageFor(x => x.UsuConciliado)
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class='panel-group' id='accordion'>
+            <div class='panel panel-default'>
+                <div class='panel-heading'>
+                    <h4 class='panel-title'>
+                        <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                        </a>
+                    </h4>
+                </div>
+                <div id='collapseOne' class='panel-collapse collapse out'>
+                    <div class='panel-body'>
+                        <form class='form-search'>
+                            <div class='container'>
+                                <div class='row'>
+                                    <div class='col-md-3 form-group'>
+                                        Banco :
+                                        <br />
+                                        @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---")
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        Data Inicial :
+                                        <br />
+                                        <input type='text' id='DataIni' name='DataIni' class='text-box single-line'  value='@ViewData["DataIni"]' />
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        Data Final :
+                                        <br />
+                                        <input type='text' id='DataFim' name='DataFim' class='text-box single-line'  value='@ViewData["DataFim"]' />
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-3 form-group'>
+                                        Valor Inicial :
+                                        <br />
+                                        @Html.TextBox("ValorIni",ViewData["ValorIni"])
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        Valor Final : 
+                                        <br />
+                                        @Html.TextBox("ValorFim",ViewData["ValorFim"])
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                                        Número Contas a Pagar :
+                                        <br />
+                                        @Html.TextBox("NumeroCPAG",ViewData["NumeroNFES"])
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-3 form-group'>
+                                        Número NFES :
+                                        <br />
+                                        @Html.TextBox("NumeroNFES",ViewData["NumeroNFES"])
+                                    </div>
+                                    <div class='col-md-3 form-group'>
+                            <button type='button' name='pesquisa' id='pesquisa' class='btn'>
+                                <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+        <div id="jqgObjOpc" style="text-align: center;"></div>
+
+
+        <div class="container-fluid">
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href='#collapse_CPAG'>Contas a Pagar
+                    </a>
+                </div>
+
+                <div id='collapse_CPAG' class="accordion-body collapse" style="height: 0px;">
+                    <div class="accordion-inner">
+                        <iframe id="ConsultaCPAG" name="ConsultaCPAG" width="935" height="800"></iframe>
+                    </div>
+                </div>
+
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href='#collapse_NFES'>Nota Fiscal
+                    </a>
+                </div>
+
+                <div id='collapse_NFES' class="accordion-body collapse" style="height: 0px;">
+                    <div class="accordion-inner">
+                        <iframe id="ConsultaNFES" name="ConsultaNFES" width="935" height="800"></iframe>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#jqgObj').jqGrid({
+                    //url from wich data should be requested
+                    url: '@Url.Action("Listas2")'
+                            + '?banco_id='
+                            + $('#banco_id').val()
+                            + '&DataIni='
+                            + $('#DataIni').val()
+                            + '&DataFim='
+                            + $('#DataFim').val()
+                            + '&ValorIni='
+                            + $('#ValorIni').val()
+                            + '&ValorFim='
+                            + $('#ValorFim').val()
+                            + '&NumeroCPAG='
+                            + $('#NumeroCPAG').val()
+                            + '&NumeroNFES='
+                            + $('#NumeroNFES').val(),
+
+                                        //type of data
+                                        datatype: 'json',
+                                        //url access method type
+                                        mtype: 'POST',
+                                        //columns namesa
+                                        colNames: ['Data', 'Valor', 'Banco', 'Contas a Pagar', 'NFE-s'],
+                                        //columns model
+                                        colModel: [
+                                                    { name: 'txtData', index: 'Data', align: 'left', editable: false, width: '100', hidden: false },
+                                                    { name: 'txtValor', index: 'Valor Bruto', align: 'right', editable: false, width: '150', hidden: false },
+                                                    { name: 'txtBanco', index: 'Banco', align: 'left', editable: false, width: '300', hidden: false },
+                                                    { name: 'txtCPGA', index: 'CPAG', align: 'left', editable: false, width: '150', hidden: false },
+                                                    { name: 'txtNFES', index: 'NFES', align: 'left', editable: false, width: '150', hidden: false }
+
+                                        ],
+                                        //pager for grid
+                                        pager: $('#jqgObjOpc'),
+                                        //number of rows per page
+                                        rowNum: 12,
+                                        //initial sorting column
+                                        sortname: 'Tipo',
+                                        //initial sorting direction
+                                        sortorder: 'asc',
+                                        viewrecords: true,
+                                        //grid height
+                                        height: '100%',
+                                        caption: "Lista de Banco Movimento",
+
+                                        onSelectRow: function (id) {
+                                            $("#collapse_CPAG").hide();
+                                            $("#collapse_NFES").hide();
+
+                                            if (id.substring(0, 4) == "CPAG") {
+                                                url = "../../DocumentoPagarMestre/Detail/" + id.substring(5) + "?SemBarras='S'";
+                                                $("#ConsultaCPAG").attr('src', url);
+                                                $("#collapse_CPAG").show();
+                                            } else if (id.substring(0, 4) == "NFES") {
+                                                url = "../../NotaFiscal/Detail/" + id.substring(5) + "?SemBarras='S'";
+                                                $("#ConsultaNFES").attr('src', url);
+                                                $("#collapse_NFES").show();
+
+                                            }
+                                        }
+
+                                    });
+
+                                    $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+                                        { add: false, del: false, edit: false, search: false });
+
+                                    $('#pesquisa').click(function () {
+                                        var caminho = '@Url.Action("Listas2")' + '?';
+                                        caminho += 'banco_id=';
+                                        caminho += $('#banco_id').val();
+                                        caminho += '&DataIni=';
+                                        caminho += $('#DataIni').val();
+                                        caminho += '&DataFim=';
+                                        caminho += $('#DataFim').val();
+                                        caminho += '&ValorIni=';
+                                        caminho += $('#ValorIni').val();
+                                        caminho += '&ValorFim=';
+                                        caminho += $('#ValorFim').val();
+                                        caminho += '&NumeroCPAG=';
+                                        caminho += $('#NumeroCPAG').val();
+                                        caminho += '&NumeroNFES=';
+                                        caminho += $('#NumeroNFES').val();
+                                        
+                                        jQuery("#jqgObj").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+                            });
+
+
+                                });
+
+        </script>
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+
+<script>
+    $('#data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DataIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DataFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          $('#valor').val(filtraNumerosComVirgula($('#valor').val()));
+      });
+    $('#valor').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#ValorIni').attr('maxlength', '18');
+    $('#ValorIni').keyup(
+      function (event) {
+          $('#ValorIni').val(filtraNumerosComVirgula($('#ValorIni').val()));
+      });
+    $('#ValorIni').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#ValorFim').attr('maxlength', '18');
+    $('#ValorFim').keyup(
+      function (event) {
+          $('#ValorFim').val(filtraNumerosComVirgula($('#ValorFim').val()));
+      });
+    $('#ValorFim').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $("form").submit(function (event) {
+
+        var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+        if (gr == null) {
+            alert("Selecione 1 linha para continuar.");
+            event.preventDefault();
+        };
+
+        $('#txtBancoMovimento').val(gr);
+    });
+
+</script>
+<style type='text/css'>
+    <!--
+    #id {
+        width: 275.00px;
+    }
+
+    #empresa_id {
+        width: 275.00px;
+    }
+
+    #Empresa {
+        width: 275.00px;
+    }
+
+    #banco_id {
+        width: 275.00px;
+    }
+
+    #Banco {
+        width: 275.00px;
+    }
+
+    #planoDeConta_id {
+        width: 275.00px;
+    }
+
+    #PlanoDeConta {
+        width: 275.00px;
+    }
+
+    #origemmovimento_id {
+        width: 275.00px;
+    }
+
+    #OrigemMovimento {
+        width: 275.00px;
+    }
+
+    #tipoDeMovimento_id {
+        width: 275.00px;
+    }
+
+    #TipoMovimento {
+        width: 275.00px;
+    }
+
+    #tipoDeDocumento_id {
+        width: 275.00px;
+    }
+
+    #TipoDocumento {
+        width: 275.00px;
+    }
+
+    #unidadeDeNegocio_id {
+        width: 275.00px;
+    }
+
+    #UnidadeNegocio {
+        width: 275.00px;
+    }
+
+    #IndicadorDeMovimento {
+        width: 275.50px;
+    }
+
+    #data {
+        width: 275.00px;
+    }
+
+    #historico {
+        width: 275.00px;
+    }
+
+    #valor {
+        width: 275.00px;
+    }
+    -->
+</style>
+
+

@@ -1,0 +1,690 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/IPS/Index.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div id="loadGrid" style="text-align: center;" class="loading_img" ng-show="showloadGrid">
+            <img src="~/Content/images/loading_bar_animated.gif" />
+        </div>
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Imposto Produto Serviço?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.codigo}} - {{item.descricao}} </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                                Excluir
+                            </button>
+                            <button class="btn btn-default" ng-click="cancel()">
+                                <span class="glyphicon glyphicon-log-out"></span>
+                                Voltar
+                            </button>
+
+
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalExcluirTabela.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir a Tabela?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.descricao}} </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Excluir
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalRelacionamento.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Relacionamento com Tabela</h3>
+                </div>
+                <div class="modal-body">
+                    <div >
+
+                        <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Tabela
+                                    </th>
+                                    <th>
+                                        Custo
+                                    </th>
+                                    <th >
+                                        Descrição
+                                    </th>
+                                    <th>
+                                        Relacionamento
+                                    </th>
+                                    <th>
+                                        Porcertagem
+                                    </th>
+                                    <th>
+                                        Lucro
+                                    </th>
+                                    <th>
+                                        Preço de Venda
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr dir-paginate="item in ListaRelacionamentos|itemsPerPage:7">
+                                    <td>
+                                        {{item.tabela}}
+                                    </td>
+                                    <td>
+                                        {{item.custo}}
+                                    </td>
+
+                                    <td>
+                                        <input type='text' ng-model='item.descricao' class='form-control' />
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" ng-model="item.relaciona" ng-disabled='ModoConsulta'
+                                                ng-options="o.Value as o.Text for o in ListaSimNao">
+                                            <option value="">--Selecione--</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type='text' ng-model='item.porcentagem' class='form-control' ui-number-mask="2" />
+                                    </td>
+                                    
+                                    
+                                    <td>
+                                        {{((item.custo / 100) * item.porcentagem) | number:2}}
+                                    </td>
+                                    <td>
+                                        {{(((item.custo / 100) * item.porcentagem) + item.custo) | number:2}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+        <div id="tabs">
+            <ul class="nav nav-tabs">
+                <li class="aba-estab">
+                    <a href="#tabProduto" data-toggle="tab">
+                        Serviço/Produto 
+                        <span class="badge"></span>
+                    </a>
+                </li>
+                <li class="aba-perfil">
+                    <a href="#tabTabela" data-toggle="tab">
+                        Tabela Preços
+                        <span class="badge"></span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="tab-content">
+
+                    <div class="tab-pane fade activate active in" id="tabProduto" aria-expanded="true">
+
+
+
+                        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+                            <div class='panel-body'>
+                                <form class="form-search">
+                                    <div class='container'>
+
+                                        <div class='col-md-3 form-group'>
+                                            <label>Pesquisa : </label>
+                                            <input type="text" class="form-control" ng-model="procurar" />
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+
+                            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th ng-show="showMostraTodos">
+
+
+                                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                                    ng-click="Pesquisa()"
+                                                    title="Atualiza a lista na tela"
+                                                    class="btn btn-warning">
+                                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                                            </button>
+
+                                            <button style="margin-top: 4px; padding-right: 72px;"
+                                                    ng-click="Novo()"
+                                                    ng-show="EditAccess"
+                                                    title="Novo serviço/produto"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-plus"></span> Novo
+                                            </button>
+
+
+
+                                        </th>
+                                        <th>Dados</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7" class="{{item.active}}">
+                                        <td style="width: 40px;" ng-show="showMostraTodos">
+
+
+
+                                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                                    ng-click="Detalhar(item)"
+                                                    title="Detalhes do serviço/produto"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                                            </button>
+
+
+
+                                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 56px;"
+                                                    ng-click="Tabela(item)"
+                                                    ng-show="EditAccess"
+                                                    title="Editar relacionamento com a tabela"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-list-alt"></span> Tabelas
+                                            </button>
+
+                                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                                    type="button"
+                                                    ng-click="Excluir(item)"
+                                                    ng-show="EditAccess"
+                                                    title="Excluir serviço/produto"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                                            </button>
+
+                                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                    ng-click="Alterar(item)"
+                                                    ng-show="EditAccess"
+                                                    title="Editar serviço/produto"
+                                                    class="btn btn-warning">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+
+                                            
+
+                                        </td>
+
+                                        <td>
+                                            <b>
+                                                <span ng-click="ordenar('codigo')"> Data </span> /
+                                                <span ng-click="ordenar('descricao')"> Descrição </span> /
+                                                <span ng-click="ordenar('ncm')">NCM </span> /
+                                                <span ng-click="ordenar('marca')">Marca </span>
+                                            </b>
+                                            <br />
+                                            <label>
+                                                {{item.codigo}} /
+                                                {{item.descricao}} /
+                                                {{item.ncm}} /
+                                                {{item.marca}}
+                                            </label>
+                                            <br />
+
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+                            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" ng-show="showManut">
+
+
+
+                            <div ng-form="frmpessoas">
+                                <div class="panel-body">
+                                    <div class='container-fluid'>
+                                        <div class='row'>
+                                            <div class='col-md-9 form-group'>
+                                            </div>
+                                            <div class='col-md-3 form-group'>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="Salvar()"
+                                                            class="btn btn-primary"
+                                                            ng-show="!ModoConsulta">
+                                                        <span class="glyphicon glyphicon-ok"></span> {{msgSalvar}}
+                                                    </button>
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="Voltar()"
+                                                            class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-2 form-group'>
+                                            <label>Código</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.codigo' class='form-control' ng-maxlength="20" required />
+                                        </div>
+                                        <div class='col-md-4 form-group'>
+                                            <label>Descrição</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.descricao' class='form-control' ng-maxlength="70" required />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Unidade Medida</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.unidadeMedida' class='form-control' ng-maxlength="50" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>NCM</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.ncm' class='form-control' ng-maxlength="50" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Ativo</label>
+                                            <select class="form-control" ng-model="ips.Ativo" ng-disabled='ModoConsulta'
+                                                    ng-options="o.Value as o.Text for o in ListaSimNao">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+                                        <div class='col-md-4 form-group'>
+                                            <label>Marca</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.marca' class='form-control' ng-maxlength="120" />
+                                        </div>
+                                        <div class='col-md-8 form-group'>
+                                            <label>Categoria </label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="ips.CategoriaItemProdutoServico_ID" ng-options="o.Value as o.Text for o in ListaCategoria" required>
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+                                        <div class='col-md-6 form-group'>
+                                            <label>Código Barras EAN</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.codigoBarrasEAN' class='form-control' ng-maxlength="120" />
+                                        </div>
+
+
+
+
+                                        <div class='col-md-2 form-group'>
+                                            <label>Estoque</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.estoque' class='form-control' ui-number-mask="0" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Custo</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.custo' class='form-control' ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Margem Lucro(%) </label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.margem' class='form-control' ui-number-mask="2" ng-change="ips.precoVenda = ips.custo + ((ips.custo / 100) * ips.margem)" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Preço Venda</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.precoVenda' class='form-control' ui-number-mask="2" />
+                                        </div>
+
+
+                                        <div class='col-md-2 form-group'>
+                                            <label>Peso Liquido</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.pesoLiquido' class='form-control' ui-number-mask="0" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Peso Bruto</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.pesoBruto' class='form-control' ui-number-mask="0" />
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>EXTIPI</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.EXTIPI' class='form-control' ng-maxlength="30" />
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <label>CEST</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.CEST' class='form-control' ng-maxlength="30" />
+                                        </div>
+                                        <div class='col-md-4 form-group'>
+                                            <label>Porcentagem Valor Tributos (IBPT)</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.valorTributos' class='form-control' ng-maxlength="6" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-8 form-group'>
+
+                                            <label>Origem</label>
+                                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="ips.origem" ng-options="o.Value as o.Text for o in ListaOrigem">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+                                        <div class='col-md-12 form-group'>
+                                            <label>Informaçôes Complementares</label>
+                                            <input type='text' ng-disabled='ModoConsulta' ng-model='ips.informacoesComplementares' class='form-control' ng-maxlength="250" />
+                                        </div>
+
+                                        <div class='row'>
+                                            <div class='col-md-9 form-group'>
+                                            </div>
+                                            <div class='col-md-3 form-group'>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="Salvar()"
+                                                            class="btn btn-primary"
+                                                            ng-show="!ModoConsulta">
+                                                        <span class="glyphicon glyphicon-ok"></span> {{msgSalvar}}
+                                                    </button>
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="Voltar()"
+                                                            class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info" ng-show="showOK">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+                    <div class="tab-pane fade activate" id="tabTabela" aria-expanded="true">
+
+
+
+                        <div id="GridTabela" class="container-fluid" ng-show="showGridTabela">
+
+                            <div class='panel-body'>
+                                <form class="form-search">
+                                    <div class='container'>
+
+                                        <div class='col-md-3 form-group'>
+                                            <label>Pesquisa : </label>
+                                            <input type="text" class="form-control" ng-model="procurarTabela" />
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+
+                            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th ng-show="showMostraTodosTabela">
+
+
+                                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                                    ng-click="PesquisaTabela()"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                                            </button>
+
+                                            <button style="margin-top: 4px; padding-right: 72px;"
+                                                    ng-click="NovoTabela()"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-plus"></span> Novo
+                                            </button>
+
+
+
+                                        </th>
+                                        <th>Dados</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr dir-paginate="item in listaTabela|orderBy:sortKey:reverseTabela|filter:procurarTabela|itemsPerPage:7">
+                                        <td style="width: 40px;" ng-show="showMostraTodosTabela">
+
+
+
+                                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                                    ng-click="AlterarTabela(item)"
+                                                    class="btn btn-primary">
+                                                <span class="glyphicon glyphicon-edit"></span> Editar
+                                            </button>
+
+                                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                                    type="button"
+                                                    ng-click="ExcluirTabela(item)"
+                                                    class="btn btn-danger">
+                                                <span class="glyphicon glyphicon-minus"></span> Excluir
+                                            </button>
+
+                                        </td>
+
+                                        <td>
+                                            <b>
+                                                <span ng-click="ordenarTabela('descricao')"> Descrição </span> /
+                                                <span ng-click="ordenarTabela('porcentagemlucropadrao')"> Porcentagem Lucro Padrão </span> /
+                                                <span ng-click="ordenarTabela('ativo')"> Ativo </span>
+
+
+                                            </b>
+                                            <br />
+                                            <label>
+                                                {{item.descricao}} /
+                                                {{item.porcentagemlucropadrao | number:2}}%  /
+                                                {{item.ativo}}
+                                            </label>
+                                            <br />
+
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+                            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" ng-show="showManutTabela">
+
+
+
+                            <div ng-form="frmTabela">
+                                <div class="panel-body">
+                                    <div class='container-fluid'>
+                                        <div class='row'>
+                                            <div class='col-md-9 form-group'>
+                                            </div>
+                                            <div class='col-md-3 form-group'>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="SalvarTabela()"
+                                                            class="btn btn-success"
+                                                            ng-show="!ModoConsulta">
+                                                        <span class="glyphicon glyphicon-plus"></span> {{msgSalvar}}
+                                                    </button>
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="VoltarTabela()"
+                                                            class="btn btn-success">
+                                                        <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-4 form-group'>
+                                            <label>Descrição</label>
+                                            <input type='text' ng-disabled='ModoConsultaTabela' ng-model='tabela.descricao' class='form-control' ng-maxlength="70" required />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Margem Lucro(%) </label>
+                                            <input type='text' ng-disabled='ModoConsultaTabela' ng-model='tabela.porcentagemlucropadrao' class='form-control' ui-number-mask="2" required/>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Ativo</label>
+                                            <select class="form-control" ng-model="tabela.ativo" ng-disabled='ModoConsultaTabela'
+                                                    ng-options="o.Value as o.Text for o in ListaSimNao">
+                                                <option value="">--Selecione--</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class='row'>
+                                            <div class='col-md-9 form-group'>
+                                            </div>
+                                            <div class='col-md-3 form-group'>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="SalvarTabela()"
+                                                            class="btn btn-success"
+                                                            ng-show="!ModoConsulta">
+                                                        <span class="glyphicon glyphicon-plus"></span> {{msgSalvar}}
+                                                    </button>
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button type="button"
+                                                            ng-click="VoltarTabela()"
+                                                            class="btn btn-success">
+                                                        <span class="glyphicon glyphicon-folder-close"></span> Voltar
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info" ng-show="showOK">
+                                {{msgOK}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="showNOK">
+                                {{msgNOK}}
+                                <ul>
+                                    <li ng-repeat="item in Erros">{{item}}</li>
+                                </ul>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

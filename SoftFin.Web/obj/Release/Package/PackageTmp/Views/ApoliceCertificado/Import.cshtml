@@ -1,0 +1,26 @@
+﻿
+
+<h2>Importar Planilha de Apolices</h2>
+
+@using (Html.BeginForm("Import", "ApoliceCertificado", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <label>Clique no botão abaixo e informe o arquivo : </label> 
+    <input class="btn" type="file" name="file" />
+   
+    <input class="btn btn-primary" type="submit" name="Submit" id="Submit" value="Ler Arquivo" />
+}
+
+
+      <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

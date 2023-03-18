@@ -1,0 +1,114 @@
+﻿@model SoftFin.Web.Models.LoteDespesa
+@{
+    ViewBag.Title = "Despesas no Lote";
+}
+<div id="indicator" style="display: none; text-align: center;" class="loading_img">
+    <img src="~/Content/images/loading_bar_animated.gif" />
+</div>
+@using (Html.BeginForm())
+{
+    <div class="button-row form-group">
+        @Html.ActionLink("Voltar", "/Index", new object(), new { @class = "btn btn-primary", role = "button" })
+    </div>
+    <fieldset>
+        <legend>Dados do Lote</legend>
+        <div class='container-fluid'>
+            <div class="row">
+                @Html.HiddenFor(x => x.id)
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.codigo)
+                    <br />
+                    @Html.TextBoxFor(x => x.codigo, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Data)
+                    <br />
+                    @Html.TextBoxFor(x => x.Data, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Historico)
+                    <br />
+                    @Html.TextBoxFor(x => x.Historico, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.SituacaoLoteDespesa.descricao)
+                    <br />
+                    @Html.TextBoxFor(x => x.SituacaoLoteDespesa.descricao, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.ValorLote)
+                    <br />
+                    @Html.TextBoxFor(x => x.ValorLote, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Detalhe do Lote</legend>
+        <div id="table_div">
+            <header>Despesas</header>
+        </div>
+    </fieldset>
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('document').ready(function () {
+        $('#indicator').show();
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "../getDespesaDetalhes",
+            data: {
+                'ID': $("#id").val(),
+            },
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Colaborador');
+                data.addColumn('string', 'Cliente');
+                data.addColumn('string', 'Data');
+                data.addColumn('string', 'Projeto');
+                data.addColumn('string', 'Valor');
+                data.addColumn('string', 'Tipo');
+
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].usuario,
+                                 tabledata[i].cliente,
+                                 tabledata[i].dataS,
+                                 tabledata[i].projeto,
+                                 tabledata[i].valorS,
+                                 tabledata[i].tipodespesae]);
+                }
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+                table.draw(data, { showRowNumber: true });
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('input[type!=hidden]').attr('disabled', 'disabled')
+    $('select').attr('disabled', 'disabled')
+</script>

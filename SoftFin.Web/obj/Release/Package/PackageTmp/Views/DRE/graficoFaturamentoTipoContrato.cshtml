@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Faturamento por Tipo de Contrato";
+}
+
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-stats"></span> Gerar Gráfico</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="chart_div"></div>
+    <br />
+    <div id="detail_div"></div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["corechart", "table"] });
+
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraGraficoFaturamentoTipoContrato",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (chartsdata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Tipo');
+                data.addColumn('number', 'Valor');
+
+                for (var i = 0; i < chartsdata.length; i++) {
+                    data.addRow([chartsdata[i].tipo, chartsdata[i].valor]);
+                }
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+                chart.draw(data,
+                  {
+                      title: "Faturamento por Tipo de Contrato",
+                  });
+
+                $('#indicator').hide();
+
+                // Add our selection handler.
+                google.visualization.events.addListener(chart, 'select', function () {
+                    var row = chart.getSelection()[0].row;
+                    var tipo = data.getValue(row, 0);
+                    DrillDown(tipo);
+                });
+
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+    function DrillDown(tipo) {
+        $('#indicator').show();
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "graficoTipoDrillDown",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val(),
+                'Tipo': tipo,
+            },
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('number', 'Número');
+                data.addColumn('string', 'Emissão');
+                data.addColumn('string', 'Vencimento');
+                data.addColumn('string', 'Tomador');
+                data.addColumn('number', 'Valor Total');
+                data.addColumn('number', 'Valor Líquido');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].numeroNfse,
+                                 tabledata[i].dataEmissaoS,
+                                 tabledata[i].dataVencimentoS,
+                                 tabledata[i].razaoTomador,
+                                 tabledata[i].valorNfse,
+                                 tabledata[i].valorLiquido]);
+                }
+
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                formatter.format(data, 4);
+                formatter.format(data, 5);
+
+                var table = new google.visualization.Table(document.getElementById('detail_div'));
+
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    }
+
+</script>

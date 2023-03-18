@@ -1,0 +1,75 @@
+﻿@model IEnumerable<SoftFin.GestorProcessos.Models.TipoCampo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TemplateHTML)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TemplateHTMLModal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TemplateJSControl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TemplateJSScript)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoBancoDados)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SQLDefault)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ativo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TemplateHTML)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TemplateHTMLModal)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TemplateJSControl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TemplateJSScript)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoBancoDados)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SQLDefault)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

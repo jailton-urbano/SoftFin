@@ -1,0 +1,263 @@
+﻿@{
+                /**/
+
+                Layout = "_LayoutSemMenu.cshtml";
+}
+<div ng-cloak ng-app="SOFTFIN" id="DivTotal" ng-controller="MestreEntidade">
+    <div ng-show="ShowCampos">
+
+        <md-toolbar class="md-whiteframe-1dp">
+            <div class="md-toolbar-tools">
+                <div class="md-title">Mantenção</div>
+            </div>
+        </md-toolbar>
+
+        <md-toolbar class="md-table-toolbar md-default">
+            <div class="md-toolbar-tools">
+                <span>@ViewData["titulo"]</span>
+                <div flex></div>
+                <md-button class="md-raised md-primary" ng-click="Pesquisa()">Recarregar</md-button>
+            </div>
+        </md-toolbar>
+
+        <!-- exact table from live demo -->
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row>
+                        <th md-column>
+                            <md-button class="md-raised md-primary" ng-click="Novo()">Novo</md-button>
+                        </th>
+                        @Html.Raw(ViewData["cabeca"])
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row md-select="item" md-select-id="name" md-auto-select ng-repeat="item in lista">
+                        <td md-cell>
+                            <md-button class="md-raised md-primary" ng-click="Editar(item)">Editar</md-button>
+                            <md-button class="md-raised md-default" ng-click="Detalhar(item)">Detalhar</md-button>
+                            <md-button class="md-raised md-warn" ng-click="ExcluirConfirmar(item)">Excluir</md-button>
+                        </td>
+                        @Html.Raw(ViewData["colunas"])
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+
+        @*<md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="query.page" md-total="query.total" md-on-paginate="Pesquisa" md-page-select></md-table-pagination>*@
+
+    </div>
+
+    <div ng-show="!ShowCampos">
+        <md-toolbar md-scroll-shrink="">
+            <div class="md-toolbar-tools">@ViewData["titulo"]</div>
+        </md-toolbar>
+
+        <md-content style="height: 600px;" md-theme="altTheme">
+
+
+            @Html.Raw(ViewData["campos"])
+
+
+
+            <section layout="row" layout-sm="column" layout-align="left left" layout-wrap>
+                <md-button class="md-raised md-primary" ng-click="Voltar()">Cancelar</md-button>
+                <md-button class="md-raised md-primary" ng-click="SalvarConfirmar()">Salvar</md-button>
+            </section>
+        </md-content>
+    </div>
+</div>
+
+
+<script>
+
+
+    var app = angular.module('SOFTFIN',
+        ['ui.utils.masks', 'ngAnimate', 'ngSanitize', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache', 'md.data.table'])
+        .config(function ($mdDateLocaleProvider) {
+
+            $mdDateLocaleProvider.shortMonths = ['Jan', 'Fev', 'Mar', 'Abril', 'Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            $mdDateLocaleProvider.Months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $mdDateLocaleProvider.days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'];
+            $mdDateLocaleProvider.shortDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            $mdDateLocaleProvider.weekNumberFormatter = function (weekNumber) {
+                return 'Semana ' + weekNumber;
+            };
+            $mdDateLocaleProvider.formatDate = function (date) {
+                var m = moment(date);
+                return m.isValid() ? m.format("DD/MM/YYYY") : '';
+            };
+            $mdDateLocaleProvider.msgCalendar = 'Calendario';
+            $mdDateLocaleProvider.msgOpenCalendar = 'Abrir calendario';
+
+        }).config(function ($mdThemingProvider) {
+            $mdThemingProvider.theme('altTheme');
+        });
+
+
+
+
+        app.filter('yesNo', function () {
+            return function (input) {
+                return input == "True" ? 'Sim' : 'Não';
+            }
+        })
+
+        app.controller('MestreEntidade', [
+            '$scope', '$http', '$location', '$anchorScroll', '$timeout', '$mdToast', '$mdEditDialog', '$q', '$mdDialog',
+            function ($scope, $http, $location, $anchorScroll, $timeout, $mdToast, $mdEditDialog, $q, $mdDialog) {
+                $scope.ShowCampos = true;
+                $scope.ModoConsulta = false;
+                $scope.tabela = "@ViewData["titulo"]";
+                $scope.paramProcesso = @Html.Raw(ViewData["paramProcesso"]);
+                $scope.selected = [];
+
+                $scope.query = {
+                    order: 'id',
+                    limit: 30,
+                    page: 1,
+                    total: 0
+                };
+
+                $scope.Pesquisa = function () {
+                    $http.post("../Dinamico/PesquisaTabela", { "paramProcesso": $scope.paramProcesso, "query": $scope.query, "tabela": $scope.tabela })
+                        .success(function (data) {
+                            $scope.lista = JSON.parse(data.Lista);
+                            $scope.query = data.Query;
+                            
+                            
+                        }).error(function (data) {
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                }
+                $scope.Pesquisa();
+
+                $scope.Editar = function (item) {
+                    $scope.entidade = item;
+                    $scope.ShowCampos = false;
+                    $scope.ModoConsulta = true;
+                }
+                $scope.Detalhar = function (item) {
+                    $scope.entidade = item;
+                    $scope.ShowCampos = false;
+                    $scope.ModoConsulta = true;
+                }
+
+                $scope.Novo = function () {
+                    $scope.ModoConsulta = false;
+                    $scope.entidade = {};
+                    $scope.entidade.Id = "0";
+                    $scope.ShowCampos = false;
+                }
+
+                $scope.Voltar = function () {
+                    $scope.ShowCampos = true;
+                    $scope.Pesquisa();
+                }
+                
+                $scope.Salvar = function () {
+                    
+                    $http.post("../Dinamico/SalvarTabela", { "paramProcesso": $scope.paramProcesso, "json": JSON.stringify($scope.entidade)})
+                        .success(function (data) {
+
+
+                            $scope.Voltar();
+                            $scope.showSimpleToast("Salvo com sucesso!");
+
+
+                        }).error(function (data) {
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                }
+
+                $scope.SalvarConfirmar = function (ev) {
+                    // Appending dialog to document.body to cover sidenav in docs app
+                    var confirm = $mdDialog.confirm()
+                        .title('Deseja salvar?')
+                        .textContent('')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .ok('OK')
+                        .cancel('Cancelar');
+
+                    $mdDialog.show(confirm).then(function () {
+                        $scope.Salvar();
+                    }, function () {
+
+                    });
+                };
+
+                $scope.Excluir = function (item) {
+
+                    $http.post("../Dinamico/ExcluirTabela", { "paramProcesso": $scope.paramProcesso, "Id": item.Id})
+                        .success(function (data) {
+
+
+                            $scope.Voltar();
+                            $scope.showSimpleToast("Excluido com sucesso");
+
+
+                        }).error(function (data) {
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                }
+
+                $scope.ExcluirConfirmar = function (ev) {
+                    // Appending dialog to document.body to cover sidenav in docs app
+                    var confirm = $mdDialog.confirm()
+                        .title('Excluir?')
+                        .textContent(ev)
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .ok('OK')
+                        .cancel('Cancelar');
+
+                    $mdDialog.show(confirm).then(function () {
+                        $scope.Excluir(ev);
+                    }, function () {
+
+                    });
+                };
+
+                var last = {
+                    bottom: false,
+                    top: true,
+                    left: false,
+                    right: true
+                };
+
+                $scope.toastPosition = angular.extend({}, last);
+
+                $scope.getToastPosition = function () {
+                    sanitizePosition();
+
+                    return Object.keys($scope.toastPosition)
+                        .filter(function (pos) { return $scope.toastPosition[pos]; })
+                        .join(' ');
+                };
+
+                function sanitizePosition() {
+                    var current = $scope.toastPosition;
+
+                    if (current.bottom && last.top) current.top = false;
+                    if (current.top && last.bottom) current.bottom = false;
+                    if (current.right && last.left) current.left = false;
+                    if (current.left && last.right) current.right = false;
+
+                    last = angular.extend({}, current);
+                }
+
+                $scope.showSimpleToast = function (msg) {
+                    var pinTo = $scope.getToastPosition();
+
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent(msg)
+                            .position(pinTo)
+                            .hideDelay(13000)
+                    );
+                };
+            }
+        ]);
+
+</script>

@@ -1,0 +1,1121 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarMestreVlw2
+@{
+    ViewBag.Title = "Contas a Pagar - Prorrogar Data Vencimento";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+
+        
+
+        <div class="container-fluid">
+
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    <label>Código de Barras</label>
+                    <input type="text" class="form-control" name="LinhaDigitavel" id="LinhaDigitavel"  value="@Model.linhadigitavel"/>
+
+                    <span class="field-validation-error" name="LinhaDigitavelErro" id="LinhaDigitavelErro"></span>
+                </div>
+                <div class='col-md-1 form-group'><br /> 
+                    </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.pessoa_id)
+                    @Html.HiddenFor(x => x.situacaoPagamento)
+                    @Html.DropDownListFor(x => x.pessoa_id, (SelectList)ViewData["Pessoas"], "--Selecione--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoa_id)
+                </div>
+                <div class='col-md-1 form-group'>
+                    @Html.LabelFor(x => x.codigoPagamento)
+                    @Html.TextBoxFor(x => x.codigoPagamento, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigoPagamento)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataLancamento)
+                    @Html.TextBoxFor(x => x.dataLancamento, new { @disabled = "disabled", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.dataLancamento)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataCompetencia)
+                    @Html.TextBoxFor(x => x.dataCompetencia, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.dataCompetencia)
+                </div>
+            </div>
+            <div class='row'>
+
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataDocumento)
+                    <input type="text" id="dataDocumento" name="dataDocumento"  class="form-control" value="@Model.dataDocumento.Date.ToString("dd/MM/yyyy")" />
+                    @Html.ValidationMessageFor(x => x.dataDocumento)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataVencimento)
+                    <input type="text" id="dataVencimento" name="dataVencimento" class="form-control" value="@Model.dataVencimento.Date.ToString("dd/MM/yyyy")" />
+                    @Html.ValidationMessageFor(x => x.dataVencimento)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorBruto)
+                    @Html.TextBoxFor(x => x.valorBruto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorBruto)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.numeroDocumento)
+
+                    @Html.TextBoxFor(x => x.numeroDocumento, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.numeroDocumento)
+                </div>
+
+
+
+            </div>
+
+            <div class='row'>
+
+
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.tipodocumento_id)
+
+                    @Html.DropDownListFor(x => x.tipodocumento_id, (SelectList)ViewData["TipoDocumento"], "--Selecione--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tipodocumento_id)
+                </div>
+
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.tipolancamento)
+
+                    @Html.DropDownListFor(x => x.tipolancamento, (SelectList)ViewData["TipoLancamento"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tipolancamento)
+                </div>
+
+                <div class='col-md-5 form-group'>
+                    @Html.LabelFor(x => x.banco_id)
+
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.banco_id)
+                </div>
+
+
+            </div>
+
+
+            <div id="DivFGTS" name="DivFGTS" hidden="hidden">
+                <h4>FGTS</h4>
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.FGTSnomeContribuinte)
+                            @Html.TextBoxFor(x => x.FGTSnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSnomeContribuinte" id="ErroFGTSnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTScnpj)
+                            @Html.TextBoxFor(x => x.FGTScnpj, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScnpj" id="ErroFGTScnpj" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTScodigoReceita)
+                            @Html.TextBoxFor(x => x.FGTScodigoReceita, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScodigoReceita" id="ErroFGTScodigoReceita" hidden="hidden">*</span>
+                        </div>
+
+
+                    </div>
+                    <div class='row'>
+
+                        <div class='col-md-4 form-group'>
+                            @Html.LabelFor(x => x.FGTScodigoBarras)
+                            @Html.TextBoxFor(x => x.FGTScodigoBarras, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScodigoBarras" id="ErroFGTScodigoBarras" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSidentificadorFgts)
+                            @Html.TextBoxFor(x => x.FGTSidentificadorFgts, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSidentificadorFgts" id="ErroFGTSidentificadorFgts" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            @Html.LabelFor(x => x.FGTSlacreConectividadeSocial)
+                            @Html.TextBoxFor(x => x.FGTSlacreConectividadeSocial, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSlacreConectividadeSocial" id="ErroFGTSlacreConectividadeSocial" hidden="hidden">*</span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSdigitoLacre)
+                            @Html.TextBoxFor(x => x.FGTSdigitoLacre, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSdigitoLacre" id="ErroFGTSdigitoLacre" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSdataPagamento)
+                            @if (Model.FGTSdataPagamento.Date == null)
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control"  />
+                            }
+                            else
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control"  value="@Model.FGTSdataPagamento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroFGTSdataPagamento" id="ErroFGTSdataPagamento" hidden="hidden">*</span>
+                        </div>
+                        
+                        <div class='col-md-1 form-group'>
+                            </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTStipoInscricao)
+                            @Html.TextBoxFor(x => x.FGTStipoInscricao, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTStipoInscricao" id="ErroFGTStipoInscricao" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSvalorPagamento)
+                            @Html.TextBoxFor(x => x.FGTSvalorPagamento, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSvalorPagamento" id="ErroFGTSvalorPagamento" hidden="hidden">*</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="DivDARF" name="DivDARF" hidden="hidden">
+                <h4>DARF</h4>
+                <div class='container'>
+
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.DARFnomeContribuinte)
+                            @Html.TextBoxFor(x => x.DARFnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFnomeContribuinte" id="ErroDARFnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFnomeContribuinte)
+                            <input type="text" id="DARFperiodoApuracao" name="DARFperiodoApuracao" class = "form-control"/>
+                            <span class="field-validation-error" name="ErroDARFnomeContribuinte" id="ErroDARFnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFcnpj)
+                            @Html.TextBoxFor(x => x.DARFcnpj, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFcnpj" id="ErroDARFcnpj" hidden="hidden">*</span>
+                        </div>
+
+
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFcodigoReceita)
+                            @Html.TextBoxFor(x => x.DARFcodigoReceita, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFcodigoReceita" id="ErrDARFcodigoReceita" hidden="hidden">*</span>
+                        </div>                    
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFnumeroReferencia)
+                            @Html.TextBoxFor(x => x.DARFnumeroReferencia, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFnumeroReferencia" id="ErroDARFnumeroReferencia" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-1 form-group'>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFdataVencimento)
+
+                            @if (Model.DARFdataVencimento.Date == null)
+                            {
+                                <input type='text' id='DARFdataVencimento' name='DARFdataVencimento' class="form-control"  />
+                            }
+                            else
+                            {
+                                <input type='text' id='DARFdataVencimento' name='DARFdataVencimento' class="form-control"  value="@Model.DARFdataVencimento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroDARFdataVencimento" id="DARFdataVencimento" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFvalorPrincipal)
+                            @Html.TextBoxFor(x => x.DARFvalorPrincipal, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFvalorPrincipal" id="ErroDARFvalorPrincipal" hidden="hidden">*</span>
+                        </div>
+
+                    </div>
+
+                    <div class='row'>
+
+                       <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFmulta)
+                            @Html.TextBoxFor(x => x.DARFmulta, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFmulta" id="ErroDARFmulta" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFjurosEncargos)
+                            @Html.TextBoxFor(x => x.DARFjurosEncargos, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFjurosEncargos" id="ErroDARFjurosEncargos" hidden="hidden">*</span>
+                        </div>
+                                                <div class='col-md-1 form-group'>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFvalorTotal)
+                            @Html.TextBoxFor(x => x.DARFvalorTotal, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFvalorTotal" id="ErroDARFvalorTotal" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFdataPagamento)
+
+                            @if (Model.DARFdataPagamento.Date == null)
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control"  />
+                            }
+                            else
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control"  value="@Model.FGTSdataPagamento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+
+                            <span class="field-validation-error" name="ErroDARFdataPagamento" id="ErroDARFdataPagamento" hidden="hidden">*</span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <div id="DivGPS" name="DivGPS" hidden="hidden">
+                
+                <h4>GPS</h4>
+                
+                <div class="container-fluid">
+
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.GPSnomeContribuinte)
+                            @Html.TextBoxFor(x => x.GPSnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSnomeContribuinte" id="ErroGPSnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            @Html.LabelFor(x => x.GPSinformacoesComplementares)
+                            @Html.TextBoxFor(x => x.GPSinformacoesComplementares, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSinformacoesComplementares" id="ErroGPSinformacoesComplementares" hidden="hidden">*</span>
+                        </div>
+                            
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSdataArrecadacao)
+                            @if (Model.FGTSdataPagamento.Date == null)
+                            {
+                                <input type='text' id='GPSdataArrecadacao' name='GPSdataArrecadacao' class="form-control"  />
+                            }
+                            else
+                            {
+                                <input type='text' id='GPSdataArrecadacao' name='GPSdataArrecadacao' class="form-control"  value="@Model.GPSdataArrecadacao.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroGPSdataArrecadacao" id="ErroGPSdataArrecadacao" hidden="hidden">*</span>
+
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPScodigoPagamento)
+                            @Html.TextBoxFor(x => x.GPScodigoPagamento, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPScodigoPagamento" id="ErroGPScodigoPagamento" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-3     form-group'>
+                            @Html.LabelFor(x => x.GPScompetencia)
+                            @Html.TextBoxFor(x => x.GPScompetencia, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPScompetencia" id="ErroGPScompetencia" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSidentificador)
+                            @Html.TextBoxFor(x => x.GPSidentificador, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSidentificador" id="ErroGPSidentificador" hidden="hidden">*</span>
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorTributo)
+                            @Html.TextBoxFor(x => x.GPSvalorTributo, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorTributo" id="ErroGPSvalorTributo" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorOutrasEntidades)
+                            @Html.TextBoxFor(x => x.GPSvalorOutrasEntidades, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorOutrasEntidades" id="ErroGPSvalorOutrasEntidades" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-3 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorAtualizacaoMonetaria)
+                            @Html.TextBoxFor(x => x.GPSvalorAtualizacaoMonetaria, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorAtualizacaoMonetaria" id="ErroGPSvalorAtualizacaoMonetaria" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorArrecadado)
+                            @Html.TextBoxFor(x => x.GPSvalorArrecadado, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorArrecadado" id="ErroGPSvalorArrecadado" hidden="hidden">*</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+<h4>Itens do Documento</h4>
+
+
+            <div class='container-fluid'>
+                <input type="hidden" name="txtItems" id="txtItems" value="0" />
+
+                <div name="Repositorio" id="Repositorio">
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <b>Conta Contabil</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Unidade de Negócio</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Historico</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Valor    </b>
+                        </div>
+                        <div class='col-md-1 form-group'>
+                            <b>Porcentagem</b>
+                        </div>
+                    </div>
+                    @{int contaItem = 0;}
+                    @foreach (SoftFin.Web.Models.DocumentoPagarDetalhe item in (List<SoftFin.Web.Models.DocumentoPagarDetalhe>)ViewData["DocumentoPagarDetalhe"])
+                    {
+                        contaItem += 1;
+                        string textoDIVID = "divItem" + contaItem.ToString();
+                        string textoJS = "Remove(" + contaItem.ToString() + ")";
+                        string textoID = "postCC" + contaItem.ToString();
+                        string textoValor = item.planoDeConta_id.ToString();
+                      
+                        <div class='row' id="@textoDIVID">
+                            <div class='col-md-2 form-group'>
+                                @item.PlanoDeConta.descricao
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@textoValor'/>
+                                @{textoID = "postUND" + contaItem.ToString();}
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@item.unidadenegocio_id.ToString()'/>
+                                @{textoID = "postHST" + contaItem.ToString();}
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@item.historico.ToString()'/>
+                                @{textoID = "postVLR" + contaItem.ToString();}
+                                <input type='hidden' name='@textoID' id='@textoID' value='@item.valor.ToString("0.00")'/>
+                                @{textoID = "postPOR" + contaItem.ToString();}
+                                <input type='hidden' name='@textoID' id='@textoID' value='@item.percentual.ToString("0.00")'/>
+                                @*                          <input type='hidden' name='postUND" + item + "' id='postUND" + item + "' value='" + $('#txtUnidadeNegocio').val() + "'/>"
+                            <input type='hidden' name='postHST" + item + "' id='postHST" + item + "' value='" + $('#txtHistorico').val() + "'/>"
+                            <input type='hidden' class='postVLR' name='postVLR" + item + "' id='postVLR" + item + "' value='" + $('#txtValor').val() + "'/>"
+                            <input type='hidden' class='postPOR' name='postPOR" + item + "' id='postPOR" + item + "' value='" + porc + "'/>"*@
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                @item.UnidadeNegocio.unidade
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.historico
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.valor
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.percentual
+                            </div>
+
+                            <div>
+                                <br />
+                            </div>
+                            
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+
+
+
+            @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+            
+            <div class="alert alert-info">
+                @ViewBag.msg
+            </div>
+    </fieldset>
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    var totalVal = 0.00;
+    var val1 = 0.00;
+    var val2 = 0.00;
+    var porc = 0.00;
+    var resto = 0.00;
+    var porctot = 0.00;
+
+
+    var texto = $('#tipodocumento_id option:selected').text();
+    $("#DivDARF").hide();
+    $("#DivFGTS").hide();
+    $("#DivGPS").hide();
+
+    if (texto == "GPS") {
+        $("#DivGPS").slideDown("slow");
+    }
+    if (texto == "FGTS") {
+        $("#DivFGTS").slideDown("slow");
+    }
+    if (texto == "DARF") {
+        $("#DivDARF").slideDown("slow");
+    }
+
+    function Remove(item) {
+        $("#divItem" + item).remove();
+
+        CalculaTotal();
+        $("#txtValor").val(resto.toFixed(2).replace(".", ","));
+    }
+
+
+    function CalculaTotal() {
+        totalVal = 0.00
+        val1 = parseFloat(replaceAll($("#txtValor").val(), ".", "").replace(",", "."));
+        val2 = parseFloat(replaceAll($("#valorBruto").val(), ".", "").replace(",", "."));
+        porc = (val1 / val2) * 100;
+        porc = porc.toFixed(2);
+
+        $('.postVLR').each(function () {
+            totalVal += Number(replaceAll($(this).val(), ".", "").replace(",", "."));
+        });
+
+        resto = (val2) - (totalVal);
+
+        if ((totalVal != 0) && (val2 != 0)) {
+            porctot = (totalVal / val2) * 100;
+        }
+        else {
+            porctot = 0;
+        }
+
+        var txtValorTotPor = porctot.toFixed(2).replace(".", ",");
+        var txtValorTot = totalVal.toFixed(2).replace(".", ",");
+
+
+        $("#txtValorTotPor").val(txtValorTotPor);
+        $("#txtValorTot").val(txtValorTot);
+
+
+    }
+
+
+
+    function adiciona() {
+
+
+
+        CalculaTotal();
+
+
+        var item = parseInt($("#txtItems").val());
+        item = item + 1;
+        $("#txtItems").val(item);
+
+        var texto = "<div class='row' id='divItem" + item + "'>";
+        texto += "<div class='col-md-2 form-group'>"
+        texto += "<input type='hidden' class='postCC' name='postCC" + item + "' id='postCC" + item + "' value='" + $('#txtContaContabil').val() + "'/>"
+        texto += "<input type='hidden' name='postUND" + item + "' id='postUND" + item + "' value='" + $('#txtUnidadeNegocio').val() + "'/>"
+        texto += "<input type='hidden' name='postHST" + item + "' id='postHST" + item + "' value='" + $('#txtHistorico').val() + "'/>"
+        texto += "<input type='hidden' class='postVLR' name='postVLR" + item + "' id='postVLR" + item + "' value='" + $('#txtValor').val() + "'/>"
+        texto += "<input type='hidden' class='postPOR' name='postPOR" + item + "' id='postPOR" + item + "' value='" + porc.replace(".", ",") + "'/>"
+        texto += $('#txtContaContabil option:selected').text()
+        texto += "</div>"
+        texto += "<div class='col-md-2 form-group'>"
+        texto += $('#txtUnidadeNegocio option:selected').text()
+        texto += "</div>"
+
+        texto += "<div class='col-md-2 form-group'>"
+        texto += $('#txtHistorico').val()
+        texto += "</div>"
+
+        texto += "<div class='col-md-2 form-group'>"
+        texto += $('#txtValor').val()
+        texto += "</div>"
+
+        texto += "<div class='col-md-1 form-group'>"
+        texto += porc.replace(".", ",") + " %"
+        texto += "</div>"
+
+        texto += "<div>"
+        texto += "<input type='button' name='btnExcluir" + item + "'  class='btn-danger' id='btnExcluir" + item + "' onClick='Remove(" + item + ");' value='Excluir' />";
+        texto += "</div>"
+        texto += "</div>"
+
+
+        $("#Repositorio").append(texto);
+
+        CalculaTotal()
+
+        $("#txtValor").val(resto.toFixed(2).replace(".", ","));
+    }
+
+    function valida() {
+        if ($("#valorBruto").val() == "") {
+            alert("Informe o valor bruto");
+            return false;
+        }
+        if ($("#txtValor").val() == "") {
+            alert("Informe o valor do item do documento");
+            return false;
+        }
+
+        if ($("#txtValor").val() == "0") {
+            alert("Valor tem que ser maior que Zero");
+            return false;
+        }
+
+        CalculaTotal()
+
+        if ((val1 + totalVal) > val2) {
+            alert("Valor do items supera o valor bruto");
+            return false;
+        }
+
+
+
+        if (totalVal >= val2) {
+            alert("Valor total bruto já atingido");
+            return false;
+        }
+        if ($('#txtHistorico').val() == '') {
+            alert("Informe o histórico");
+            return false;
+        }
+        return true;
+    }
+
+
+    $('#tipodocumento_id').change(function () {
+
+
+        var texto = $('#tipodocumento_id option:selected').text();
+        $("#DivDARF").hide();
+        $("#DivFGTS").hide();
+        $("#DivGPS").hide();
+
+        if (texto == "GPS") {
+            $("#DivGPS").slideDown("slow");
+            if ($('#pessoa_id').val() != "") {
+                var pessoa = $('#pessoa_id option:selected').text();
+                $("#GPSnomeContribuinte").val(pessoa)
+            }
+
+            $("#GPSdataArrecadacao").val($("#dataVencimento").val());
+            $("#GPSvalorArrecadado").val($("#valorBruto").val());
+            $("#GPScompetencia").val($("#dataCompetencia").val());
+        }
+        if (texto == "FGTS") {
+            $("#DivFGTS").slideDown("slow");
+            if ($('#pessoa_id').val() != "") {
+                var pessoa = $('#pessoa_id option:selected').text();
+                $("#FGTSnomeContribuinte").val(pessoa)
+            }
+
+            $("#FGTSdataPagamento").val($("#dataVencimento").val());
+            $("#FGTSvalorPagamento").val($("#valorBruto").val());
+
+            $.ajax({
+                url: "@Url.Action("cnpj")",
+                data: { id: $("#pessoa_id").val() },
+                type: "POST",
+                success: function (data) {
+                    $("#FGTScnpj").val(data);
+                }
+            });
+
+        }
+        if (texto == "DARF") {
+            $("#DivDARF").slideDown("slow");
+            if ($('#pessoa_id').val() != "") {
+                var pessoa = $('#pessoa_id option:selected').text();
+                $("#DARFnomeContribuinte").val(pessoa)
+            }
+
+            $("#DARFperiodoApuracao").val($("#dataVencimento").val());
+            $("#DARFdataVencimento").val($("#dataVencimento").val());
+            $("#DARFvalorPrincipal").val($("#valorBruto").val());
+
+
+            $.ajax({
+                url: "@Url.Action("cnpj")",
+                data: { id: $("#pessoa_id").val() },
+                type: "POST",
+                success: function (data) {
+                    $("#DARFcnpj").val(data);
+                }
+            });
+        }
+
+
+    });
+
+
+    $('#Processar').click(function () {
+        $.ajax({
+            url: "@Url.Action("codigoBarras")",
+            data: { LinhaDigitavel: $("#LinhaDigitavel").val() },
+            type: "POST",
+            success: function (data) {
+                console.log(data);
+                $("#LinhaDigitavelErro").html(data.Erro);
+                if (data.Erro == "") {
+                    $("#dataVencimento").val(data.Vencimento);
+                    $("#valorBruto").val(data.Valor);
+                    $("#FGTScodigoBarras").val(data.LinhaDigitavel);
+                    $("#LinhaDigitavel").val(data.LinhaDigitavel);
+                }
+            }
+        });
+    });
+
+
+    $("#GPSvalorTributo, #GPSvalorOutrasEntidades, #GPSvalorAtualizacaoMonetaria").blur(
+        function (event) {
+            formataValor(this, event);
+            var val1 = parseFloat(replaceAll($("#GPSvalorTributo").val(), ".", "").replace(",", "."));
+            var val2 = parseFloat(replaceAll($("#GPSvalorOutrasEntidades").val(), ".", "").replace(",", "."));
+            var val3 = parseFloat(replaceAll($("#GPSvalorAtualizacaoMonetaria").val(), ".", "").replace(",", "."));
+
+            var valtot = val1 + val2 + val3;
+
+
+            $("#GPSvalorArrecadado").val(valtot.toFixed(2).replace(".", ","));
+            formataValor($("#GPSvalorArrecadado"), event);
+
+        }
+    );
+
+
+    $("form").submit(function (event) {
+        var Erro = false;
+        var texto = $('#tipodocumento_id option:selected').text();
+
+        if (texto == "GPS") {
+            Erro = ValidaGPS()
+        }
+        if (texto == "FGTS") {
+            Erro = ValidaFGTS()
+        }
+        if (texto == "DARF") {
+            Erro = ValidaDARF()
+        }
+        if (Erro == true) {
+            event.preventDefault();
+            return;
+        }
+        else {
+            return;
+        }
+    });
+
+
+    function ValidaGPS() {
+        var Erro = false;
+
+        if ($("#GPSnomeContribuinte").val() == "") {
+            $("#GPSnomeContribuinte").toggleClass("field-validation-error");
+            $("#ErroGPSnomeContribuinte").show();
+            Erro = true;
+        }
+
+
+
+        if ($("#GPSinformacoesComplementares").val() == "") {
+            $("#GPSinformacoesComplementares").toggleClass("field-validation-error");
+            $("#ErroGPSinformacoesComplementares").show();
+            Erro = true;
+        }
+
+
+        if ($("#GPSdataArrecadacao").val() == "") {
+            $("#ErroGPSdataArrecadacao").show();
+            Erro = true;
+        }
+
+
+        if ($("#GPScodigoPagamento").val() == "") {
+            $("#ErroGPScodigoPagamento").show();
+            Erro = true;
+        }
+
+        if ($("#GPScompetencia").val() == "") {
+            $("#ErroGPScompetencia").show();
+            Erro = true;
+        }
+
+        if ($("#GPSidentificador").val() == "") {
+            $("#ErroGPSidentificador").show();
+            Erro = true;
+        }
+
+        if ($("#GPSvalorArrecadado").val() == "") {
+            $("#ErroGPSvalorArrecadado").show();
+            Erro = true;
+        }
+
+        if ($("#GPSvalorOutrasEntidades").val() == "") {
+            $("#ErroGPSvalorOutrasEntidades").show();
+            Erro = true;
+        }
+
+        if ($("#GPSvalorAtualizacaoMonetaria").val() == "") {
+            $("#ErroGPSvalorAtualizacaoMonetaria").show();
+            Erro = true;
+        }
+
+        if ($("#GPSvalorTributo").val() == "") {
+            $("#ErroGPSvalorTributo").show();
+            Erro = true;
+        }
+        return erro;
+    }
+
+    function ValidaFGTS() {
+        var Erro = false;
+
+        if ($("#FGTScodigoReceita").val() == "") {
+            $("#FGTScodigoReceita").toggleClass("field-validation-error");
+            $("#ErroGPSnomeContribuinte").show();
+            Erro = true;
+        }
+
+        if ($("#FGTStipoInscricao").val() == "") {
+            $("#FGTStipoInscricao").toggleClass("field-validation-error");
+            $("#ErroFGTStipoInscricao").show();
+            Erro = true;
+        }
+
+        if ($("#FGTScnpj").val() == "") {
+            $("#FGTScnpj").toggleClass("field-validation-error");
+            $("#ErroFGTScnpj").show();
+            Erro = true;
+        }
+
+        if ($("#FGTScodigoBarras").val() == "") {
+            $("#FGTScodigoBarras").toggleClass("field-validation-error");
+            $("#ErroFGTScodigoBarras").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSidentificadorFgts").val() == "") {
+            $("#FGTSidentificadorFgts").toggleClass("field-validation-error");
+            $("#ErroFGTSidentificadorFgts").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSlacreConectividadeSocial").val() == "") {
+            $("#FGTSlacreConectividadeSocial").toggleClass("field-validation-error");
+            $("#ErroFGTSlacreConectividadeSocial").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSdigitoLacre").val() == "") {
+            $("#FGTSdigitoLacre").toggleClass("field-validation-error");
+            $("#ErroFGTSdigitoLacre").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSnomeContribuinte").val() == "") {
+            $("#FGTSnomeContribuinte").toggleClass("field-validation-error");
+            $("#ErroFGTSnomeContribuinte").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSdataPagamento").val() == "") {
+            $("#FGTSdataPagamento").toggleClass("field-validation-error");
+            $("#ErroFGTSdataPagamento").show();
+            Erro = true;
+        }
+
+        if ($("#FGTSvalorPagamento").val() == "") {
+            $("#FGTSvalorPagamento").toggleClass("field-validation-error");
+            $("#ErroFGTSvalorPagamento").show();
+            Erro = true;
+        }
+
+
+        return erro;
+    }
+
+    function ValidaDARF() {
+        var Erro = false;
+
+        if ($("#DARFcodigoReceita").val() == "") {
+            $("#DARFcodigoReceita").toggleClass("field-validation-error");
+            $("#ErroDARFcodigoReceita").show();
+            Erro = true;
+        }
+
+        if ($("#DARFcnpj").val() == "") {
+            $("#DARFcnpj").toggleClass("field-validation-error");
+            $("#ErroDARFcnpj").show();
+            Erro = true;
+        }
+
+        if ($("#DARFperiodoApuracao").val() == "") {
+            $("#DARFperiodoApuracao").toggleClass("field-validation-error");
+            $("#ErroDARFperiodoApuracao").show();
+            Erro = true;
+        }
+
+        if ($("#DARFnumeroReferencia").val() == "") {
+            $("#DARFnumeroReferencia").toggleClass("field-validation-error");
+            $("#ErroDARFnumeroReferencia").show();
+            Erro = true;
+        }
+
+        if ($("#DARFvalorPrincipal").val() == "") {
+            $("#DARFvalorPrincipal").toggleClass("field-validation-error");
+            $("#ErroDARFvalorPrincipal").show();
+            Erro = true;
+        }
+
+        if ($("#DARFmulta").val() == "") {
+            $("#DARFmulta").toggleClass("field-validation-error");
+            $("#ErroDARFmulta").show();
+            Erro = true;
+        }
+
+        if ($("#DARFjurosEncargos").val() == "") {
+            $("#DARFjurosEncargos").toggleClass("field-validation-error");
+            $("#ErroDARFjurosEncargos").show();
+            Erro = true;
+        }
+
+        if ($("#DARFvalorTotal").val() == "") {
+            $("#DARFvalorTotal").toggleClass("field-validation-error");
+            $("#ErroDARFvalorTotal").show();
+            Erro = true;
+        }
+
+        if ($("#DARFdataVencimento").val() == "") {
+            $("#DARFdataVencimento").toggleClass("field-validation-error");
+            $("#ErroDARFdataVencimento").show();
+            Erro = true;
+        }
+
+        if ($("#DARFdataPagamento").val() == "") {
+            $("#DARFdataPagamento").toggleClass("field-validation-error");
+            $("#ErroDARFdataPagamento").show();
+            Erro = true;
+        }
+
+        if ($("#DARFnomeContribuinte").val() == "") {
+            $("#DARFnomeContribuinte").toggleClass("field-validation-error");
+            $("#ErroDARFnomeContribuinte").show();
+            Erro = true;
+        }
+
+
+        return erro;
+    }
+
+
+    $('#btnAdicione').click(function () {
+        if (valida()) {
+            adiciona();
+            CalculaTotal();
+        }
+    });
+
+
+    $("#dataCompetencia").datepicker({ dateFormat: "mm/yy" });
+    $("#dataDocumento").datepicker({ dateFormat: "dd/mm/yy" });
+    $('#dataDocumento').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+    $("#dataVencimento").datepicker({ dateFormat: "dd/mm/yy" });
+    $('#dataVencimento').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $("#valorBruto").attr("maxlength", "18");
+    $("#valorBruto").keyup(
+        function (event) {
+            formataValor(this, event);
+        }
+    );
+    $("#txtValor").attr("maxlength", "18");
+    $("#txtValor").keyup(
+        function (event) {
+            formataValor(this, event);
+
+        }
+    );
+
+    $("#txtPorcentagemLct").attr("maxlength", "5");
+    $("#txtPorcentagemLct").blur(
+        function (event) {
+
+            formataValor(this, event);
+            val1 = parseFloat(replaceAll($("#txtValor").val(), ".", "").replace(",", "."));
+            val2 = parseFloat(replaceAll($("#valorBruto").val(), ".", "").replace(",", "."));
+            val3 = parseFloat(replaceAll($("#txtPorcentagemLct").val(), ".", "").replace(",", "."));
+
+            if (isNaN(val1) && val3 != "") {
+                porc = (val2 / 100) * val3;
+                $("#txtValor").val(porc.toFixed(2).replace(".", ","));
+                formataValor($("#txtValor"), event);
+            }
+        }
+    );
+
+
+
+
+    function replaceAll(string, token, newtoken) {
+        while (string.indexOf(token) != -1) {
+            string = string.replace(token, newtoken);
+        }
+        return string;
+    }
+
+</script>
+
+
+
+<script>
+
+    $("#GPScompetencia").datepicker({ dateFormat: "mm/yy" });
+    $('#GPSdataArrecadacao').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#GPSdataArrecadacao').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#GPSvalorTributo').attr('maxlength', '18');
+    $('#GPSvalorTributo').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#GPSvalorOutrasEntidades').attr('maxlength', '18');
+    $('#GPSvalorOutrasEntidades').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#GPSvalorAtualizacaoMonetaria').attr('maxlength', '18');
+    $('#GPSvalorAtualizacaoMonetaria').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>
+
+
+
+
+
+
+<script>
+
+
+    $('#DARFcnpj').attr('maxlength', '18');
+    $('#DARFcnpj').attr('style', 'text-align:right');
+    $('#DARFcnpj').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      })
+    $('#DARFvalorPrincipal').attr('maxlength', '18');
+    $('#DARFvalorPrincipal').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#DARFmulta').attr('maxlength', '18');
+    $('#DARFmulta').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#DARFjurosEncargos').attr('maxlength', '18');
+    $('#DARFjurosEncargos').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+
+    $('#DARFvalorTotal').attr('maxlength', '18');
+    $('#DARFvalorTotal').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+    $('#DARFdataVencimento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DARFdataVencimento').keyup(
+  function (event) {
+      formataData(this, event);
+  });
+    $('#DARFdataPagamento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DARFdataPagamento').keyup(
+  function (event) {
+      formataData(this, event);
+  });
+    $('#DARFperiodoApuracao').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#DARFperiodoApuracao').keyup(
+  function (event) {
+      formataData(this, event);
+  });
+</script>
+
+
+
+
+
+<script>
+
+
+    $('#FGTScnpj').attr('maxlength', '18');
+    $('#FGTScnpj').attr('style', 'text-align:right');
+    $('#FGTScnpj').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      });
+    $('#FGTSdataPagamento').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#FGTSdataPagamento').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+
+    $('#FGTSvalorPagamento').attr('maxlength', '18');
+    $('#FGTSvalorPagamento').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+</script>
+
+<script>
+    $('input[type!=hidden]').attr('disabled', 'disabled');
+    $('select').attr('disabled', 'disabled');
+    $('#dataVencimento').removeAttr('disabled');
+    
+</script>

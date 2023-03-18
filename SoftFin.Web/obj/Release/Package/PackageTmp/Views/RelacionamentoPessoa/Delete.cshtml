@@ -1,0 +1,54 @@
+﻿
+@model SoftFin.Web.Models.RelacionamentoPessoa
+@{
+    ViewBag.Title = "Relacionamento Pessoa - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class='container-fluid'>
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null , new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.TipoRelacionamento_id)
+                    @Html.DropDownListFor(x => x.TipoRelacionamento_id, (SelectList)ViewData["tiporelacionamento"], "--Selecione--",  new { @class = "form-control"}) 
+                    @Html.ValidationMessageFor(x => x.TipoRelacionamento_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.pessoamestre_id)
+                    @Html.DropDownListFor(x => x.pessoamestre_id, (SelectList)ViewData["pessoamestre"], "--Selecione--", new { @class = "form-control",disabled = "disabled" })
+                    @Html.ValidationMessageFor(x => x.pessoamestre_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.pessoa_id)
+                    @Html.DropDownListFor(x => x.pessoa_id, (SelectList)ViewData["pessoa"], "--Selecione--", new { @class = "form-control",disabled = "disabled" })
+                    @Html.ValidationMessageFor(x => x.pessoa_id)
+                </div>
+            </div>
+        </div>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

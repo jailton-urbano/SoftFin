@@ -1,0 +1,326 @@
+﻿@{
+    Layout = "";
+    }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="../../Content/site/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css?ver5">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/Site/css/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    @Html.Partial("_Escripts")
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        @Html.Partial("_MenuCimaCima")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader menu_interna">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("_MenuCima")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <section>
+        <div class="head_fixo" style="background:url('../../Content/site/img/calculadora.png');height: 340px;;background-size: cover;background-position: center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+
+                        <div class="banner_fixo_simplicidade">
+                            <ul class="breadcrumb">
+                                <li><a href="./">Home</a></li>
+                                <li>Simule</li>
+                            </ul>
+
+                            <h2 style="font-size:40px">Simule seu Investimento</h2>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-5"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <script>
+        function flip() {
+            $('.card').toggleClass('flipped');
+        }
+    </script>
+
+
+    <div class="bloco_calculadora">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12">
+
+
+                    <section>
+                        <div class="card">
+
+
+                            <div class="front">
+
+                                <div class="dados_form etapa1">
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <div class="text_etapa1">
+                                                <img src="../../Content/site/icons/paper-pencil-and-calculator.png">
+
+                                                <h2>Veja o quanto você pode economizar com a SoftFin</h2>
+                                                <p>Calcule as vantagens em usar a SoftFin como seu gerenciador financeiro e desfrute da comodidade que oferecemos ao seu negócio. </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <div class="campos_dados_etapa1">
+                                                <form>
+
+                                                    <input required type="text" id="simnome" name="Nome" placeholder="Nome">
+                                                    <br>
+
+                                                    <input required type="email" id="simemail" name="Email" placeholder="E-mail">
+                                                    <br>
+                                                    <input required type="tel" id="simtelefone" name="Telefone" placeholder="Celular">
+                                                    <br>
+
+                                                </form>
+
+                                                <button id="simbtnA" class="sub_btn">Enviar</button>
+                                                <div class="simple-msg"></div>
+                                                <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                                                <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+                                                <br />
+
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="back">
+
+                                <div class="dados_form etapa2">
+                                    <div class="title_etapa2">
+                                        <h2>Preencha as Informações</h2>
+                                    </div>
+
+                                    <div class="form_etapa2">
+                                        <form>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calcempresas" name="Nome" placeholder="Quantidade de Empresas " class="somentenumerico">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calcestabelecimentos" name="Nome" placeholder="Quantidade de estabelecimentos " class="somentenumerico">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calcbancomes" name="Nome" placeholder="Total de lançamentos bancários mês " class="somentenumerico">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calccpagmes" name="Nome" placeholder="Total de lançamentos de contas a pagar " class="somentenumerico">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calcnfsmes" name="Nome" placeholder="Total de Notas fiscais de serviços" class="somentenumerico">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input required type="text" id="calcnfemes" name="Nome" placeholder="Total de Notas fiscais de mercadoria " class="somentenumerico">
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+                                        <div class="center_btn">
+                                            <button id="btn_tabela_on" class="sub_btn">Ver comparação</button>
+                                        </div>
+
+                                        <div class="simple-msg"></div>
+                                        <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                                        <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+                                        <br />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+
+
+
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+
+
+
+
+
+            <!-- CALCULADORA TABELA -->
+            
+            <div class="tabela_calculadora">
+                <div class="row">
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-10">
+                        <a id="contact"></a>
+                        <div class="title_etapa2">
+                            <h2>Veja a tabela de Comparação</h2>
+                        </div>
+
+                        <div class="tabela_layout table-responsive">
+
+                            <table id="customers">
+
+                                <thead>
+                                    <tr>
+                                        <th style="background:white"></th>
+                                        <th style="width: 28%;font-size: 18px;">Sem a SoftFin</th>
+                                        <th style="width: 28%;font-size: 18px;">Com a SoftFin</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td>Assinatura Mensal Software</td>
+                                    <td>350,00</td>
+                                    <td>350,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Serviço Terceirização</td>
+                                    <td>0,00</td>
+                                    <td><span id="cotacao"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Assistente Financeiro (Fonte Catho)</td>
+                                    <td><span id="assistente"></span></td>
+                                    <td>0,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Vale Refeição</td>
+                                    <td><span id="refeicao"></span></td>
+                                    <td>0,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Vale Transporte</td>
+                                    <td><span id="transporte"></span></td>
+                                    <td>0,00</td>
+                                </tr>
+                                <tr>
+                                    <td>Custos Trabalhista (Fonte Calculator)</td>
+                                    <td><span id="custos"></span></td>
+                                    <td>0,00</td>
+                                </tr>
+                                <tfoot>
+                                    <tr>
+                                        <td style="font-weight: 600;font-size: 18px;">Custo Total</td>
+                                        <td style="font-weight: 600;font-size: 18px;">R$ <span id="total"></span></td>
+                                        <td class="highlight" style="font-weight: 600;font-size: 18px;">R$ <span id="cotacaoTotal"></span></td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1"> </div>
+                </div>
+                <div class="text_tabela_calculadora">
+                    <button id="simbtnContrate" class="sub_btn_Final">Contrate agora</button> <br />
+
+                    <div id="mensagemFinal">
+                        <h2>Em breve um de nossos consultores entrará em contato</h2>
+                    </div>
+                    <br />
+                    <div class="simple-msg"></div>
+                    <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+
+                    <br />
+                </div>
+
+
+
+            </div>
+
+            <!-- FIM CALCULADORA TABELA -->
+
+        </div>
+    </div>
+
+    @Html.Partial("_Experimente")
+
+    @Html.Partial("_Rodape")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/js/bootstrap.js"></script>
+    <script src="../../Content/site/js/owl.js"></script>
+    <script src="../../Content/site/js/scripts.js"></script>
+    <script src="../../Content/site/js/validacao_contact_form7.js"></script>
+    <script src="~/Content/Site/js/site.js"></script>
+</body>
+</html>

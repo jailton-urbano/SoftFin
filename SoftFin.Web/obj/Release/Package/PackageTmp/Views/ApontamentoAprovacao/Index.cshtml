@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "Aprovação de Atividade por Data e Usuário";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Usuário</label>
+                @Html.DropDownList("usuario_id", (SelectList)ViewData["usuarios"], "---Selecione---",  new { @class = "form-control" })
+            </div>
+            <div class='col-md-2 form-group'>
+                <br />
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+        
+    <div>
+        <button class="btn btn-primary" type="submit">Salvar</button>
+    </div>
+    <br />
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    function montaDRE(jsonData) {
+
+        var table = '                    <table class="table table-striped table-bordered table-hover">';
+        table += '                        <thead>';
+        table += '                            <tr>';
+        table += '                                <th class="center" width="10%">Data</th>';
+        table += '                                <th class="center" width="30%">Projeto</th>';
+        table += '                                <th class="center" width="30%">Atividade</th>';
+        table += '                                <th class="center" width="25%">Descricao</th>';
+        table += '                                <th class="center" width="5%">Horas</th>';
+        table += '                                <th class="center" width="5%">Horas Restantes</th>';
+        table += '                            </tr>';
+        table += '                        </thead>';
+        table += '                        <tbody>';
+
+        $.each(jsonData, function (index, item) {
+
+
+
+
+
+            table += '<tr>';
+            table += '<td class="active">' + item.data + '</td>';
+            table += '<td class="active">' + item.projeto + '</td>';
+            table += '<td class="active">' + item.atividade + '</td>';
+            table += '<td class="active">' + item.descricao + '</td>';
+            table += '<td class="active">' + item.totalgasto + '</td>';
+            table += '<td class="active">' + item.totalemaberto + '</td>';
+
+            table += '</tr>';
+
+            table += '<tr>';
+            table += '<td>Situação/Descrição</td>'
+            table += '<td class="active" colspan=1>'
+            table += '  <select id="Situacao_' + item.id + '" name="Situacao_' + item.id + '" class="form-control">'
+            table += '      <option value="">Em Analise</option>'
+            table += '      <option value="Aprovado">Aprovado</option>'
+            table += '      <option value="Reprovado">Reprovado</option>'
+            table += '  </select> '
+            table += '</td>';
+            table += '<td class="active" colspan=4><input type="text" id="txtDesc_' + item.id + '" name="txtDesc_' + item.id + '" class="form-control"></td>';
+            table += '</tr>';
+        });
+        table += '                        </tbody>';
+        table += '                     </table>';
+
+        $('div#Lista').html(table);
+    }
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#pesquisa').click(function () {
+            $('#indicator').show();
+            if ($("#usuario_id").val() == "") {
+                alert("Selecione o usuário inválido");
+                return;
+            }
+            $.ajax(
+                {
+                    url: "Pesquisa",
+                    data: {
+                        'dataInicial': $("#dataInicial").val(),
+                        'dataFinal': $("#dataFinal").val(),
+                        'usuario': $("#usuario_id").val(),
+                    },
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (data) {
+                        montaDRE(data);
+                        $('#indicator').hide();
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                }
+            );
+
+        });
+        $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+
+
+</script>
+

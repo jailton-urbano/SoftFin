@@ -1,0 +1,262 @@
+﻿@{
+    Layout = "";
+    }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="../../Content/site/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css?ver5">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/Site/css/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    @Html.Partial("_Escripts")
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        @Html.Partial("_MenuCimaCima")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader menu_interna">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("_MenuCima")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <section>
+        <div class="head_fixo" style="background:url('../../../Content/site/img/Parceiros.png');height: 340px;;background-size: cover;background-position: center;">
+            <div class="container">
+                <div class="banner_fixo_simplicidade">
+                    <ul class="breadcrumb">
+                        <li><a href="./">Home</a></li>
+                        <li>Parceiros</li>
+                    </ul>
+                    <h2>Seja um parceiro softfin</h2>
+                    <div class="form_banner_fixo">
+                        <form>
+                            <input type="email" id="email02" placeholder="Insira seu E-mail" required>
+                            <button type="submit" id="btnemail02" style="cursor:pointer">Enviar</button>
+                            <div class="simple-msg"></div>
+                            <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                            <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <section>
+        <div class="parceiros_soft">
+            <div class="container">
+                <div class="text_parceiros">
+
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <h3>Nossos parceiros atendem seus clientes usando a simplicidade e o poder da plataforma SoftFin. Você tem diversas formas de agregar valor ao seu cliente e gerar ganhos para o seu negócio.</h3>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="row bloco1_parceiros_style">
+                        <div class="col-md-4">
+                            <p class="before_mais">Comissões de até 20% das mensalidades de software do primeiro ano.</p>
+                            <i class="fa fa-plus"></i>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p class="before_mais">Possibilidade de até 100% da receita de BPO e terceirização dos processos.</p>
+                            <i class="fa fa-plus"></i>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p>Pacotes de Suporte Especial e Serviços de Consultoria 100% do parceiro Service.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="bloco_vantagens_parceiros" style="background:url('../../../Content/site/img/back2.jpg');background-attachment: fixed;background-position: right;">
+            <div class="container">
+                <h2>Vantagens de ser parceiro SoftFin</h2>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Parceiro pode cuidar de até 100% dos serviços.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Plataforma otimizada para Outsourcing. </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Parceiro pode solicitar melhorias no software para automatizar seus processos.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Excelente resultado financeiro.</p>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Gerente de parceria </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Gerente comercial dedicado</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Vídeos aulas do sistema SoftFin </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Suporte prioritário para clientes </p>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="col-md-3">
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Cursos e treinamentos</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="bloco_parceiros_padrao">
+                            <i class="fa fa-check-square-o"></i>
+                            <p>Materiais de Divulgação</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                    </div>
+
+                    <div class="clearfix"></div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="mail_saiba_mais_parceiros container">
+            <span>Para saber mais envie um e-mail para <a href="mailto:comercial@softfin.com.br">comercial@softfin.com.br</a></span>
+        </div>
+    </section>
+
+
+
+
+    <section>
+        <div class="novidades_home">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="newslatter_text">
+                            <h2>SIMULE SEU INVESTIMENTO AGORA!</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="btn_simule_fixo_pages">
+                            <a href="simule">Simular Já <i class="fa fa-usd"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @Html.Partial("_Rodape")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/js/bootstrap.js"></script>
+    <script src="../../Content/site/js/owl.js"></script>
+    <script src="../../Content/site/js/scripts.js"></script>
+    <script src="../../Content/site/js/validacao_contact_form7.js"></script>
+    <script src="~/Content/Site/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+﻿@model DateTime
+@Html.TextBox("", Model.ToString("dd/MM/yyyy")) 
+** TODO Wire up the date picker! **
+
+$(document).ready(function () {
+    $('.date').datepicker({dateFormat: "dd/mm/yy"});
+});

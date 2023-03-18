@@ -1,0 +1,108 @@
+﻿@model IEnumerable<SoftFin.Web.Models.Empresa>
+
+@{
+    ViewBag.Title = "Lista de Empresa";
+}
+
+
+<table id="jqgEmpresas" cellpadding="0" cellspacing="0"></table>
+
+<div   id="jqgEmpresasOpc" style="text-align:center;"></div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            QuickSidebar.init(); // init quick sidebar
+
+            $('#jqgEmpresas').jqGrid({
+                //url from wich data should be requested
+                url: '@Url.Action("Listas")',
+                //type of data
+                datatype: 'json',
+                //url access method type
+                mtype: 'POST',
+                //columns names
+                colNames: ['Código', 'Nome Fantasia', 'Código', 'Nome', 'Holding'],
+                //columns model
+                colModel: [
+                            { name: 'txtCodigo', index: 'id', align: 'left', editable: false, width: '50', hidden: true },
+                            {
+                                name: 'txtapelido', index: 'apelido', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '275'
+                            },
+                            {
+                                name: 'txtcodigo', index: 'codigo', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '50'
+                            },
+                            {
+                                name: 'txtnome', index: 'nome', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '275'
+                            },
+                            {
+                                name: 'txtHolding', index: 'holding', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '275'
+                            }
+                ],
+                //pager for grid
+                pager: $('#jqgEmpresasOpc'),
+                //number of rows per page
+                rowNum: 12,
+                //initial sorting column
+                sortname: 'Descricao',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+
+            });
+
+            $('#jqgEmpresas').jqGrid('navGrid', '#jqgEmpresasOpc',
+                { add: false, del: false, edit: false, search: false });
+
+            $('#jqgEmpresas').navButtonAdd('#jqgEmpresasOpc', { // custom edit button
+                caption: "Novo",
+                buttonicon: "ui-icon ui-icon-plus",
+                onClickButton: function () {
+                    window.location = "Create/";
+                },
+                position: "Last"
+            });
+
+            $('#jqgEmpresas').navButtonAdd('#jqgEmpresasOpc', { // custom edit button
+                caption: "Alterar",
+                buttonicon: "ui-icon ui-icon-pencil",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgEmpresas").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Edit/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+            $('#jqgEmpresas').navButtonAdd('#jqgEmpresasOpc', { // custom edit button
+                caption: "Excluir",
+                buttonicon: "ui-icon ui-icon-trash",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgEmpresas").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Delete/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+        });
+
+    </script>
+

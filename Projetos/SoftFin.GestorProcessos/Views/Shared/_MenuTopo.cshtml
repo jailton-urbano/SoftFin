@@ -1,0 +1,42 @@
+﻿<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">SoftFin GP</a>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Bancos de Dados
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="\TB\Index">Tabela</a></li>
+                    <li><a href="\VW\Index">Visão</a></li>
+                    <li><a href="\ABD\Index">Aplicar Banco de Dados</a></li>
+                    <li><a href="\PR\Index">Processos</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Usuário e Funções
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="\Usuarios\Index">Usuários</a></li>
+                    <li><a href="\Funcaos\Index">Funções</a></li>
+                    <li><a href="\UsuarioFuncaos\Index">Usuário e Funções</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+  
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> @HttpContext.Current.User.Identity.Name</a></li>
+            <li><a href="..\..\Login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    </div>
+</nav>

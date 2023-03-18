@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Upload de Arquivo para Contas a Pagar";
+
+}
+
+
+
+
+@using (Html.BeginForm("Arquivo", "DocumentoPagarMestre", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    
+        @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    
+        <div class='container'>
+            <input type="hidden" id="id" name="id" value="@ViewData["id"]" />
+            <input type="hidden" id="Arquivopadrao" name="Arquivopadrao" value=""/>
+            <div class='row'>
+                <div class='col-md-6 form-group'>
+                    <label>Arquivo</label>
+                    <input type="file" name="NomeArquivoAnexo" id="NomeArquivoAnexo"/>
+                    <br />Somente(".doc", ".docx", ".pdf", ".txt", ".jpeg", ".png")Max(1-Mega)
+                    <br />@ViewBag.msg
+                </div>
+            </div>
+             
+            <div class='row'>
+
+            @if (ViewData["objs"] != null) 
+            {
+                foreach (SoftFin.Web.Models.DocumentoPagarArquivo item in (List<SoftFin.Web.Models.DocumentoPagarArquivo>)ViewData["objs"])
+                {
+                    <div class='col-md-6 form-group'>
+                        <a href="@item.arquivoReal"> @item.arquivoOriginal </a>
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        <a href="../../DocumentoPagarMestre/RemoveArquivo/@item.id"> Remover Arquivo </a>
+                    </div>
+                }
+            }
+                
+            </div>
+        </div>
+    
+    
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

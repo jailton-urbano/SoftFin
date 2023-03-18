@@ -1,0 +1,60 @@
+﻿@model SoftFin.Web.Models.Empresa
+@{
+    ViewBag.Title = "Empresa - Excluir";
+}
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   @Html.ValidationSummary(true)
+  <fieldset>
+      
+      @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+      <div class='container'>
+            @Html.HiddenFor(x => x.id)
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.apelido)
+            @Html.TextBoxFor(x => x.apelido)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.codigo)
+            @Html.TextBoxFor(x => x.codigo)
+        </div>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.nome)
+            @Html.TextBoxFor(x => x.nome)
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-3 form-group'>
+            @Html.LabelFor(x => x.Holding_id)
+            @Html.DropDownListFor(model => model.Holding_id, (SelectList)ViewData["Holding"], "---Selecione---")
+        </div>
+      </div>
+      @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+      <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+  </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('input[type!=hidden]').attr('disabled', 'disabled')
+    $('select').attr('disabled', 'disabled')
+</script>
+<style type='text/css'>
+<!--
+#id {width:275.00px;}
+#apelido {width:275.00px;}
+#codigo {width:85.00px;}
+#nome {width:275.00px;}
+#Holding_id {width:275.00px;}
+#Holding {width:275.00px;}
+-->
+</style>

@@ -1,0 +1,557 @@
+﻿@{
+
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318865";
+}
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/PG/PGIndex.js"></script>
+
+
+
+<div ng-app="SOFTFIN" class="container-fluid">
+    <div ng-controller="MestreCPAG">
+
+        <script type="text/ng-template" id="modalUpload.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo para upload</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-12 form-group'>
+                                <label> Descrição </label>
+                                <input type="text" maxlength="50" ng-model="descricao" id="DescricaoArquivo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+  
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+                        </div>
+
+
+
+
+
+
+                        <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Upload
+                        </button>
+
+
+                        <button class="btn btn-" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalArquivos.html">
+
+            <div class="modal-header">
+                <h3>Arquivos Relacionados</h3>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Opção</th>
+                            <th>Visualização</th>
+                            <th>Informação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ListaArquivos">
+                            <td>
+
+                                <button ng-show="!ModoConsulta"
+                                        type="button"
+                                        ng-click="Excluir(item)"
+                                        class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                </button>
+
+                                <a href='{{item.arquivoReal}}' class="btn btn-success" target="_blank" style="margin-top: 4px; padding-right: 26px;">
+                                    <span class="glyphicon glyphicon-open-file"></span> Abrir
+                                </a>
+                            </td>
+                            <td>
+                                <a prettyp href="{{item.arquivoReal}}" rel="prettyPhoto[main]" title="{{item.Descricao}}">
+                                    <img src="{{item.arquivoReal}}" width="80" height="80" alt="{{item.Descricao}}" />
+                                </a>
+                            </td>
+                            <td>
+                                <b>Nome Arquivo:</b>{{item.arquivoOriginal}} <br />
+                                <b>Descrição:</b>{{item.descricao}} <br />
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+
+
+
+        </script>
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Pagamento ?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.pessoa}} - {{item.descricao}} - {{item.valor}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <input class="btn btn-danger" type="button" ng-click="ok()" value="Excluir">
+                    <button class="btn btn-success" ng-click="cancel()">Voltar</button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search'>
+                                <div class='container'>
+
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.vencimentoIni">
+                                            <label>Data Vencimento Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.vencimentoIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.vencimentoFim">
+                                            <label>Data Vencimento Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.vencimentoFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Inicial</label>
+                                            <input type="text" ng-model="filtro.valorIni" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Final</label>
+                                            <input type="text" ng-model="filtro.valorFim" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <input type="checkbox" ng-model="filtro.emAberto" class="form-control" checked ng-true-value="true" ng-false-value="false" />
+                                            <label>Em Aberto</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisar()">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Localizar : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 142px;">
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Pesquisar()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+                        </th>
+
+                        <th>
+                            Parcela
+                        </th>
+
+                        <th>
+                            Fornecedor
+                        </th>
+                        <th>
+                            Histórico
+                        </th>
+                        <th>
+                            N. Documento
+                        </th>
+
+                        <th>
+                            Situação
+                        </th>
+
+                        <th>
+                            Vencimento
+                        </th>
+
+                        <th>
+                            Valor Total
+                        </th>
+
+                        <th>
+                            Valor em Aberto
+                        </th>
+                        <th>
+                            Valor Pago
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaPAGAMENTOS|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7">
+                        <td style="width: 40px;">
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 26px;"
+                                    ng-click="Receber(item)"
+                                    title="Mostra o pagamento"
+                                    ng-show="EditAccess"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-usd"></span> Pagamentos
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 59px;"
+                                    type="button"
+                                    ng-click="upload(item)"
+                                    ng-show="EditAccess"
+                                    class="btn btn-success"
+                                    title="Anexa um ou mais arquivos ao lançamento">
+                                <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+                            </button>
+
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 30px;"
+                                    type="button"
+                                    ng-show="EditAccess"
+                                    ng-click="Arquivos(item)"
+                                    class="btn btn-success"
+                                    title="Lista de arquivos anexada ao lançamento">
+                                <span class="glyphicon glyphicon-file"></span> Arquivos ({{item.qtdImagens}})
+                            </button>
+                        </td>
+                        <td>
+                            {{item.parcela}}
+                        </td>
+                        <td>
+                            {{item.nome}}
+                        </td>
+                        <td>
+                            {{item.historico}}
+                        </td>
+                        <td>
+                            {{item.numeroDocumento}}
+                        </td>
+                        <td>
+                            <span class="label label-sm label-primary" ng-show="item.situacao == '1 - Em Aberto'"> {{item.situacao}}</span>
+                            <span class="label label-sm label-warning" ng-show="item.situacao == '2 - Pago Parcialmente'"> {{item.situacao}}</span>
+                            <span class="label label-sm label-success" ng-show="item.situacao == '3 - Pago Total'">
+                                {{item.situacao}}
+                            </span>
+                        </td>
+                        <td>
+                            {{item.vencimento |date:'dd/MM/yyyy'}}
+                        </td>
+                        <td style="text-align:right">
+                            {{item.valor |number:2}}
+                        </td>
+                        <td style="text-align:right">
+                            {{item.valor - item.valorPagamento |number:2}}
+                        </td>
+                        <td style="text-align:right">
+                            {{item.valorPagamento |number:2}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div ng-show="showCadastro">
+
+            <div class="button-row form-group">
+                <button class="btn btn-default" ng-click="Voltar()" type="submit">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+
+            <!--Mensagem tipo Modal Salvar-->
+            <script type="text/ng-template" id="divModalSalvar.html">
+                <div>
+                    <div class="modal-header">
+                        <h3 class="modal-title">Confirme.</h3>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja lançar o Contas a Pagar?
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn bkg" ng-click="Ok()">Sim</button>
+                        <button class="btn bkg" ng-click="Cancel()">Não</button>
+                    </div>
+                </div>
+            </script>
+            <!--Mensagem tipo Modal Salvar Fim-->
+
+
+            <div id="DivDadosGerais" class="panel panel-primary">
+                <div class="panel-heading">Dados do pagamento</div>
+                <div class="panel-body">
+                    <div class='row'>
+
+                        <div class='col-md-1 form-group'>
+                            <label>Parcela</label><br />
+                            {{ITEM.parcela}}
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Fornecedor</label><br />
+                            {{ITEM.nome}}
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Histórico</label><br />
+                            {{ITEM.historico}}
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Data Vencimento</label><br />
+                            {{ITEM.vencimento | date:'dd/MM/yyyy'}}
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Valor</label><br />
+                            {{ITEM.valor | number:2}}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Pagamento</div>
+                <div class="panel-body">
+                    <form id="frmItem">
+                        <div class='container-fluid'>
+                            <div class='row'>
+
+                                <div class='col-md-6 form-group'>
+                                    <label>Banco</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="ENTIDADE.banco_ID" ng-options="o.Value as o.Text for o in ListaBanco">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-6 form-group'>
+                                    <label>Histórico</label>
+                                    <input ng-disabled="ModoConsulta" type="text" id="txtparcelaHistorico" class="form-control" ng-model="ENTIDADE.historico" ng-maxlength="50" />
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Multa</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="ENTIDADE.multa" ui-number-mask="2">
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Juros</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="ENTIDADE.juros" ui-number-mask="2">
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Pago</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="ENTIDADE.valorPagamento" ui-number-mask="2">
+                                </div>
+
+                                <div class='col-md-3 form-group' datetimez ng-model="ENTIDADE.dataPagamento">
+                                    <label>Data de Pagamento</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="ENTIDADE.dataPagamento" ui-date-mask ng-disabled="ModoConsulta" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Conta Contabil Crédito</label>
+                                    <select class="form-control" ng-model="ENTIDADE.contaContabilCredito_id"
+                                            ng-options="o.Value as o.Text for o in ListaContaContabil">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <div class="button-row form-group">
+                                        <button class="btn btn-success" ng-click="Adicionar()" ng-hide="ModoConsulta" type="submit" style="
+                                        margin-top: 24px;">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Adicionar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                        {{MsgDivValidacao}}
+                    </div>
+
+
+                </div>
+
+                <div class='container-fluid'>
+                    <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                    <div id="Repositorio">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Data Pagamento</th>
+                                    <th>Banco</th>
+                                    <th>Conta / Histórico</th>
+                                    <th>Multa</th>
+                                    <th>Juros</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in ITEM.Pagamentos">
+                                    <td>{{item.dataPagamento | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{item.banco_nome }}</td>
+                                    <td>{{item.contaContabilCredito_desc}} / {{item.historico }}</td>
+                                    <td style="text-align:left">{{item.multa  | number:2}}</td>
+                                    <td style="text-align:left">{{item.juros | number:2}}</td>
+                                    <td style="text-align:left">{{item.valorPagamento  | number:2}}</td>
+                                    <td>
+                                        <button ng-show="!ModoConsulta"
+                                                type="button"
+                                                ng-click="Excluir(item)"
+                                                class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove"></span> Excluir
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total</td>
+                                    <td>{{valorTotal | number:2}}</td>
+
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-row form-group">
+                <button class="btn btn-default" ng-click="Voltar()" type="submit">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+
+            <div class="alert alert-info" ng-show="(MsgDivSuccess != '')">
+                {{MsgDivSuccess}}
+            </div>
+            <div class="alert alert-danger" ng-show="(MsgDivDanger != '')">
+
+                {{MsgDivDanger}}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+
+</script>

@@ -1,0 +1,6 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Release\SoftFin.Infrastructure.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Release\SoftFin.Infrastructure.Comum.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Release\SoftFin.Infrastructure.Comum.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Release\SoftFin.Infrastructure.Comum.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Release\SoftFin.Infrastructure.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Release\SoftFin.Infrastructure.Comum.pdb

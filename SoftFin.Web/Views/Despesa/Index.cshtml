@@ -1,0 +1,302 @@
+﻿@model SoftFin.Web.Models.Despesa
+@{
+    ViewBag.Title = "Lista de Despesas";
+
+}
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse out'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+                        @Html.HiddenFor(x => x.id)
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.colaborador_id)
+                                <br />
+                                @Html.DropDownListFor(model => model.colaborador_id, (SelectList)ViewData["colaborador"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.colaborador_id)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.cliente_id)
+                                <br />
+                                @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.cliente_id)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.projeto_id)
+                                <br />
+                                @Html.DropDownListFor(model => model.projeto_id, (SelectList)ViewData["projeto"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.projeto_id)
+                            </div>
+                        </div>
+                        <div class='row'>
+
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.tipoDespesa_id)
+                                <br />
+                                @Html.DropDownListFor(model => model.tipoDespesa_id, (SelectList)ViewData["tipoDespesa"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.tipoDespesa_id)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.Data)
+                                <br />
+                                <input type='text' id='Data' name='Data' class='form-control'  value='' />
+                                @Html.ValidationMessageFor(x => x.Data)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valor)
+                                <br />
+                                @Html.TextBoxFor(x => x.valor, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.valor)
+                            </div>
+
+                        </div>
+                        <div class='row'>
+
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.descricao)
+                                <br />
+                                @Html.TextBoxFor(x => x.descricao, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.descricao)
+                            </div>
+
+                        </div>
+                    </div>
+                    </br>
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar
+                    </button>
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<table id="jqg" cellpadding="0" cellspacing="0"></table>
+
+<div id="jqgOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqg').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+                //type of data
+                datatype: 'json',
+                //url access method type
+                mtype: 'POST',
+                //columns names
+                colNames: [ 'Data', 'Valor', 'Cliente', 'Colaborador','Tipo','Lote Cobrança','Lote Reembolso','Lote Adiantamento','Aprovador','Situação Aprovação'],
+                //columns model
+                colModel: [
+
+                            {
+                                name: 'colData', index: 'Data', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '80'
+                            },
+                            {
+                                name: 'colValor', index: 'Valor', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '80'
+                            },
+                            {
+                                name: 'colCliente', index: 'Cliente', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '140'
+                            },
+                            {
+                                name: 'colColaborador', index: 'Colaborador', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '140'
+                            }, {
+                                name: 'colTipoDespesa', index: 'TipoDespesa', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 50 }, editrules: { required: true }, width: '100'
+                            }, {
+                                name: 'colLoteCobranca', index: 'LoteCobranca', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 30 }, editrules: { required: true }, width: '70', 
+                            }, {
+                                name: 'colLoteReembolso', index: 'LoteReembolso', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 30 }, editrules: { required: true }, width: '90'
+                            }, {
+                                name: 'colLoteAdiantamento', index: 'LoteAdiantamento', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 30 }, editrules: { required: true }, width: '100'
+                            }, {
+                                name: 'colAprovador', index: 'Aprovador', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '90'
+                            }, {
+                                name: 'colSituacaoAprovacao', index: 'SituacaoAprovacao', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '90'
+                            }
+                ],
+                //pager for grid
+                pager: $('#jqgOpc'),
+                //number of rows per page
+                rowNum: 20,
+                //initial sorting column
+                sortname: 'APELIDO_ESTAB',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+
+            });
+
+            $('#jqg').jqGrid('navGrid', '#jqgOpc',
+                { add: false, del: false, edit: false, search: false },
+                { width: 'auto', url: 'www.google.com' },
+                { width: 'auto', url: '@Url.Action("Insert")' },
+                { width: 'auto', url: '@Url.Action("Delete")' });
+
+            $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+                caption: "Novo",
+                buttonicon: "ui-icon ui-icon-plus",
+                onClickButton: function () {
+                    window.location = "Create/";
+                },
+                position: "Last"
+            });
+
+            $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+                caption: "Alterar",
+                buttonicon: "ui-icon ui-icon-pencil",
+                onClickButton: function () {
+                    var gr = jQuery("#jqg").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Edit/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+            $('#jqg').navButtonAdd('#jqgOpc', { // custom edit button
+                caption: "Excluir",
+                buttonicon: "ui-icon ui-icon-trash",
+                onClickButton: function () {
+                    var gr = jQuery("#jqg").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "Delete/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+        });
+
+
+        $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")';
+            caminho += '?estabelecimento_id=';
+            caminho += $('#estabelecimento_id').val();
+            caminho += '&colaborador_id=';
+            caminho += $('#colaborador_id').val();
+            caminho += '&cliente_id=';
+            caminho += $('#cliente_id').val();
+            caminho += '&projeto_id=';
+            caminho += $('#projeto_id').val();
+            caminho += '&tipoDespesa_id=';
+            caminho += $('#tipoDespesa_id').val();
+            caminho += '&Data=';
+            caminho += $('#Data').val();
+            caminho += '&valor=';
+            caminho += $('#valor').val();
+            caminho += '&descricao=';
+            caminho += $('#descricao').val();
+            caminho += '&aprovador_id=';
+            caminho += $('#aprovador_id').val();
+            caminho += '&lote_id=';
+            caminho += $('#lote_id').val();
+            jQuery('#jqg').jqGrid('setGridParam', { url: caminho }).trigger('reloadGrid');
+        });
+
+</script>
+
+<script>
+    $('#Data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#Data').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+
+
+    $("#cliente_id").change(function () {
+
+        carregaProjeto()
+    });
+
+    function limpaProjeto() {
+        $("#projeto_id").empty();
+        $("#projeto_id").append('<option value="">' + '---Selecione---</option>');
+    }
+
+    limpaProjeto();
+
+    function carregaProjeto() {
+
+        limpaProjeto();
+
+        if ($("#cliente_id").val() == "")
+            return;
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getProjetos")',
+            dataType: 'json',
+            data: { cliente: $("#cliente_id").val() },
+            success: function (itens) {
+
+                if (itens.length > 0) {
+                    var select = document.getElementById("projeto_id");
+                    for (var i = 0; i < itens.length; i++) {
+                        $("#projeto_id").append('<option value="' + itens[i].id + '">' + itens[i].nomeProjeto + '</option>');
+                    }
+                }
+            },
+
+            error: function (ex) {
+                alert('Error.' + ex);
+            }
+
+        });
+    }
+
+</script>
+
+<style>
+    .ui-jqgrid .ui-jqgrid-htable th div {
+    height:auto;
+    overflow:hidden;
+    padding-right:4px;
+    padding-top:2px;
+    position:relative;
+    vertical-align:text-top;
+    white-space:normal !important;
+}
+</style>
+

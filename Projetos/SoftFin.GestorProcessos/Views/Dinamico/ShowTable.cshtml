@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "_LayoutSemMenu.cshtml";
+
+}
+
+
+
+
+<div ng-cloak ng-app="SOFTFIN" id="DivTotal" ng-controller="MestreEntidade">
+    <div ng-show="!ShowProcesso">
+
+        <md-content style="height: 600px;" >
+            <div class='modal-body'>
+                <div ng-cloak>
+                    <md-content>
+                        <md-tabs md-dynamic-height md-border-bottom>
+                            @Html.Raw(ViewData["tabs"])
+                        </md-tabs>
+                    </md-content>
+
+                </div>
+            </div>
+        </md-content>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+    var app = angular.module('SOFTFIN',
+        ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination', 'ngAnimate', 'ngSanitize', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+        .config(function ($mdDateLocaleProvider) {
+
+            $mdDateLocaleProvider.shortMonths = ['Jan', 'Fev', 'Mar', 'Abril', 'Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            $mdDateLocaleProvider.Months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $mdDateLocaleProvider.days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'];
+            $mdDateLocaleProvider.shortDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            $mdDateLocaleProvider.weekNumberFormatter = function (weekNumber) {
+                return 'Semana ' + weekNumber;
+            };
+            $mdDateLocaleProvider.formatDate = function (date) {
+                var m = moment(date);
+                return m.isValid() ? m.format("DD/MM/YYYY") : '';
+            };
+            $mdDateLocaleProvider.msgCalendar = 'Calendario';
+            $mdDateLocaleProvider.msgOpenCalendar = 'Abrir calendario';
+
+        }).config(function ($mdThemingProvider) {
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('blue-grey');;
+        });
+
+
+
+
+        app.filter('yesNo', function () {
+            return function (input) {
+                return input == "True" ? 'Sim' : 'Não';
+            }
+        })
+
+        app.controller('MestreEntidade', [
+            '$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', '$mdDialog', '$mdToast',
+            function ($scope, $http, $location, $anchorScroll, $timeout, $modal, $mdDialog, $mdToast) {
+  
+            }
+        ]);
+
+</script>
+
+

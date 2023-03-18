@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Relatório Estrutura Empresa";
+}
+
+
+@using (Html.BeginForm())
+{
+        <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+            <span class="glyphicon glyphicon-cog"></span> Gerar
+        </button>
+
+    
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <table>
+        <tr>
+            <th>Resultado</th>
+        </tr>
+        <tr>
+            <td style="width: 100%;">
+                <div id="table_div"></div>
+            </td>
+        </tr>
+    </table>
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+
+}
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+        
+        
+    });
+
+
+        
+        google.load("visualization", "1", { packages: ["table"] });
+
+        $('#gerar').click(function () {
+
+            $('#indicator').show();
+            $('#table_div').html("");
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: "GetReport",
+
+                success: function (tabledata) {
+
+
+                    var data = new google.visualization.DataTable();
+
+
+                    data.addColumn('string', 'Código Holding');
+                    data.addColumn('string', 'Nome Holding');
+                    data.addColumn('string', 'Código Empresa');
+                    data.addColumn('string', 'Nome Empresa');
+                    data.addColumn('string', 'Código Estabelecimento');
+                    data.addColumn('string', 'Nome Estabelecimento');
+
+                    for (var i = 0; i < tabledata.length; i++) {
+                        data.addRow([tabledata[i].codigoHolding,
+                                    tabledata[i].NomeHolding,
+                                    tabledata[i].CodigoEmpresa,
+                                    tabledata[i].NomeEmpresa,
+                                    tabledata[i].CodigoEstabelecimento,
+                                        tabledata[i].NomeEstabelecimento]);
+                    }
+
+
+                    var table = new google.visualization.Table(document.getElementById('table_div'));
+
+
+                    table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                    $('#indicator').hide();
+
+
+
+                },
+                error: function () {
+                    alert("Ops...");
+                }
+            });
+        });
+
+
+</script>

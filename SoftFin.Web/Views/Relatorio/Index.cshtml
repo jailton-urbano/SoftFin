@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = @ViewData["descricao"];
+    var Relatorio = Request.QueryString["name"];
+}
+
+
+    
+<iframe src="~/ReportingService/Relatorio.aspx?name=@Relatorio" width="935" height="800"> 
+
+
+</iframe>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

@@ -1,0 +1,195 @@
+﻿@model SoftFin.Web.Models.OrdemVenda
+@{
+    ViewBag.Title = "Ordem de Venda - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.tabelaPreco_ID)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)                    
+                    @Html.TextBoxFor(x => x.descricao,null, new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    <input type='text' id='data' name='data' class='form-control' value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.statusParcela_ID)
+                    @Html.DropDownListFor(x => x.statusParcela_ID, (SelectList)ViewData["statusParcela"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.statusParcela_ID)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.itemProdutoServico_ID)
+                    @Html.DropDownListFor(x => x.itemProdutoServico_ID, (SelectList)ViewData["item"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.itemProdutoServico_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    <label>Tabela de Preço</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" value="@ViewData["tabela"]" id="tabela_texto" disabled>
+                        <span class="input-group-addon" data-toggle="modal" data-target="#Modal" data-whatever="@@mdo"><i class="glyphicon glyphicon-refresh"></i></span>
+                    </div>
+                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal" data-whatever="@@mdo">Lista de Preços</button>*@
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control"})
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+                @*@Html.HiddenFor(x => x.TabelaPrecoItemProdutoServico)*@
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.pessoas_ID)
+                    @Html.DropDownListFor(x => x.pessoas_ID, (SelectList)ViewData["pessoas"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoas_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeNegocio_ID)
+                    @Html.DropDownListFor(x => x.unidadeNegocio_ID, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.unidadeNegocio_ID)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="ModalLabel">Selecione um Preço</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Descriçao</th>
+                                <th>Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody id="GridColunas">
+                            @*<tr>
+                                <td><input type="radio" name="items" value="1"></td>
+                                <td>Nono no nononnoo</td>
+                                <td>Nono no nononnoo</td>
+                                <td>200,99</td>
+                            </tr>*@
+
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Voltar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnSeleciona">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var listPreco = [];
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+
+    $("#itemProdutoServico_ID").change(function () {
+        
+        $.get('/OrdemVenda/getList?item_id=' + $("#itemProdutoServico_ID").val(), function (data) {
+            listPreco = data;
+
+            $("#GridColunas").html("");
+            for (i = 0; i < data.length; i++) {
+                var item = data[i];
+                var html = "";
+                html += "<tr>";
+                html += "<td><input type='radio' name='items' value='" + item.id + "'></td>";
+                html += "<td>" + item.descricao + "</td>";
+                html += "<td>" + item.preco + "</td>";
+                html += "</tr>";
+                $("#GridColunas").append(html);
+            }
+
+            $(":radio[name=items]").change(function () {
+                $(".table tr.active").removeClass("active"); //remove previous active class
+                $(this).closest("tr").addClass("active"); //add active to radio selected tr
+            });
+        });
+    });
+
+
+
+    $.get('/OrdemVenda/getList?item_id=' + $("#itemProdutoServico_ID").val(), function (data) {
+        var listPreco = data;
+
+        for (i = 0; i < data.length; i++) {
+            var item = data[i];
+            var html = "";
+            html += "<tr>";
+            html += "<td><input type='radio' name='items' value='" + item.id + "'></td>";
+            html += "<td>" + item.descricao + "</td>";
+            html += "<td>" + item.preco + "</td>";
+            html += "</tr>";
+            $("#GridColunas").append(html);
+        }
+
+        $(":radio[name=items]").change(function () {
+            $(".table tr.active").removeClass("active"); //remove previous active class
+            $(this).closest("tr").addClass("active"); //add active to radio selected tr
+        });
+    });
+
+    $("#btnSeleciona").click(function () {
+        $('input[name="items"]:checked').each(function () {
+            for (i = 0; i < listPreco.length; i++) {
+                if (this.value == listPreco[i].id) {
+                    $("#valor").val(listPreco[i].preco);
+                    $("#tabelaPreco_ID").val(listPreco[i].tabela_id);
+                    document.getElementById("tabela_texto").value = listPreco[i].descricao;
+                }
+            }
+            
+        });
+    });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataAutorizacao').datepicker({ dateFormat: 'dd/mm/yy' });
+
+</script>
+
+<style>
+    .glyphicon-refresh:hover {
+        cursor: pointer;
+    }
+</style>

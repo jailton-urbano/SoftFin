@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Geração de Arquivo de RPS para Prefeitura de São Paulo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318845-Emiss%C3%A3o-NFS-Soft-Fin-semi-automatica-Prefeitura-S%C3%A3o-Paulo";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial" class = "form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal" class = "form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="pesquisa" name="pesquisa">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="Lista">
+    </div>
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+   
+     <div id="Emissao">
+         <button class="btn btn-primary" type="submit">
+             <span class="glyphicon glyphicon-cog"></span> Gerar Arquivo</button>
+    </div>
+}
+
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#pesquisa').click(function () {
+        $('#indicator').show();
+        $.ajax(
+            {
+                url: "ConsultaNota",
+                data: {
+                    'DataInicial': $("#dataInicial").val(),
+                    'DataFinal': $("#dataFinal").val()
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    carregaListaNotas(data);
+                    $('#indicator').hide();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+    
+    function carregaListaNotas(jsonData) {
+        var table = '<table width="600" cellpadding="5" class="table table-hover table-bordered"><thead><tr><th scope="col">Emitir</th><th scope="col">RPS</th><th scope="col">Data</th><th scope="col">Cliente</th><th scope="col">Valor</th></tr></thead><tbody>';
+        $.each(jsonData, function (index, nota) {
+            table += '<tr>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '"><input type="checkbox" name="nf'+ nota.id +'" value="checked" /></td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.RPS + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.Data + '</td>';
+            table += '<td class="edit" field="name" user_id="' + nota.id + '">' + nota.Cliente + '</td>';
+            table += '<td class="edit" field="email" user_id="' + nota.id + '">' + nota.Valor + '</td>';
+            table += '<td class="edit" field="email" user_id="' + nota.id + '">' + nota.Situacao + '</td>';
+            table += '</tr>';
+        });
+        table += '</tbody></table>';
+
+        $('div#Lista').html(table);
+    }
+
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

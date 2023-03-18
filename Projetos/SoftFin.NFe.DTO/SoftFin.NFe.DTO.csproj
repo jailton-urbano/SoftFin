@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B7CE9A82-D516-472F-87E8-0F09785C05FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SoftFin.NFe.DTO</RootNamespace>
+    <AssemblyName>SoftFin.NFe.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTOAutXML.cs" />
+    <Compile Include="DTOAvulsa.cs" />
+    <Compile Include="DTOEvento.cs" />
+    <Compile Include="DTOCobr.cs" />
+    <Compile Include="DTOCOFINSNT.cs" />
+    <Compile Include="DTOCOFINSST.cs" />
+    <Compile Include="DTOCOFINS.cs" />
+    <Compile Include="DTODest.cs" />
+    <Compile Include="DTODet.cs" />
+    <Compile Include="DTODi.cs" />
+    <Compile Include="DTODup.cs" />
+    <Compile Include="DTOEmit.cs" />
+    <Compile Include="DTOEntrega.cs" />
+    <Compile Include="DTOErro.cs" />
+    <Compile Include="DTOFat.cs" />
+    <Compile Include="DTOGenericoRetorno.cs" />
+    <Compile Include="DTOICMSTot.cs" />
+    <Compile Include="DTOIde.cs" />
+    <Compile Include="DTOII.cs" />
+    <Compile Include="DTOImposto.cs" />
+    <Compile Include="DTOInfAdic.cs" />
+    <Compile Include="DTOInfNFe.cs" />
+    <Compile Include="DTOIPI.cs" />
+    <Compile Include="DTOIPITrib.cs" />
+    <Compile Include="DTOISSQN.cs" />
+    <Compile Include="DTOLacres.cs" />
+    <Compile Include="DTONfe.cs" />
+    <Compile Include="DTONFref.cs" />
+    <Compile Include="DTOPagamento.cs" />
+    <Compile Include="DTOPIS.cs" />
+    <Compile Include="DTOPISNT.cs" />
+    <Compile Include="DTOPISST.cs" />
+    <Compile Include="DTOProd.cs" />
+    <Compile Include="DTORefECF.cs" />
+    <Compile Include="DTORefNF.cs" />
+    <Compile Include="DTORefNFP.cs" />
+    <Compile Include="DTORetirada.cs" />
+    <Compile Include="DTORetornoCadastro.cs" />
+    <Compile Include="DTORetornoNFe.cs" />
+    <Compile Include="DTORetornoNotaEntrada.cs" />
+    <Compile Include="DTOSignature.cs" />
+    <Compile Include="DTOTotal.cs" />
+    <Compile Include="DTOTransp.cs" />
+    <Compile Include="DTOVeicTransp.cs" />
+    <Compile Include="DTOVol.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tbAlerta.cs" />
+    <Compile Include="tpErro.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SoftFin.NFSe.DTO\SoftFin.NFSe.DTO.csproj">
+      <Project>{7E7F1F65-DDAB-4E43-89F3-8F810493D880}</Project>
+      <Name>SoftFin.NFSe.DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

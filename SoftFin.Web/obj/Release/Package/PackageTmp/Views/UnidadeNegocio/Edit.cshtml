@@ -1,0 +1,39 @@
+﻿@model SoftFin.Web.Models.UnidadeNegocio
+@{
+    ViewBag.Title = "Unidade de Negócio - Edição";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div>
+            Unidade de Negócio:
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.unidade)
+            @Html.ValidationMessageFor(x => x.unidade)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

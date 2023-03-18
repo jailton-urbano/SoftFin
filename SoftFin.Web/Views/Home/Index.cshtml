@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205097615-Antes-de-utilizar";
+}
+
+<link href="~/css/calendar/calendar.css" rel="stylesheet" />
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/angular/calendar/calendar.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/Home/HomeIndex.js"></script>
+
+
+<html>
+<body ng-app="SOFTFIN" ng-controller="MestreCTR">
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="portlet light portlet-fit bordered calendar">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class=" icon-layers font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">Calendário</span>
+
+                    </div>
+
+                </div>
+                <div class="calendar" ng-model="eventSources" calendar="myCalendar" ui-calendar="uiConfig.calendar"></div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-sm-3">
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+
+                        <th colspan="2">Legenda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background-color: #4B77BE"></td>
+                        <td>Pendente sem atraso ou Pendente de Importação</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1BBC9B"></td>
+                        <td>Pago ou Importado</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #F7CA18"></td>
+                        <td>Pago Parciamente</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #D91E18"></td>
+                        <td>Em atraso</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #b200ff"></td>
+                        <td>Item que precisa de sua atenção</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</body>
+</html>

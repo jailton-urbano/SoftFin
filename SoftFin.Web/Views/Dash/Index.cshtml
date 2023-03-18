@@ -1,0 +1,181 @@
+﻿@model List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>
+@{
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205097615-Antes-de-utilizar";
+    //Layout = "~/Views/Shared/_LayoutNovo.cshtml";
+}
+<html>
+<body>
+    @*<div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div*@
+    <div class="container-fluid" id="DivFuncionalidades">
+
+            <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <select id="gerar" name="gerar">
+                    <option value="1">Mês</option>
+                    <option value="2">Semana</option>
+                    <option value="3">Dia</option>
+                </select>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <br />
+            </div>
+        </div>
+        <div class="row">
+            @foreach (SoftFin.Web.Models.SistemaDashBoardFuncionalidade item in Model)
+            {
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat @item.cor">
+                        <div class="visual">
+                            <i class="fa fa-@item.Icone"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                @{
+                var nomeSpan = "span" + item.Controller + (item.metodoTotalizador == null ? "TotalizadorDash" : item.metodoTotalizador);
+                                }
+                                <span data-counter="counterup" data-value="0" id='@nomeSpan' >0</span>
+                            </div>
+                            <div class="desc">@item.Descricao</div>
+                        </div>
+                        <a class="more lksf" href="../../@item.Controller/@item.Action">
+                            @item.Descricao
+                            <i class="m-icon-swapright m-icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+
+            }
+
+            
+        </div>
+        @{
+            bool escreve = (((List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>)ViewData["cadastros"]).Count() > 0);
+        }
+        @if (escreve)
+        {
+            <div class="row">
+                <h3>Cadastros</h3>
+            </div>
+            <div class="row">
+                @foreach (SoftFin.Web.Models.SistemaDashBoardFuncionalidade item in (List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>)ViewData["cadastros"])
+                {
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat @item.cor">
+                            <a class="more lksf" href="../../@item.Controller/@item.Action">
+                                @item.Descricao
+                                <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        }
+
+        @{
+            escreve = (((List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>)ViewData["relatorios"]).Count() > 0);
+        }
+        @if (escreve)
+        {
+            <div class="row">
+                <h3>Relatórios</h3>
+            </div>
+            <div class="row">
+                @foreach (SoftFin.Web.Models.SistemaDashBoardFuncionalidade item in (List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>)ViewData["relatorios"])
+                {
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="dashboard-stat @item.cor">
+                            <a class="more lksf" href="../../@item.Controller/@item.Action">
+                                @item.Descricao
+                                <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        }
+    </div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    var redirecionando = false;
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        Metronic.blockUI({
+            boxed: true
+        });
+
+        //$('.selectpicker').selectpicker({
+        //    style: 'btn-default',
+        //    size: false
+        //});
+    });
+
+    $('#indicator').show();
+    $('#DivFuncionalidades').hide();
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    $('#indicator').show();
+
+    function carregaValor(controller, metodo) {
+        $.post("../../../" + controller + "/" + metodo, { id: $("#gerar").val() }, function (data) {
+            $("#span" + controller + metodo).html(data.Result);
+            $('#indicator').hide();
+            $("#DivFuncionalidades").fadeIn("slow");
+            if (redirecionando === false) {
+                Metronic.unblockUI();
+            }
+        });
+    }
+
+
+    function drawChart() {
+        @if (Model.Count() == 0)
+        {
+            @Html.Raw("if (redirecionando === false) {");
+            @Html.Raw("     Metronic.unblockUI();");
+            @Html.Raw("}");
+        }
+
+        @foreach (SoftFin.Web.Models.SistemaDashBoardFuncionalidade item in Model)
+        {
+            if (item.metodoTotalizador == null)
+            {
+                @Html.Raw("carregaValor('" + item.Controller + "','TotalizadorDash');");
+            }
+            else
+            {
+                @Html.Raw("carregaValor('" + item.Controller + "','" + item.metodoTotalizador + "');");
+            }
+        }
+    }
+
+    $('#gerar').change(function () {
+        drawChart();
+    });
+
+    $('.lksf').click(function () {
+        redirecionando = true;
+        Metronic.blockUI({
+            boxed: true
+        });
+
+    });
+
+    drawChart();
+</script>
+

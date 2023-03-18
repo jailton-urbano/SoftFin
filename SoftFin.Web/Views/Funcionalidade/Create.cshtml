@@ -1,0 +1,99 @@
+﻿@model SoftFin.Web.Models.Funcionalidade
+
+
+@{
+    ViewBag.Title = "Funcionalidade - Inclusão";
+}
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Descricao)
+                    @Html.TextBoxFor(model => model.Descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Descricao)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.idPai)
+                    @Html.TextBoxFor(model => model.idPai, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.idPai)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.NomeController)
+                    @Html.TextBoxFor(model => model.NomeController, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NomeController)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.NomeAction)
+                    @Html.TextBoxFor(model => model.NomeAction, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NomeAction)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.NomeRelatorio)
+                    @Html.TextBoxFor(model => model.NomeRelatorio, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NomeRelatorio)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Ordem)
+                    @Html.TextBoxFor(model => model.Ordem, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Ordem)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Icone)
+                    @Html.TextBoxFor(model => model.Icone, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Icone)
+                </div>
+
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Indexado)
+                    @Html.CheckBoxFor(model => model.Indexado, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Indexado)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Ativo)
+                    @Html.CheckBoxFor(model => model.Ativo.Value, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Ativo)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Jarvis)
+                    @Html.CheckBoxFor(model => model.Jarvis.Value, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Jarvis)
+                </div>
+                <div class="col-md-3 form-group">
+                    @Html.LabelFor(model => model.Comentario)
+                    @Html.TextBoxFor(model => model.Comentario, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Comentario)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

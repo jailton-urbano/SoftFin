@@ -1,0 +1,117 @@
+﻿@model IEnumerable<SoftFin.GestorProcessos.Models.TabelaCampo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Tabela.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoCampo.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Campo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TamanhoColuna)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TamanhoCampo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Precisao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FK)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FKUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FKRetorno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FKParam)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ordem)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Obrigatorio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SQLDefault)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tabela.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoCampo.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Campo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ativo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TamanhoColuna)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TamanhoCampo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Precisao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FKUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FKRetorno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FKParam)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ordem)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Obrigatorio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SQLDefault)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,206 @@
+﻿@{
+    Layout = "_LayoutSemMenu.cshtml";
+}
+<link rel="stylesheet" href="https://rawgit.com/daniel-nagy/md-data-table/master/dist/md-data-table.css">
+<div ng-cloak ng-app="SOFTFIN" id="DivTotal" ng-controller="MestreEntidade">
+    <div ng-show="!ShowProcesso">
+        <md-progress-linear md-mode="indeterminate" ng-show="!Carregando"></md-progress-linear>
+        <md-toolbar md-scroll-shrink="">
+            <div class="md-toolbar-tools"> MyLims[ Integração ]</div>
+        </md-toolbar>
+        <md-content style="height: 600px;" md-theme="default">
+            <div class='modal-body'>
+                <div ng-cloak>
+                    <md-content>
+                        <md-tabs md-dynamic-height md-border-bottom>
+
+
+                            <md-tab label='Arquivos'>
+                                <md-content class='md-padding'>
+                                    <h1 class='md-display-Arquivos'>Contratos</h1>
+
+                                    <md-table-container>
+                                        <table md-table>
+                                            <thead md-head md-order="queryAnotacao.order">
+                                                <tr md-row>
+                                                    <th md-column>
+
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Emissão</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Código</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Descrição</span>
+                                                    </th>
+                                                    <th md-column>
+                                                        <span>Valor</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody md-body>
+                                                <tr md-row md-select='item' md-select-id='Id' md-auto-select ng-repeat='item in ListaGrid'>
+                                                    <td md-cell>
+
+                                                        <md-button ng-disabled="!Carregando" class="md-raised md-warn" ng-click="Integrar(item)">Integrar</md-button>
+                                                    </td>
+                                                    <td md-cell>{{item.DataEmissao |date:"dd/MM/yyyy"}}</td>
+                                                    <td md-cell>{{item.Codigo}}</td>
+                                                    <td md-cell>{{item.Descricao}}</td>
+                                                    <td md-cell>{{item.Valor |number:2}}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </md-table-container>
+                                </md-content>
+
+                            </md-tab>
+
+
+
+
+                        </md-tabs>
+                    </md-content>
+                </div>
+            </div>
+        </md-content>
+    </div>
+</div>
+<script>
+    var app = angular.module('SOFTFIN',
+        ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination', 'ngAnimate', 'ngSanitize', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache'])
+        .config(function ($mdDateLocaleProvider) {
+
+            $mdDateLocaleProvider.shortMonths = ['Jan', 'Fev', 'Mar', 'Abril', 'Maio', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            $mdDateLocaleProvider.Months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            $mdDateLocaleProvider.days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado'];
+            $mdDateLocaleProvider.shortDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+            $mdDateLocaleProvider.weekNumberFormatter = function (weekNumber) {
+                return 'Semana ' + weekNumber;
+            };
+            $mdDateLocaleProvider.formatDate = function (date) {
+                var m = moment(date);
+                return m.isValid() ? m.format("DD/MM/YYYY") : '';
+            };
+            $mdDateLocaleProvider.msgCalendar = 'Calendario';
+            $mdDateLocaleProvider.msgOpenCalendar = 'Abrir calendario';
+
+        }).config(function ($mdThemingProvider) {
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('blue-grey');;
+        });
+
+        app.filter('yesNo', function () {
+            return function (input) {
+                return input == "True" ? 'Sim' : 'Não';
+            }
+        })
+
+        app.controller('MestreEntidade', [
+            '$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', '$mdDialog', '$mdToast', '$sce',
+            function ($scope, $http, $location, $anchorScroll, $timeout, $modal, $mdDialog, $mdToast, $sce) {
+                $scope.Carregando = true;
+                $scope.ShowProcesso = false;
+                $scope.ListaSimNao = [{ Value: 0, Text: "Não" }, { Value: 1, Text: "Sim" }];
+                $scope.paramProcesso = @Html.Raw(ViewData["paramProcesso"]);
+                $scope.ok = function (item) {
+
+                    $scope.InicialCarregando();
+                    $http.post("../../MyLIMS/ExecutaIntegracaoPorContrato", { 'contrato': item.Codigo })
+                        .success(function (data) {
+                            $scope.showSimpleToast("Integrado com sucesso, verifique no email o resultado!");
+                            $scope.FimCarregando();
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                }
+
+                $scope.Integrar = function (ev) {
+
+                    // Appending dialog to document.body to cover sidenav in docs app
+                    var confirm = $mdDialog.confirm()
+                        .title('Deseja Importar o Contrato?')
+                        .textContent('')
+                        .ariaLabel('Lucky day')
+                        .targetEvent(ev)
+                        .ok('OK')
+                        .cancel('Cancelar');
+
+                    $mdDialog.show(confirm).then(function () {
+                        $scope.ok(ev);
+                    }, function () {
+
+                    });
+                };
+
+                var last = {
+                    bottom: false,
+                    top: true,
+                    left: false,
+                    right: true
+                };
+
+                $scope.toastPosition = angular.extend({}, last);
+
+                $scope.getToastPosition = function () {
+                    sanitizePosition();
+
+                    return Object.keys($scope.toastPosition)
+                        .filter(function (pos) { return $scope.toastPosition[pos]; })
+                        .join(' ');
+                };
+
+                function sanitizePosition() {
+                    var current = $scope.toastPosition;
+
+                    if (current.bottom && last.top) current.top = false;
+                    if (current.top && last.bottom) current.bottom = false;
+                    if (current.right && last.left) current.left = false;
+                    if (current.left && last.right) current.right = false;
+
+                    last = angular.extend({}, current);
+                }
+
+                $scope.showSimpleToast = function (msg) {
+                    var pinTo = $scope.getToastPosition();
+
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent(msg)
+                            .position(pinTo)
+                            .hideDelay(13000)
+                    );
+                };
+
+                $scope.FimCarregando = function () {
+                    $scope.Carregando = true;
+                }
+                $scope.InicialCarregando = function () {
+                    $scope.Carregando = false;
+                }
+
+
+                $scope.LoadGrid = function () {
+                    $scope.InicialCarregando();
+                    $http.get("../../MyLIMS/CarregarGrid")
+                        .success(function (data) {
+                            $scope.ListaGrid = JSON.parse(data);
+                            $scope.FimCarregando();
+                        }).error(function (data) {
+                            $scope.FimCarregando();
+                            $scope.showSimpleToast("Sistema indisponivel");
+                        });
+                };
+                $scope.LoadGrid();
+                //$scope.FimCarregando();
+            }
+        ]);
+
+</script>
+
+

@@ -1,0 +1,71 @@
+﻿<!-- Modal HTML Markup -->
+<div id="ModalLoginForm" class="modal fade" style="padding:0 !important">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title style_title_modal" style="line-height: 35px;">Experimente grátis! <br><span style="font-size: 16px;font-weight: 400;text-transform: initial;">Preencha os dados abaixo para realizar o seu cadastro:</span></h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" style="padding: 20px 30px;border-bottom:5px solid #84b2ff">
+
+                <form role="form" method="POST" action="">
+                    <input type="hidden" name="_token" value="">
+                    <div class="form-group">
+                        <label class="control-label">Nome</label>
+                        <div>
+                            <input type="text" class="form-control input-lg" name="name" id="expnome" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">E-Mail</label>
+                        <div>
+                            <input type="email" class="form-control input-lg" name="email" id="expemail" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Telefone</label>
+                        <div>
+                            <input type="tel" class="form-control input-lg tel" name="telefone" id="exptelefone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Crie sua senha de acesso</label>
+                        <div>
+                            <input type="password" class="form-control input-lg" name="conta" id="expsenha">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Você já tem empresa formalizada?</label>
+                        <div>
+                            <select name="empresa" class="select_form_modal" id="exptemempresa">
+                                <option value="contador">Sou contador(a)</option>
+                                <option value="sim">Sim</option>
+                                <option value="nao">Não</option>
+                                <option value="empresa">Estou abrindo empresa</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        <div>
+                            <button type="submit" class="btn btn-success" id="expbtnExperimente">
+                                Experimente Grátis
+                            </button>
+                        </div>
+                    </div>
+                    <div class="simple-msg"></div>
+                    <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                    <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

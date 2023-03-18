@@ -1,0 +1,47 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarAprovacao
+@{
+    ViewBag.Title = "Documento Pagar Aprovação - Novo";
+}
+
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div>
+            @Html.LabelFor(x => x.pessoa_id)
+        </div>
+        <div>
+            @Html.DropDownListFor(x => x.pessoa_id,(SelectList)ViewData["Pessoas"],"--Selecione--")
+            @Html.ValidationMessageFor(x => x.pessoa_id)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.Inativo)
+        </div>
+        <div>
+            @Html.CheckBoxFor(x => x.Inativo)
+            @Html.ValidationMessageFor(x => x.Inativo)
+        </div>
+        <div>
+            @Html.LabelFor(x => x.valorLimite)
+        </div>
+        <div>
+            @Html.TextBoxFor(x => x.valorLimite)
+            @Html.ValidationMessageFor(x => x.valorLimite)
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

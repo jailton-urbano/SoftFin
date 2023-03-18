@@ -1,0 +1,88 @@
+﻿@model SoftFin.Web.Models.TaxaHora
+
+@{
+    ViewBag.Title = "Taxa Hora - Alteração";
+
+}
+
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @Html.HiddenFor(model => model.id)
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.empresa_id)
+            @Html.HiddenFor(x => x.categoria_id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.categoriaProfissional.categoria)
+                    <br />
+                    @Html.DisplayFor(x => x.categoriaProfissional.categoria)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataValidade)
+                    @Html.TextBoxFor(x => x.dataValidade, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.dataValidade)
+                </div>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.taxaHoraVenda)
+                        @Html.TextBoxFor(x => x.taxaHoraVenda, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.taxaHoraVenda)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.taxaHoraCusto)
+                        @Html.TextBoxFor(x => x.taxaHoraCusto, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.taxaHoraCusto)
+                    </div>
+                </div>
+            </div>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    </fieldset>
+}
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#dataValidade').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#taxaHoraVenda').attr('maxlength', '18');
+    $('#taxaHoraVenda').keyup(
+      function (event) {
+          $('#taxaHoraVenda').val(filtraNumerosComVirgula($('#taxaHoraVenda').val()));
+      });
+    $('#taxaHoraVenda').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#').attr('maxlength', '18');
+    $('#taxaHoraCusto').keyup(
+      function (taxaHoraCustoevent) {
+          $('#taxaHoraCusto').val(filtraNumerosComVirgula($('#taxaHoraCusto').val()));
+      });
+    $('#taxaHoraCusto').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>

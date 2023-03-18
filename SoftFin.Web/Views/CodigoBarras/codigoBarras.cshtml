@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Teste Código de Barras";
+}
+
+<h2>Teste Código de Barras</h2>
+
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='span12'>
+                <label>Código de Barras</label>
+                <input type="text" class="input-xxlarge" name="LinhaDigitavel" id="LinhaDigitavel"  value="@ViewBag.LinhaDigitavel"/>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='span12'>
+                <label>Vencimento</label>
+                <input type="text" name="Vencimento" id="Vencimento"  value="@ViewBag.Vencimento"/>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='span12'>
+                <label>Valor</label>
+                <input type="text" name="Valor" id="Valor" value="@ViewBag.Valor"/>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-cog"></span> Processar</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

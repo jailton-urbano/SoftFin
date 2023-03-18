@@ -1,0 +1,82 @@
+﻿@model SoftFin.GestorProcessos.Models.TipoCampo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TipoCampo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateHTML)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateHTML)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateHTMLModal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateHTMLModal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateJSControl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateJSControl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateJSScript)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateJSScript)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoBancoDados)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoBancoDados)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SQLDefault)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SQLDefault)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

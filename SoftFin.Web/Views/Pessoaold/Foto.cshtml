@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Upload de Foto da Pessoa";
+
+}
+
+
+@using (Html.BeginForm("Foto", "Pessoa", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    
+    
+    if (ViewData["imagem"] == null)
+    {
+        <div class='container'>
+            <input type="hidden" id="id" name="id" value="@ViewData["id"]" />
+            <input type="hidden" id="logopadrao" name="logopadrao" value=""/>
+            <div class='row'>
+                <div class='span8'>
+                    <label>Imagem</label>
+                    <input type="file" name="NomeArquivoAnexo" id="NomeArquivoAnexo"/>
+                    <br />Somente(*.jpg,*.jpeg,*.png)Max(1-Mega)
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class='container'>
+            <div class='row'>
+                <div class='span8'>
+                    <input type="hidden" id="id" name="id" value="@ViewData["id"]" />
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    <label>Imagem</label>
+                    <img src='@ViewData["imagem"]' />
+                    <input type="file" name="NomeArquivoAnexo" id="NomeArquivoAnexo"/>
+                    <br />Somente(*.jpg,*.jpeg,*.png)Max(1-Mega)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='span8'>
+                    <label>Sem Imagem</label>
+                    <input type="checkbox" id="logopadrao" name="logopadrao" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="button-row form-group">
+        <button class="btn btn-success" type="submit">
+            <span class="glyphicon glyphicon-upload"></span> Carregar
+        </button>
+        @Html.ActionLink("Voltar", "/Index", new object(), new { @class = "btn btn-default", role = "button" })
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

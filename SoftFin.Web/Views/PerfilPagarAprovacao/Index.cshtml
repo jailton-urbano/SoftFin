@@ -1,0 +1,95 @@
+﻿@model IEnumerable<SoftFin.Web.Models.PerfilPagarAprovacao>
+@{
+    ViewBag.Title = "Lista de Perfil Pagar Aprovação"; 
+
+}
+
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgObj').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesava
+            colNames: ['Codigo', 'Usuário', 'Valor Limite Contas a Pagar', 'Valor Limite Notas Fiscal', 'Inativo'],
+            //columns model
+            colModel: [
+                        { name: 'txtCodigo', index: 'Codigo', align: 'left', editable: false, width: '120', hidden: true },
+                        { name: 'txtDescricao', index: 'Descricao', align: 'left', editable: false, width: '500', hidden: false },
+                        { name: 'txtDescricao1', index: 'Descricao1', align: 'left', editable: false, width: '180', hidden: false },
+                        { name: 'txtDescricao1', index: 'Descricao1', align: 'left', editable: false, width: '180', hidden: false },
+                        { name: 'txtDescricao2', index: 'Descricao2', align: 'left', editable: false, width: '50', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    </script>
+
+

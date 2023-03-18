@@ -1,0 +1,174 @@
+﻿@model SoftFin.Web.Models.Despesa
+@{
+    ViewBag.Title = "Despesa - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.colaborador_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.colaborador_id, (SelectList)ViewData["colaborador"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.colaborador_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.cliente_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.cliente_id, (SelectList)ViewData["cliente"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.cliente_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.projeto_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.projeto_id, (SelectList)ViewData["projeto"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.projeto_id)
+                </div>
+            </div>
+            <div class='row'>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.tipoDespesa_id)
+                    <br />
+                    @Html.DropDownListFor(model => model.tipoDespesa_id, (SelectList)ViewData["tipoDespesa"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tipoDespesa_id)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.Data)
+                    <br />
+                    <input type='text' id='Data' name='Data' class='form-control'  value='@Model.Data.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.Data)
+                </div>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    <br />
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+
+            </div>
+            <div class='row'>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    <br />
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+
+            </div>
+
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+<script>
+    $('#Data').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#Data').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#valor').attr('maxlength', '18');
+    $('#valor').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+
+
+    $("#cliente_id").change(function () {
+
+        carregaProjeto()
+    });
+
+    $("#projeto_id").change(function () {
+
+        carregaTipoDespesa()
+    });
+
+    function limpaProjeto() {
+        $("#projeto_id").empty();
+        $("#projeto_id").append('<option value="">' + '---Selecione---</option>');
+    }
+
+    function limpaTipoDespesa() {
+        $("#tipoDespesa_id").empty();
+        $("#tipoDespesa_id").append('<option value="">' + '---Selecione---</option>');
+    }
+
+    limpaProjeto();
+    limpaTipoDespesa();
+
+    function carregaProjeto() {
+
+        limpaProjeto();
+
+        if ($("#cliente_id").val() == "")
+            return;
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getProjetos")',
+            dataType: 'json',
+            data: { cliente: $("#cliente_id").val() },
+            success: function (itens) {
+
+                if (itens.length > 0) {
+                    var select = document.getElementById("projeto_id");
+                    for (var i = 0; i < itens.length; i++) {
+                        $("#projeto_id").append('<option value="' + itens[i].id + '">' + itens[i].nomeProjeto + '</option>');
+                    }
+                }
+            },
+            error: function (ex) {
+                alert('Error.' + ex);
+            }
+        });
+    }
+    function carregaTipoDespesa() {
+
+        limpaTipoDespesa();
+
+        if ($("#projeto_id").val() == "")
+            return;
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getTipoDespesa")',
+                dataType: 'json',
+                data: { projeto: $("#projeto_id").val() },
+                success: function (itens) {
+
+                    if (itens.length > 0) {
+                        var select = document.getElementById("tipoDespesa_id");
+                        for (var i = 0; i < itens.length; i++) {
+                            $("#tipoDespesa_id").append('<option value="' + itens[i].id + '">' + itens[i].descricao + '</option>');
+                        }
+                    }
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+            });
+
+        }
+</script>

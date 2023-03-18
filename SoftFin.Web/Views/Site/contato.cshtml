@@ -1,0 +1,211 @@
+﻿@{
+    Layout = "";
+    }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="../../Content/site/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css?ver5">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/Site/css/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    @Html.Partial("_Escripts")
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                        @Html.Partial("_MenuCimaCima")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader menu_interna">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("_MenuCima")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+
+    <section>
+        <div class="head_fixo" style="background:url('../../Content/site/img/contato_soft.png');height: 340px;;background-size: cover;background-position: center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="banner_fixo_simplicidade">
+                            <ul class="breadcrumb">
+                                <li><a href="./">Home</a></li>
+                                <li>Contato</li>
+                            </ul>
+
+                            <h2>Fale conosco!</h2>
+
+                            @*<div class="form_banner_fixo">
+            <form>
+                <input type="text" name="firstname" placeholder="Insira seu E-mail" style="    width: 50%;">
+                <button type="submit" style="width: 18%;">Enviar</button>
+            </form>
+        </div>*@
+                        </div>
+                    </div>
+
+                    <div class="col-md-5"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="content_contato">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_contato_lateral">
+                            <h3>INFORMAÇÕES DE CONTATO</h3>
+
+
+
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> Telefone: (11) 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> Whatsapp: (11) 98794-1053</a></li>
+                                <li><a href="mailto:adm@softfin.com.br"><i class="fa fa-envelope-o"></i> Email: adm@softfin.com.br</a></li>
+                                <li><a href="https://goo.gl/maps/YCMMrJgJT3s" target="_blank"><i class="fa fa-map-marker" style="padding-left: 11px;"></i> Endereço: Rua Comendador Eduardo Saccab, 215 - cj 102 - Brooklin Paulista, São Paulo - SP, 04601-070</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h3>Fale conosco</h3>
+                        <span style="margin-bottom:15px;display:inline-block">Dúvidas, sugestões ou comentários?</span>
+
+                        <div class="form_contato">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" id="contnome" name="nome" placeholder="Seu nome">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="email" id="contemail" name="email" placeholder="E-mail">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="text" id="contempresa" name="empresa" placeholder="Empresa">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="tel" id="conttelefone" class="tel" name="telefone" placeholder="Telefone">
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <input type="text" id="contassunto" name="assunto" placeholder="Assunto">
+                                    </div>
+
+
+                                </div>
+
+                                <textarea id="contmensagem" placeholder="Sua mensagem" style="height:200px"></textarea>
+                                <br />
+                                <div class="simple-msg"></div>
+                                <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                                <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+                                <br />
+                                <br />
+                                <br />
+                                <input id="contbtnEnviar" type="submit" value="Enviar" class="btn_form_contato" style="cursor:pointer">
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.772411697199!2d-46.67924908493624!3d-23.612493784657516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce50a5b048db0f%3A0xb73ff762e29b9d46!2sRua+Comendador+Eduardo+Saccab%2C+215+-+102+-+Brooklin+Paulista%2C+S%C3%A3o+Paulo+-+SP%2C+04601-070!5e0!3m2!1spt-BR!2sbr!4v1536873051986" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+
+    @Html.Partial("_Experimente")
+
+
+    <section>
+        <div class="novidades_home">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="newslatter_text">
+                            <h2>SIMULE SEU INVESTIMENTO AGORA!</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="btn_simule_fixo_pages">
+                            <a href="simule">Simular Já <i class="fa fa-usd"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @Html.Partial("_Rodape")
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/js/bootstrap.js"></script>
+    <script src="../../Content/site/js/owl.js"></script>
+    <script src="../../Content/site/js/scripts.js"></script>
+    <script src="../../Content/site/js/validacao_contact_form7.js"></script>
+    <script src="~/Content/Site/js/site.js"></script>
+
+
+
+</body>
+</html>

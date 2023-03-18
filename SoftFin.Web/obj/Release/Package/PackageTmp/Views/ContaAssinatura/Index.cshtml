@@ -1,0 +1,77 @@
+﻿@model IEnumerable<SoftFin.Web.Models.ContaAssinatura>
+@{
+    ViewBag.Title = "Conta Assinatura";
+}
+
+
+
+<table id="jqgContaAssinatura" cellpadding="0" cellspacing="0"></table>
+
+<div id="jqgContaAssinaturaOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            Metronic.init(); // init metronic core components
+            Layout.init(); // init current layout
+            QuickSidebar.init(); // init quick sidebar
+
+            $('#jqgContaAssinatura').jqGrid({
+                url: '@Url.Action("Listas")',
+                datatype: 'json',
+                mtype: 'POST',
+                colNames: ['Data Inicial', 'Data Final', 'Nota Fiscal', 'Código de Verificação', 'Data Vencimento', 'Valor', 'Situação', 'Histórico'],
+                colModel: [
+                            {
+                                name: 'DataInicial', index: 'dataInicial', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '130'
+                            },
+                            {
+                                name: 'DataFinal', index: 'dataFinal', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '130'
+                            },
+                            {
+                                name: 'NotaFiscal', index: 'notaFiscal', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '80'
+                            },
+                            {
+                                name: 'CodigoVerificacao', index: 'codigoVerificacao', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '100'
+                            },
+                            {
+                                name: 'DataVencimento', index: 'dataVencimento', align: 'center', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '130'
+                            },
+                            {
+                                name: 'Valor', index: 'valor', align: 'right', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '80'
+                            },
+                            {
+                                name: 'Situacao', index: 'situacao', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '120'
+                            },
+                            {
+                                name: 'Historico', index: 'historico', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '250'
+                            }
+                ],
+                //pager for grid
+                pager: $('#jqgContaAssinaturaOpc'),
+                //number of rows per page
+                rowNum: 12,
+                //initial sorting column
+                sortname: 'id',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+
+            });
+
+            $('#jqgContaAssinatura').jqGrid('navGrid', '#jqgUsuariosOpc',
+                { add: false, del: false, edit: false, search: false });
+        });
+
+</script>
+

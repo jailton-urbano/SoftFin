@@ -1,0 +1,16 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\SoftFin.Vindi.Testes.dll.config
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\SoftFin.Vindi.Testes.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\SoftFin.Vindi.Testes.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\Softfin.Vindi.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\Newtonsoft.Json.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\System.Net.Http.Formatting.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\Softfin.Vindi.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\Newtonsoft.Json.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\System.Net.Http.Formatting.xml
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\bin\Debug\pt-BR\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\obj\Debug\SoftFin.Vindi.Testes.csprojAssemblyReference.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\obj\Debug\SoftFin.Vindi.Testes.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\obj\Debug\SoftFin.Vindi.Testes.csproj.CopyComplete
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\obj\Debug\SoftFin.Vindi.Testes.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Vindi.Testes\obj\Debug\SoftFin.Vindi.Testes.pdb

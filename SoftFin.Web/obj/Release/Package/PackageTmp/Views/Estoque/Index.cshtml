@@ -1,0 +1,270 @@
+﻿@{
+
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318865";
+}
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/Estoque/EstoqueIndex.js"></script>
+
+
+<div ng-app="SOFTFIN" class="container-fluid">
+    <div ng-controller="MestreCPAG">
+
+        <script type="text/ng-template" id="modalLancamento.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Adicionar lançamento</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label>Pessoa</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.pessoa" typeahead="o.Text as o.Text for o in ListaPessoas | filter:$viewValue | limitTo:8" class="form-control" required />
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Movimentação</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tipomov" ng-options="o.Value as o.Text for o in ListaTipoMov" ng-required="true">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Tabela</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.tabelaid" ng-options="o.Value as o.Text for o in ListaTabelas" ng-required="true" ng-change="ObterProdutos()">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Produto</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.produtoid" ng-options="o.Value as o.Text for o in objsProdutos" ng-required="true" ng-change="CarregaPadroes()">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                <label>Descrição</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.descricao" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Medida</label>
+                                <br /><label>{{entidade.unidadeMedida}}</label>
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                <label>Quantidade</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.quantidade" class="form-control" required ng-change="SomaTotal()" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Unitário</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.valorUnitario" ui-number-mask="2" class="form-control" required ng-change="SomaTotal()" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Total</label>
+                                <br /><label>{{entidade.valorTotal |number:2}}</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" 
+                            ng-disabled="btnOK != 'OK'">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        {{btnOK}}
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+
+        <script type="text/ng-template" id="modalDetalhe.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Detalhe</h3>
+                </div>
+                <div class="modal-body">
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Data
+                                </th>
+
+                                <th>
+                                    Pessoa
+                                </th>
+
+                                <th>
+                                    Tipo Movimentação
+                                </th>
+                                <th>
+                                    Descrição
+                                </th>
+                                <th>
+                                    Quantidade
+                                </th>
+                                <th>
+                                    Valor Unidario
+                                </th>
+                                <th>
+                                    Valor Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in ListaDetalhe|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7">
+                                <td>
+                                    {{item.data |date:'dd/MM/yyyy hh:mm:ss'}}
+                                </td>
+                                <td>
+                                    {{item.pessoa}}
+                                </td>
+                                <td>
+                                    {{item.tipomov}}
+                                </td>
+                                <td>
+                                    {{item.descricao}}
+                                </td>
+                                <td>
+                                    {{item.quantidade}}
+                                </td>
+                                <td>
+                                    {{item.valorUnitario |number:2}}
+                                </td>
+                                <td>
+                                    {{item.valorTotal |number:2}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Localizar : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 142px;">
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Pesquisar()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+                            <button style="border-right-width: 4px; padding-right: 22px;margin-top: 5px;"
+                                    ng-click="Lancamento()"
+                                    ng-show="EditAccess"
+                                    title="Novo lançamento"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Lançamento
+                            </button>
+                        </th>
+
+                        <th>
+                            Produto
+                        </th>
+
+                        <th>
+                            Unidade Medida
+                        </th>
+
+                        <th>
+                            Saldo
+                        </th>
+
+                        <th>
+                            Valor
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaMovto|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:7">
+                        <td style="width: 40px;">
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detalhe(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhe
+                            </button>
+                        </td>
+                        <td>
+                            {{item.descricao}}
+                        </td>
+                        <td>
+                            {{item.unidadeMedida}}
+                        </td>
+                        <td>
+                            {{item.saldo}}
+                        </td>
+                        <td>
+                            {{item.valor |number:2}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+

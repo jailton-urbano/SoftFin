@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Exportar para Excel";
+}
+
+
+@using (Html.BeginForm())
+{
+
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                Selecione a Origem:
+                @Html.DropDownList("tabela", (SelectList)ViewData["Tabela"], "---Selecione---", new { @class = "form-control" })
+            </div>
+            <div class='col-md-3 form-group'>
+                Banco/Conta:
+                @Html.DropDownList("banco", (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class='col-md-3 form-group'>
+                <label>Data Inicial</label>
+                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-3 form-group'>
+                <label>Data Final</label>
+                <input type="text" name="dataFinal" class="form-control" id="dataFinal" value="@ViewData["DataFinal"]" />
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script>
+
+    $('#gerar').click(function () {
+
+        var banco = $("#banco").val();
+        var tabela = $("#tabela").val();
+        var dataInicial = $("#dataInicial").val();
+        var dataFinal = $("#dataFinal").val();
+
+        if (tabela == "") {
+            alert("Informe a Origem!");
+            return
+        }
+        if (banco == "") {
+            alert("Informe o Banco!");
+            return
+        }
+        if (dataInicial == "") {
+            alert("Informe a Data Inicial!");
+            return
+        }
+        if (dataFinal == "") {
+            alert("Informe a Data Final!");
+            return
+        }
+
+        $('#indicator').show();
+
+        if (tabela != undefined && tabela != null) {
+            $('#indicator').hide();
+            if (tabela == 1)
+            {
+                window.location = 'geraExcelBancoMovimento?dataInicial=' + dataInicial + "&" + "dataFinal=" + dataFinal + "&banco=" + banco;
+            }
+
+            if (tabela == 2) {
+                window.location = 'geraExcelDocumentoPagar?dataInicial=' + dataInicial + "&" + "dataFinal=" + dataFinal + "&banco=" + banco;
+            }
+
+            if (tabela == 3) {
+                window.location = 'geraExcelPessoas';
+            }
+
+            if (tabela == 4) {
+                window.location = 'geraExcelLanctoExtrato?dataInicial=' + dataInicial + "&" + "dataFinal=" + dataFinal + "&banco=" + banco;
+            }
+
+            if (tabela == 5) {
+                window.location = 'geraExcelRecebimentos?dataInicial=' + dataInicial + "&" + "dataFinal=" + dataFinal + "&banco=" + banco;
+            }
+
+            if (tabela == 6) {
+                window.location = 'geraExcelPagamentos?dataInicial=' + dataInicial + "&" + "dataFinal=" + dataFinal + "&banco=" + banco;
+            }
+        }
+    })
+</script>

@@ -1,0 +1,265 @@
+﻿@model SoftFin.Web.Models.PagamentoFiltro
+@{
+    ViewBag.Title = "Pagamento";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205667719-Como-registrar-um-pagamento";
+
+
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                    Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.emaberto)
+                                <br />
+                                @Html.CheckBox("emaberto", true, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.emaberto)
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                @Html.LabelFor(x => x.pessoa_id)
+
+                                @Html.DropDownListFor(model => model.pessoa_id, (SelectList)ViewData["Pessoas"], "---Selecione---", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.pessoa_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroDoc)
+                                <br />
+                                @Html.TextBoxFor(x => x.numeroDoc, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.numeroDoc)
+                            </div>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.dataVencimentoDocIni)
+                            <br />
+                            <input type='text' id='dataVencimentoDocIni' name='dataVencimentoDocIni' value="@ViewData["DataInicial"]" class="form-control" />
+                            @Html.ValidationMessageFor(x => x.dataVencimentoDocIni)
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.dataVencimentoDocFim)
+                            <br />
+                            <input type='text' id='dataVencimentoDocFim' name='dataVencimentoDocFim' value="@ViewData["DataFinal"]" class="form-control" />
+                            @Html.ValidationMessageFor(x => x.dataVencimentoDocFim)
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataEmissaoDocIni)
+                                <br />
+                                <input type='text' id='dataEmissaoDocIni' name='dataEmissaoDocIni' class="form-control" />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoDocIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataEmissaoDocFim)
+                                <br />
+                                <input type='text' id='dataEmissaoDocFim' name='dataEmissaoDocFim' class="form-control" />
+                                @Html.ValidationMessageFor(x => x.dataEmissaoDocFim)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.ValorPagamentoIni)
+                                <br />
+                                @Html.TextBoxFor(x => x.ValorPagamentoIni, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ValorPagamentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.ValorPagamentoFim)
+                                <br />
+                                @Html.TextBoxFor(x => x.ValorPagamentoFim, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.ValorPagamentoFim)
+                            </div>
+                        </div>
+                    </div>
+                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                </button>
+                @*<a href='@Url.Action("Excel")'>
+                    <img src='~/Content/images/icoExcel.gif' />
+                </a>*@
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<table id="jqgPessoa" cellpadding="0" cellspacing="0"></table>
+<div id="jqgPessoaOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgPessoa').jqGrid({
+            //url from wich data should be requested
+
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Número Documento', 'Fornecedor', 'Emissão', 'Vencimento', 'Valor Total', 'Valor Pagamento', 'Situação'],
+            //columns model
+            colModel: [
+                        { name: 'txtnumeroDoc', index: 'numeroDoc', align: 'center', editable: false, width: '150', hidden: false },
+                        { name: 'txtrazaoFornecedor', index: 'razaoFornecedor', align: 'left', editable: false, width: '200', hidden: false },
+                        { name: 'txtdataEmissaoDoc', index: 'dataEmissaoDoc', align: 'center', editable: false, width: '110', hidden: false },
+                        { name: 'txtdataVencimentoDoc', index: 'dataVencimentoDoc', align: 'center', editable: false, width: '110', hidden: false },
+                        { name: 'txtvalorTotal', index: 'valorTotal', align: 'right', editable: false, width: '120', hidden: false, formatter: 'currency' },
+                        { name: 'txtvalorPagamento', index: 'valorPagamento', align: 'right', editable: false, width: '120', hidden: false, formatter: 'currency' },
+                        { name: 'txtsituacao', index: 'situacao', align: 'center', editable: false, width: '200', hidden: false }
+            ],
+            //pager for grid
+            pager: $('#jqgPessoaOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgPessoa').jqGrid('navGrid', '#jqgPessoaOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Pagar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Create/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+    });
+
+
+
+
+
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")';
+        caminho += '?emaberto=';
+        caminho += $("#emaberto:checked").val();
+        caminho += '&pessoa_id=';
+        caminho += $('#pessoa_id').val();
+        caminho += '&cnpj=';
+        caminho += $('#cnpj').val();
+        caminho += '&cpf=';
+        caminho += $('#cpf').val();
+        caminho += '&numeroDoc=';
+        caminho += $('#numeroDoc').val();
+        caminho += '&dataEmissaoDocIni=';
+        caminho += $('#dataEmissaoDocIni').val();
+        caminho += '&dataEmissaoDocFim=';
+        caminho += $('#dataEmissaoDocFim').val();
+        caminho += '&dataVencimentoDocIni=';
+        caminho += $('#dataVencimentoDocIni').val();
+        caminho += '&dataVencimentoDocFim=';
+        caminho += $('#dataVencimentoDocFim').val();
+        caminho += '&historico=';
+        caminho += $('#historico').val();
+        caminho += '&banco_id=';
+        caminho += $('#banco_id').val();
+        caminho += '&ValorTotalIni=';
+        caminho += $('#ValorTotalIni').val();
+        caminho += '&ValorTotalFim=';
+        caminho += $('#ValorTotalFim').val();
+        caminho += '&ValorPagamentoIni=';
+        caminho += $('#ValorPagamentoIni').val();
+        caminho += '&ValorPagamentoFim=';
+        caminho += $('#ValorPagamentoFim').val();
+        jQuery("#jqgPessoa").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    });
+
+    $('#cnpj').attr('maxlength', '18');
+    $('#cnpj').attr('style', 'text-align:right');
+    $('#cnpj').keydown(
+      function (event) {
+          formataCNPJ(this, event);
+      });
+    $('#cpf').attr('maxlength', '14');
+    $('#cpf').attr('style', 'text-align:right');
+    $('#cpf').keydown(
+      function (event) {
+          formataCPF(this, event);
+      });
+    $('#dataEmissaoDocIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoDocFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoDocIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataEmissaoDocFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimentoDocIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataVencimentoDocFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataPagamentoIni').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataPagamentoFim').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#ValorTotalIni').attr('maxlength', '18');
+    $('#ValorTotalIni').keyup(
+      function (event) {
+          $('#ValorTotalIni').val(filtraNumerosComVirgula($('#ValorTotalIni').val()));
+      });
+    $('#ValorTotalIni').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#ValorTotalFim').attr('maxlength', '18');
+    $('#ValorTotalFim').keyup(
+      function (event) {
+          $('#ValorTotalFim').val(filtraNumerosComVirgula($('#ValorTotalFim').val()));
+      });
+    $('#ValorTotalFim').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#ValorPagamentoIni').attr('maxlength', '18');
+    $('#ValorPagamentoIni').keyup(
+      function (event) {
+          $('#ValorPagamentoIni').val(filtraNumerosComVirgula($('#ValorPagamentoIni').val()));
+      });
+    $('#ValorPagamentoIni').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#ValorPagamentoFim').attr('maxlength', '18');
+    $('#ValorPagamentoFim').keyup(
+      function (event) {
+          $('#ValorPagamentoFim').val(filtraNumerosComVirgula($('#ValorPagamentoFim').val()));
+      });
+    $('#ValorPagamentoFim').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>
+
+
+
+
+
+

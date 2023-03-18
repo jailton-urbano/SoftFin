@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.SubTitle = "";
+    ViewBag.Helplink = "";
+
+
+}
+
+
+@using (Html.BeginForm())
+{
+  
+
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-stats"></span> Gerar Gráfico</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="chart_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["corechart"] });
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+
+        $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $('#gerar').click(function () {
+            $('#indicator').show();
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                url: "geraGraficoPrevisaoFaturamento",
+                data: {
+                    'DataInicial': $("#dataInicial").val(),
+                    'DataFinal': $("#dataFinal").val()
+                },
+                success: function (chartsdata) {
+
+                    function pad(n, width, z) {
+                        z = z || '0';
+                        n = n + '';
+                        return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                    }
+
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Mês');
+                    data.addColumn('number', 'Liberada');
+                    data.addColumn('number', 'Emitida');
+                    data.addColumn('number', 'Pendente');
+                    data.addColumn('number', 'Cancelada');
+
+                    var vano = chartsdata[0].ano.toString();
+                    var vmes = chartsdata[0].mes.toString();
+                    vanomesant = vano.concat('-').concat((pad(vmes, 2)));
+
+                    vliberada = 0;
+                    vemitida = 0;
+                    vpendente = 0;
+                    vcancelada = 0;
+
+                    for (var i = 0; i < chartsdata.length; i++) {
+
+                        var vano = chartsdata[i].ano.toString();
+                        var vmes = chartsdata[i].mes.toString();
+                        var vanomes = vano.concat('-').concat((pad(vmes, 2)));
+
+                        if (vanomes != vanomesant) {
+                            data.addRow([vanomesant, vliberada, vemitida, vpendente, vcancelada]);
+                            vanomesant = vanomes;
+                            vliberada = 0;
+                            vemitida = 0;
+                            vpendente = 0;
+                            vcancelada = 0;
+                        }
+
+                        if (chartsdata[i].status == 'Liberada') {
+                            vliberada = chartsdata[i].valor;
+                        }
+                        if (chartsdata[i].status == 'Emitida') {
+                            vemitida = chartsdata[i].valor;
+                        }
+                        if (chartsdata[i].status == 'Pendente') {
+                            vpendente = chartsdata[i].valor;
+                        }
+                        if (chartsdata[i].status == 'Cancelada') {
+                            vcancelada = chartsdata[i].valor;
+                        }
+                    }
+
+                    data.addRow([vanomes, vliberada, vemitida, vpendente, vcancelada]);
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+                    chart.draw(data,
+                      {
+                          title: "Gráfico de Faturamento",
+                          isStacked: true,
+                      });
+
+                    $('#indicator').hide();
+
+                },
+                error: function () {
+                    alert("Ops...");
+                }
+            });
+        })
+    });
+</script>
+

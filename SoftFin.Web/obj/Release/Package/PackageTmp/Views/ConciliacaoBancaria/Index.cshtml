@@ -1,0 +1,226 @@
+﻿@model SoftFin.Web.Models.LanctoExtratoView
+@{
+    ViewBag.Title = "Conciliação Bancária"; 
+
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse out'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.dataIni)
+                                <br />
+                                <input type='text' id='dataIni' name='dataIni' class='text-box single-line' value='' />
+                                @Html.ValidationMessageFor(x => x.dataIni)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.dataFim)
+                                <br />
+                                <input type='text' id='dataFim' name='dataFim' class='text-box single-line' value='' />
+                                @Html.ValidationMessageFor(x => x.dataFim)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.descricao) 
+                                <br />
+                                @Html.TextBoxFor(x => x.descricao)
+                                @Html.ValidationMessageFor(x => x.descricao)
+                            </div>
+
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.ValorIni) 
+                                <br />
+                                @Html.TextBoxFor(x => x.ValorIni)
+                                @Html.ValidationMessageFor(x => x.ValorIni)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.ValorFim) 
+                                <br />
+                                @Html.TextBoxFor(x => x.ValorFim)
+                                @Html.ValidationMessageFor(x => x.ValorFim)
+                            </div>                            
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.banco_id)
+                                <br />
+                                @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["Banco"], "---Selecione---")
+                                @Html.ValidationMessageFor(x => x.banco_id)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.idLancto) 
+                                <br />
+                                @Html.TextBoxFor(x => x.idLancto)
+                                @Html.ValidationMessageFor(x => x.idLancto)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.Tipo) 
+                                <br />
+                                @Html.TextBoxFor(x => x.Tipo)
+                                @Html.ValidationMessageFor(x => x.Tipo)
+                            </div>                            
+                        </div>                    
+                        <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                            <span class="glyphicon glyphicon-search"></span> Pesquisar
+                        </button>
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#jqgObj').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesa
+            colNames: ['Codigo', 'Data', 'Identificação', 'Descrição', 'Tipo', 'Valor', 'Banco', 'Conciliado', 'Data Conciliado', 'Usuário Resp. pelo Conc.'],
+            //columns model
+            colModel: [
+                        { name: 'txtCodigo', index: 'Codigo', align: 'left', editable: false, width: '100', hidden: true },
+                        { name: 'txtData', index: 'data', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtIdentificacao', index: 'idLancto', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtDescricao', index: 'descricao', align: 'left', editable: false, width: '200', hidden: false },
+                        { name: 'txtTipo', index: 'Tipo', align: 'left', editable: false, width: '50', hidden: false },
+                        { name: 'txtValor', index: 'Valor', align: 'right', editable: false, width: '100', hidden: false },
+                        { name: 'txtBanco', index: 'banco', align: 'left', editable: false, width: '100', hidden: false },
+                        { name: 'txtConc', index: 'Conciliado', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtDataConc', index: 'DataConciliado', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtUsuConc', index: 'UsuConciliado', align: 'left', editable: false, width: '160', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        //$('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+        //    caption: "Conciliar",
+        //    buttonicon: "ui-icon ui-icon-plus",
+        //    onClickButton: function () {
+        //        window.location = "Create/";
+        //    },
+        //    position: "Last"
+        //});
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Conciliar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Conciliar/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        //$('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+        //    caption: "Excluir",
+        //    buttonicon: "ui-icon ui-icon-trash",
+        //    onClickButton: function () {
+        //        var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+        //        if (gr != null) {
+        //            window.location = "Delete/" + gr;
+        //        }
+        //        else {
+        //            alert("Selecione 1 coluna.");
+        //        };
+        //    },
+        //    position: "Last"
+        //});
+
+    });
+
+
+    $("#dataIni").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#dataFim").datepicker({ dateFormat: "dd/mm/yy" });
+
+    $("#valorIni").attr("maxlength", "18");
+    $("#valorIni").keyup(
+        function (event) {
+            $("#valorIni").val(filtraNumerosComVirgula($("#valorIni").val()));
+            //$("#valortotal").val());
+        }
+    );
+    $("#valorIni").blur(
+    function (event) {
+        formataValor(this, event);
+    }
+    );
+
+    $("#valorFim").attr("maxlength", "18");
+    $("#valorFim").keyup(
+        function (event) {
+            $("#valorFim").val(filtraNumerosComVirgula($("#valorFim").val()));
+            //$("#valortotal").val());
+        }
+    );
+    $("#valorFim").blur(
+    function (event) {
+        formataValor(this, event);
+    }
+    );
+
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")' ;
+                    caminho += '?dataIni=';
+                    caminho += $('#dataIni').val();
+                    caminho += '&dataFim=';
+                    caminho += $('#dataFim').val();
+                    caminho += '&idLancto=';
+                    caminho += $('#idLancto').val();
+                    caminho += '&descricao=';
+                    caminho += $('#descricao').val();
+                    caminho += '&Tipo=';
+                    caminho += $('#Tipo').val();
+                    caminho += '&ValorIni=';
+                    caminho += $('#ValorIni').val();
+                    caminho += '&ValorFim=';
+                    caminho += $('#ValorFim').val();
+                    caminho += '&banco_id=';
+                    caminho += $('#banco_id').val();
+                    jQuery("#jqgObj").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+                });
+
+    </script>
+
+

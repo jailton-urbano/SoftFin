@@ -1,0 +1,35 @@
+﻿@model SoftFin.Web.Models.StatusParcela
+@{
+    ViewBag.Title = "Alterar Status do Contrato";
+}
+
+
+@using (Html.BeginForm())
+{
+    @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    <div class="container-fluid">
+        <div class="row" >
+            <div class="col-md-3 form-group">
+                    Status:
+                    @Html.TextBoxFor(x => x.status,null, new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.status) 
+            </div>
+        </div>
+    </div>
+    @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+    Metronic.init(); // init metronic core components
+    Layout.init(); // init current layout
+    QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+
+

@@ -1,0 +1,155 @@
+﻿@model SoftFin.Web.Models.GPS
+@{
+    ViewBag.Title = "GUIA PREVIDÊNCIA SOCIAL - GPS  - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+<div class='container'> 
+
+            <div class='row' >
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.nomeContribuinte)
+                        @Html.TextBoxFor(x => x.nomeContribuinte)                        
+                        @Html.ValidationMessageFor(x => x.nomeContribuinte)
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.informacoesComplementares)
+                        @Html.TextBoxFor(x => x.informacoesComplementares)                        
+                        @Html.ValidationMessageFor(x => x.informacoesComplementares)
+                    </div>
+
+            </div>
+        
+            <div class='row' >
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataArrecadacao)
+                        <input type="text" id="dataArrecadacao" name="dataArrecadacao" value="@Model.dataArrecadacao.Date.ToString("dd/MM/yyyy")" />
+                            @Html.ValidationMessageFor(x => x.dataArrecadacao)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.codigoPagamento)
+                        @Html.TextBoxFor(x => x.codigoPagamento)                        
+                        @Html.ValidationMessageFor(x => x.codigoPagamento)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.competencia)
+                        @Html.TextBoxFor(x => x.competencia)                        
+                        @Html.ValidationMessageFor(x => x.competencia)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.identificador)
+                        @Html.TextBoxFor(x => x.identificador)
+                        @Html.ValidationMessageFor(x => x.identificador)
+                    </div>
+            </div>
+
+            <div class='row' >
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorArrecadado)
+                        @Html.TextBoxFor(x => x.valorArrecadado)                        
+                        @Html.ValidationMessageFor(x => x.valorArrecadado)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorOutrasEntidades)
+                        @Html.TextBoxFor(x => x.valorOutrasEntidades)                        
+                        @Html.ValidationMessageFor(x => x.valorOutrasEntidades)
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorAtualizacaoMonetaria)
+                        @Html.TextBoxFor(x => x.valorAtualizacaoMonetaria)                        
+                        @Html.ValidationMessageFor(x => x.valorAtualizacaoMonetaria)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorTributo)
+                        @Html.TextBoxFor(x => x.valorTributo)
+                        @Html.ValidationMessageFor(x => x.valorTributo)
+                    </div>
+            </div>
+
+
+        </div>
+                @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $("#competencia").datepicker({ dateFormat: "mm/yy" });
+
+    $('#valorTributo').attr('maxlength', '18');
+    $('#valorTributo').keyup(
+      function (event) {
+          $('#valorTributo').val(filtraNumerosComVirgula($('#valorTributo').val()));
+      });
+    $('#valorTributo').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorOutrasEntidades').attr('maxlength', '18');
+    $('#valorOutrasEntidades').keyup(
+      function (event) {
+          $('#valorOutrasEntidades').val(filtraNumerosComVirgula($('#valorOutrasEntidades').val()));
+      });
+    $('#valorOutrasEntidades').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorAtualizacaoMonetaria').attr('maxlength', '18');
+    $('#valorAtualizacaoMonetaria').keyup(
+      function (event) {
+          $('#valorAtualizacaoMonetaria').val(filtraNumerosComVirgula($('#valorAtualizacaoMonetaria').val()));
+      });
+    $('#valorAtualizacaoMonetaria').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorArrecadado').attr('maxlength', '18');
+    $('#valorArrecadado').keyup(
+      function (event) {
+          $('#valorArrecadado').val(filtraNumerosComVirgula($('#valorArrecadado').val()));
+      });
+    $('#valorArrecadado').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#dataArrecadacao').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+
+
+
+<style type='text/css'>
+<!--
+
+#codigoPagamento {width:210.00px;}
+#competencia {width:210.00px;}
+#identificador {width:210.00px;}
+#valorTributo {width:210.00px;}
+#valorOutrasEntidades {width:210.00px;}
+#valorAtualizacaoMonetaria {width:210.00px;}
+#valorArrecadado {width:210.00px;}
+#dataArrecadacao {width:210.00px;}
+#informacoesComplementares {width:360.00px;}
+#nomeContribuinte {width:360.00px;}
+#estabelecimento_id {width:210.00px;}
+#Estabelecimento {width:210.00px;}
+-->
+</style>

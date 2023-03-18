@@ -1,0 +1,420 @@
+﻿@{
+    ViewBag.Title = "Conciliação";
+}
+
+
+
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                Banco/Conta:
+                @Html.DropDownList("txtBanco", (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" }) 
+            </div>
+            <div class='col-md-3 form-group'>
+                Data :
+                <input type="text" class = "form-control" id="txtData" name="txtData"/>
+            </div>
+            <div class='col-md-3 form-group'>
+
+                <a href="#" id="pesquisa" name="pesquisa" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-search"></span> Pesquisa</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div style="float:inherit" class="container">
+        <div name="divOFX" id="divOFX" >
+        </div>
+
+        <div name="divCC" id="divCC" >
+        </div>
+    </div>
+
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+    <div style="display:initial">
+
+        <div id="Mensagem" name="Mensagem" class=''>
+        
+        </div>
+        
+            <a href="#" class="btn btn-primary" id="btnConciliar" name="btnConciliar">Conciliar</a>
+        </div>
+<br />
+    <h4>Items Conciliados</h4>
+
+
+    <div name="divFinal" id="divFinal">
+    </div>
+<script>
+    $('#txtData,#txtDataCC').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    $('#pesquisa').click(function () {
+        //$('#indicator').show();
+        PesquisaPrincipal();
+
+    });
+
+    function PesquisaPrincipal() {
+        $('#indicator').show();
+        $('#divFinal').html("");
+        $('#divOFX').html("");
+        $('#divCC').html("");
+        $.ajax(
+        {
+            url: "Pesquisa",
+            data: {
+                'txtData': $("#txtData").val(),
+                'txtBanco': $("#txtBanco").val()
+            },
+            dataType: "json",
+            type: 'POST',
+            success: function (data) {
+                montaListas(data);
+                montaConciliados(data.Conciliados);
+                $('#indicator').hide();
+            },
+            error: function () {
+                alert("error");
+            }
+        }
+    );
+    }
+
+
+    $('#btnConciliar').click(function () {
+        //$('#indicator').show();
+        $.ajax(
+            {
+                url: "Conciliar",
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    $("#Mensagem").toggleClass("");
+                    if (data == "") {
+                        
+                        $("#Mensagem").attr("class","alert alert-success");
+                        PesquisaPrincipal();
+                        data = "Salvo com sucesso.";
+                    }
+                    else {
+                        $("#Mensagem").attr("class", "alert alert-warning");
+    
+                    }
+                    $("#Mensagem").html(data);
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    });
+
+
+
+    function Marca(id, valor) {
+        //$('#indicator').show();
+        $.ajax(
+            {
+                url: "Marca",
+                data: {
+                    'id': id,
+                    'valor': valor
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    $('#TotalOFX').html(data.ExtratoTotal);
+                    $('#TotalCC').html(data.BancoTotal);
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    };
+
+
+    function montaListas(jsonData) {
+        carregaOFX(jsonData.LanctoExtratos, jsonData.ExtratoPaginaAtual, jsonData.ExtratoPaginaQtd, jsonData.ExtratoTotalRegistros);
+        carregaCC(jsonData.BancoMovimentoConciliacaoVLWs, jsonData.BancoPaginaAtual, jsonData.BancoPaginaQtd, jsonData.BancoTotalRegistros);
+        $('#txtDataCC').datepicker({ dateFormat: 'dd/mm/yy' });
+        var dataAux = $('#txtData').val();
+        $('#txtDataCC').val(dataAux);
+
+    }
+
+    function montaCC(jsonData) {
+        var dataAux = $('#txtDataCC').val();
+        $('#divCC').html("");
+        carregaCC(jsonData.BancoMovimentoConciliacaoVLWs, jsonData.BancoPaginaAtual, jsonData.BancoPaginaQtd, jsonData.BancoTotalRegistros);
+        $('#txtDataCC').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#txtDataCC').val(dataAux);
+    }
+
+    function carregaOFX(jsonData, atual, final, total) {
+
+        var table = '    <div style="float: none">';
+        table += '            <div class="container" style="width: 470px; background-color: #D8D8D8; float: left; border: 0px; display: block; border-right-style: solid; border-left-width: 2px; border-bottom-color: black">';
+        table += '                <div class="row">';
+        table += '                    <div class="col-md-2 form-group">';
+        table += '                        <b>Extrato Bancario - OFX</b>';
+        table += '                    </div>';
+        table += '                </div>';
+        table += '                <div class="row">';
+        table += '                    <div class="span1"><b>Tipo</b>';
+        table += '                    </div>';
+        table += '                    <div class="col-md-2 form-group">';
+        table += '                        <b>Descrição</b>';
+        table += '                    </div>';
+        table += '                    <div class="span2" style="text-align: right">';
+        table += '                        <b>Valor</b>';
+        table += '                    </div>';
+        table += '                </div>';
+
+        $.each(jsonData, function (index, item) {
+
+
+
+            if (item.Tipo == "D") {
+                table += '            <div class="row" style="color: Red;">';
+            }
+            else {
+                table += '            <div class="row" style="color: Blue;">';
+            }
+
+
+            table += '                <div class="span1" style="text-align: left">';
+            var valorAux = item.Valor;
+            valorAux = valorAux.replace(".", "");
+            valorAux = valorAux.replace(",", ".");
+
+            table += '                    <input type="checkbox" onclick="Marca(' + item.id + ',' + valorAux + ')" />';
+
+            if (item.Tipo == "D") {
+                table += ' DEB.';
+            }
+            else {
+                table += ' CRÉD.';
+            }
+
+            table += '                </div>';
+            table += '                <div class="col-md-2 form-group">';
+            table += '                   ' + item.descricao;
+            table += '                </div>';
+            table += '                <div class="span2" style="text-align: right">';
+            table += '                   ' + item.Valor;
+            table += '                </div>';
+            table += '            </div>';
+
+        });
+
+        table += '          <div class="row">';
+        table += '              <div class="span1">';
+        table += '                  ';
+        table += '              </div>';
+        table += '              <div class="col-md-2 form-group">';
+        table += '                  <b>Total</b>';
+        table += '              </div>';
+        table += '              <div class="span2" style="text-align: right">';
+        table += '                  <span id="TotalOFX" name="TotalOFX">0,00</span>';
+        table += '              </div>';
+        table += '          </div>';
+
+        table += '      </div>';
+        table += '   </div>';
+
+        $('#divOFX').html(table);
+
+
+    }
+
+    function carregaCC(jsonData, atual, final, total) {
+
+        var table = '    <div style="float: none">';
+        table += '            <div class="container" style="width: 470px; background-color: #D8D8D8; float: left; border: 0px; display: block; border-right-style: solid; border-left-width: 2px; border-bottom-color: black">';
+        table += '                <div class="row">';
+        table += '                    <div class="span2">';
+        table += '                        <b>Banco Movimento</b>';
+        table += '                    </div>';
+        table += '                    <div class="col-md-2 form-group">';
+        table += '                        <input type="text" id="txtDataCC" name="txtDataCC"/>';
+        table += '                    </div>';
+        table += '                </div>';
+        table += '                <div class="row">';
+        table += '                    <div class="span1">';
+        table += '                    </div>';
+        table += '                    <div class="col-md-2 form-group">';
+        table += '                        <b>Descrição</b>';
+        table += '                    </div>';
+        table += '                    <div class="span2" style="text-align: right">';
+        table += '                        <b>Valor</b>';
+        table += '                    </div>';
+        table += '                </div>';
+
+        $.each(jsonData, function (index, item) {
+
+
+            table += '            <div class="row">';
+            table += '                <div class="span1" style="text-align: center;">';
+            var valorAux = item.Valor;
+            valorAux = valorAux.replace(".", "");
+            valorAux = valorAux.replace(",", ".");
+
+            var checked = "";
+            if (item.Selecionado == "S")
+                checked = "checked";
+
+
+
+            table += '                    <input type="checkbox" onclick=Marca("' + item.id + '",' + valorAux + ') '+ checked + '/>';
+            table += '                </div>';
+            table += '                <div class="col-md-2 form-group">';
+            table += '                   ' + item.Descricao;
+            table += '                </div>';
+            table += '                <div class="span2" style="text-align: right">';
+            table += '                   ' + item.Valor;
+            table += '                </div>';
+            table += '            </div>';
+
+        });
+
+        table += '          <div class="row">';
+        table += '              <div class="span1">';
+        table += '                  ';
+        table += '              </div>';
+        table += '              <div class="col-md-2 form-group">';
+        table += '                  <b>Total</b>';
+        table += '              </div>';
+        table += '              <div class="span2" style="text-align: right">';
+        table += '                  <span id="TotalCC" name="TotalCC">0,00</span>';
+        table += '              </div>';
+        table += '          </div>';
+
+        table += '      </div>';
+        table += '   </div>';
+
+        $('#divCC').html(table);
+        $('#txtDataCC').change(function () {
+            //$('#indicator').show();
+            $.ajax(
+                {
+                    url: "Pesquisa2",
+                    data: {
+                        'txtData': $("#txtDataCC").val(),
+                        'txtBanco': $("#txtBanco").val()
+                    },
+                    dataType: "json",
+                    type: 'POST',
+                    success: function (data) {
+                        montaCC(data);
+                        Marca("", "");
+                        //$('#indicator').hide();
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                }
+            );
+
+        });
+
+
+    }
+
+    function montaConciliados(jsonData) {
+
+        var table = '    <div style="float: none">';
+        table += '            <div class="container" style="width: 940px; background-color: #989898; float: left; border: 0px; display: block; border-right-style: solid; border-left-width: 2px; border-bottom-color: black">';
+        table += '                <div class="row" style="background-color: #989898;">';
+        table += '                    <div class="span6">';
+        table += '                        <b>Extrato Bancario - OFX</b>';
+        table += '                    </div>';
+        table += '                    <div class="span6">';
+        table += '                        <b>Banco Movimento</b>';
+        table += '                    </div>';
+        table += '                </div>';
+        table += '                <div class="row" style="background-color: #989898;">';
+        table += '                    <div class="span1">';
+        table += '                    </div>';
+        table += '                    <div class="col-md-4 form-group">';
+        table += '                        <b>Descrição</b>';
+        table += '                    </div>';
+
+
+        table += '                    <div class="col-md-4 form-group">';
+        table += '                        <b>Descrição</b>';
+        table += '                    </div>';
+        table += '                </div>';
+        var trocaCor = 0;
+
+        $.each(jsonData, function (index, item) {
+            if (trocaCor == 0) {
+                table += '                <div class="row"  style="background-color: #B8B8B8;">';
+                trocaCor = 1;
+            } else {
+                table += '                <div class="row"  style="background-color: #D0D0D0;">';
+                trocaCor = 0;
+            }
+
+
+            table += '                    <div class="span1">';
+            table += '                      <a href="#" class="btn-danger" onClick="ExcluiItemConciliado(' + item.id + ')">Excluir</a>'
+            table += '                    </div>';
+            table += '                    <div class="col-md-4 form-group">';
+            table += '                      ' + item.descricaoOFX
+            table += '                    </div>';
+            table += '                    <div class="col-md-4 form-group">';
+            table += '                      ' + item.descricaoCC
+            table += '                    </div>';
+            table += '                </div>';
+        });
+
+
+        table += '      </div>';
+        table += '   </div>';
+
+        $('#divFinal').html(table);
+    }
+
+    function ExcluiItemConciliado(id) {
+        //$('#indicator').show();
+        $.ajax(
+            {
+                url: "ExcluiItemConciliado",
+                data: {
+                    'id': id
+                },
+                dataType: "json",
+                type: 'POST',
+                success: function (data) {
+                    PesquisaPrincipal();
+                },
+                error: function () {
+                    alert("error");
+                }
+            }
+        );
+
+    };
+
+
+</script>
+
+
+<style type='text/css'>
+    <!--
+    #txtBanco {
+        width: 275.00px;
+    }
+    #txtData, #txtDataCC {
+        width: 100.00px;
+    }
+    -->
+</style>

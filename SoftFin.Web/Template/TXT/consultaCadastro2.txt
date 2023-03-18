@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<ConsCad versao="2.00" xmlns="http://www.portalfiscal.inf.br/nfe">  
+    <infCons>  
+        <xServ>CONS-CAD</xServ>  
+        <UF>[UF]</UF>  
+        <CNPJ>[CNPJ]</CNPJ>  
+    </infCons>  
+</ConsCad>   

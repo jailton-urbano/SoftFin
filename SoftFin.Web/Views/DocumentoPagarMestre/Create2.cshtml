@@ -1,0 +1,547 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarMestreVlw2
+@{
+    ViewBag.Title = "Contas a Pagar - Inclusão";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+
+
+        <div class="container-fluid">
+            <div ng-controller="MesteCPAG">
+                {{pessoa_id}}
+                <div class='row'>
+                    <div class='col-md-9 form-group'>
+                        <label>Código de Barras</label>
+                        <input type="text" class="form-control" name="LinhaDigitavel" id="LinhaDigitavel"  value="@ViewBag.LinhaDigitavel"/>
+                        <span class="field-validation-error" name="LinhaDigitavelErro" id="LinhaDigitavelErro"></span>
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        <br />
+                        <button class="btn" name="Processar" id="Processar">Processar</button>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.pessoa_id)
+                        @Html.HiddenFor(x => x.situacaoPagamento)
+                        @Html.DropDownListFor(x => x.pessoa_id, (SelectList)ViewData["Pessoas"], "--Selecione--", new { @class = "form-control" })
+
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        @Html.LabelFor(x => x.codigoPagamento)
+                        @Html.TextBoxFor(x => x.codigoPagamento, null, new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataLancamento)
+                        @Html.TextBoxFor(x => x.dataLancamento, new { @disabled = "disabled", @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataCompetencia)
+                        @Html.TextBoxFor(x => x.dataCompetencia, null, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class='row'>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataDocumento)
+                        <input type="text" id="dataDocumento" name="dataDocumento"  class="form-control" value="@Model.dataDocumento.Date.ToString("dd/MM/yyyy")" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataVencimento)
+                        <input type="text" id="dataVencimento" name="dataVencimento" class="form-control" value="@Model.dataVencimento.Date.ToString("dd/MM/yyyy")" />
+
+                    </div>
+                    <div class='col-md-3 form-group'>
+                        @Html.LabelFor(x => x.valorBruto)
+                        @Html.TextBoxFor(x => x.valorBruto, null, new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.numeroDocumento)
+
+                        @Html.TextBoxFor(x => x.numeroDocumento, null, new { @class = "form-control" })
+                    </div>
+
+
+
+                </div>
+                <div class='row'>
+
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.tipodocumento_id)
+
+                        @Html.DropDownListFor(x => x.tipodocumento_id, (SelectList)ViewData["TipoDocumento"], "--Selecione--", new { @class = "form-control" })
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.tipolancamento)
+
+                        @Html.DropDownListFor(x => x.tipolancamento, (SelectList)ViewData["TipoLancamento"], new { @class = "form-control" })
+                    </div>
+
+                    <div class='col-md-5 form-group'>
+                        @Html.LabelFor(x => x.banco_id)
+
+                        @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], new { @class = "form-control" })
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div id="DivFGTS" name="DivFGTS" hidden="hidden">
+                <h4>FGTS</h4>
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.FGTSnomeContribuinte)
+                            @Html.TextBoxFor(x => x.FGTSnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSnomeContribuinte" id="ErroFGTSnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTScnpj)
+                            @Html.TextBoxFor(x => x.FGTScnpj, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScnpj" id="ErroFGTScnpj" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTScodigoReceita)
+                            @Html.TextBoxFor(x => x.FGTScodigoReceita, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScodigoReceita" id="ErroFGTScodigoReceita" hidden="hidden">*</span>
+                        </div>
+
+
+                    </div>
+                    <div class='row'>
+
+                        <div class='col-md-4 form-group'>
+                            @Html.LabelFor(x => x.FGTScodigoBarras)
+                            @Html.TextBoxFor(x => x.FGTScodigoBarras, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTScodigoBarras" id="ErroFGTScodigoBarras" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSidentificadorFgts)
+                            @Html.TextBoxFor(x => x.FGTSidentificadorFgts, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSidentificadorFgts" id="ErroFGTSidentificadorFgts" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            @Html.LabelFor(x => x.FGTSlacreConectividadeSocial)
+                            @Html.TextBoxFor(x => x.FGTSlacreConectividadeSocial, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSlacreConectividadeSocial" id="ErroFGTSlacreConectividadeSocial" hidden="hidden">*</span>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSdigitoLacre)
+                            @Html.TextBoxFor(x => x.FGTSdigitoLacre, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSdigitoLacre" id="ErroFGTSdigitoLacre" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSdataPagamento)
+                            @if (Model.FGTSdataPagamento.Date == null)
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control" />
+                            }
+                            else
+                            {
+                                <input type='text' id='FGTSdataPagamento' name='FGTSdataPagamento' class="form-control"  value="@Model.FGTSdataPagamento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroFGTSdataPagamento" id="ErroFGTSdataPagamento" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-1 form-group'>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTStipoInscricao)
+                            @Html.TextBoxFor(x => x.FGTStipoInscricao, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTStipoInscricao" id="ErroFGTStipoInscricao" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.FGTSvalorPagamento)
+                            @Html.TextBoxFor(x => x.FGTSvalorPagamento, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroFGTSvalorPagamento" id="ErroFGTSvalorPagamento" hidden="hidden">*</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="DivDARF" name="DivDARF" hidden="hidden">
+                <h4>DARF</h4>
+                <div class='container'>
+
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.DARFnomeContribuinte)
+                            @Html.TextBoxFor(x => x.DARFnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFnomeContribuinte" id="ErroDARFnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFnomeContribuinte)
+                            <input type="text" id="DARFperiodoApuracao" name="DARFperiodoApuracao" class="form-control" />
+                            <span class="field-validation-error" name="ErroDARFnomeContribuinte" id="ErroDARFnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFcnpj)
+                            @Html.TextBoxFor(x => x.DARFcnpj, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFcnpj" id="ErroDARFcnpj" hidden="hidden">*</span>
+                        </div>
+
+
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFcodigoReceita)
+                            @Html.TextBoxFor(x => x.DARFcodigoReceita, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFcodigoReceita" id="ErrDARFcodigoReceita" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFnumeroReferencia)
+                            @Html.TextBoxFor(x => x.DARFnumeroReferencia, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFnumeroReferencia" id="ErroDARFnumeroReferencia" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-1 form-group'>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFdataVencimento)
+
+                            @if (Model.DARFdataVencimento.Date == null)
+                            {
+                                <input type='text' id='DARFdataVencimento' name='DARFdataVencimento' class="form-control" />
+                            }
+                            else
+                            {
+                                <input type='text' id='DARFdataVencimento' name='DARFdataVencimento' class="form-control"  value="@Model.DARFdataVencimento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroDARFdataVencimento" id="DARFdataVencimento" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFvalorPrincipal)
+                            @Html.TextBoxFor(x => x.DARFvalorPrincipal, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFvalorPrincipal" id="ErroDARFvalorPrincipal" hidden="hidden">*</span>
+                        </div>
+
+                    </div>
+
+                    <div class='row'>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFmulta)
+                            @Html.TextBoxFor(x => x.DARFmulta, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFmulta" id="ErroDARFmulta" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFjurosEncargos)
+                            @Html.TextBoxFor(x => x.DARFjurosEncargos, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFjurosEncargos" id="ErroDARFjurosEncargos" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-1 form-group'>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFvalorTotal)
+                            @Html.TextBoxFor(x => x.DARFvalorTotal, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroDARFvalorTotal" id="ErroDARFvalorTotal" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.DARFdataPagamento)
+
+                            @if (Model.DARFdataPagamento.Date == null)
+                            {
+                                <input type='text' id='DARFdataPagamento' name='DARFdataPagamento' class="form-control" />
+                            }
+                            else
+                            {
+                                <input type='text' id='DARFdataPagamento' name='DARFdataPagamento' class="form-control"  value="@Model.DARFdataPagamento.Date.ToString("dd/MM/yyyy")"/>
+                            }
+
+                            <span class="field-validation-error" name="ErroDARFdataPagamento" id="ErroDARFdataPagamento" hidden="hidden">*</span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <div id="DivGPS" name="DivGPS" hidden="hidden">
+
+                <h4>GPS</h4>
+
+                <div class="container-fluid">
+
+                    <div class='row'>
+                        <div class='col-md-5 form-group'>
+                            @Html.LabelFor(x => x.GPSnomeContribuinte)
+                            @Html.TextBoxFor(x => x.GPSnomeContribuinte, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSnomeContribuinte" id="ErroGPSnomeContribuinte" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            @Html.LabelFor(x => x.GPSinformacoesComplementares)
+                            @Html.TextBoxFor(x => x.GPSinformacoesComplementares, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSinformacoesComplementares" id="ErroGPSinformacoesComplementares" hidden="hidden">*</span>
+                        </div>
+
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSdataArrecadacao)
+                            @if (Model.FGTSdataPagamento.Date == null)
+                            {
+                                <input type='text' id='GPSdataArrecadacao' name='GPSdataArrecadacao' class="form-control" />
+                            }
+                            else
+                            {
+                                <input type='text' id='GPSdataArrecadacao' name='GPSdataArrecadacao' class="form-control"  value="@Model.GPSdataArrecadacao.Date.ToString("dd/MM/yyyy")"/>
+                            }
+                            <span class="field-validation-error" name="ErroGPSdataArrecadacao" id="ErroGPSdataArrecadacao" hidden="hidden">*</span>
+
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPScodigoPagamento)
+                            @Html.TextBoxFor(x => x.GPScodigoPagamento, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPScodigoPagamento" id="ErroGPScodigoPagamento" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-3     form-group'>
+                            @Html.LabelFor(x => x.GPScompetencia)
+                            @Html.TextBoxFor(x => x.GPScompetencia, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPScompetencia" id="ErroGPScompetencia" hidden="hidden">*</span>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSidentificador)
+                            @Html.TextBoxFor(x => x.GPSidentificador, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSidentificador" id="ErroGPSidentificador" hidden="hidden">*</span>
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorTributo)
+                            @Html.TextBoxFor(x => x.GPSvalorTributo, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorTributo" id="ErroGPSvalorTributo" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorOutrasEntidades)
+                            @Html.TextBoxFor(x => x.GPSvalorOutrasEntidades, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorOutrasEntidades" id="ErroGPSvalorOutrasEntidades" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-3 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorAtualizacaoMonetaria)
+                            @Html.TextBoxFor(x => x.GPSvalorAtualizacaoMonetaria, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorAtualizacaoMonetaria" id="ErroGPSvalorAtualizacaoMonetaria" hidden="hidden">*</span>
+                        </div>
+
+                        <div class='col-md-2 form-group'>
+                            @Html.LabelFor(x => x.GPSvalorArrecadado)
+                            @Html.TextBoxFor(x => x.GPSvalorArrecadado, null, new { @class = "form-control" })
+                            <span class="field-validation-error" name="ErroGPSvalorArrecadado" id="ErroGPSvalorArrecadado" hidden="hidden">*</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <h4>Itens do Documento</h4>
+
+            <div class='container-fluid'>
+
+
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                        <label>Conta Contabil</label>
+                        @Html.DropDownList("txtContaContabil", (SelectList)ViewData["PlanoDeContas"], new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Unidade de Negócio</label>
+                        @Html.DropDownList("txtUnidadeNegocio", (SelectList)ViewData["UnidadeNegocio"], new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Historico</label>
+                        @Html.TextBox("txtHistorico", null, new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <label>Valor</label>
+                        @Html.TextBox("txtValor", null, new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        <label>%</label>
+                        @Html.TextBox("txtPorcentagemLct", null, new { @class = "form-control" })
+                    </div>
+                    <div class='col-md-1 form-group'>
+                        <br />
+                        <input type="button" name="btnAdicione" class='btn-success' id="btnAdicione" value="Adicionar" />
+                    </div>
+                </div>
+
+            </div>
+            <h4>Items já adicionados</h4>
+            <div class='container-fluid'>
+                <input type="hidden" name="txtItems" id="txtItems" value="0" />
+
+                <div name="Repositorio" id="Repositorio">
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <b>Conta Contabil</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Unidade de Negócio</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Historico</b>
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <b>Valor    </b>
+                        </div>
+                        <div class='col-md-1 form-group'>
+                            <b>Porcentagem</b>
+                        </div>
+                    </div>
+                    @{int contaItem = 0;}
+                    @foreach (SoftFin.Web.Models.DocumentoPagarDetalhe item in (List<SoftFin.Web.Models.DocumentoPagarDetalhe>)ViewData["DocumentoPagarDetalhe"])
+                    {
+                        contaItem += 1;
+                        string textoDIVID = "divItem" + contaItem.ToString();
+                        string textoJS = "Remove(" + contaItem.ToString() + ")";
+                        string textoID = "postCC" + contaItem.ToString();
+                        string textoValor = item.planoDeConta_id.ToString();
+                      
+                        <div class='row' id="@textoDIVID">
+                            <div class='col-md-2 form-group'>
+                                @item.PlanoDeConta.descricao
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@textoValor'/>
+                                @{textoID = "postUND" + contaItem.ToString();}
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@item.unidadenegocio_id.ToString()'/>
+                                @{textoID = "postHST" + contaItem.ToString();}
+                                <input type='hidden'  name='@textoID' id='@textoID' value='@item.historico.ToString()'/>
+                                @{textoID = "postVLR" + contaItem.ToString();}
+                                <input type='hidden' name='@textoID' id='@textoID' value='@item.valor.ToString("0.00")'/>
+                                @{textoID = "postPOR" + contaItem.ToString();}
+                                <input type='hidden' name='@textoID' id='@textoID' value='@item.percentual.ToString("0.00")'/>
+                                @*                          <input type='hidden' name='postUND" + item + "' id='postUND" + item + "' value='" + $('#txtUnidadeNegocio').val() + "'/>"
+                            <input type='hidden' name='postHST" + item + "' id='postHST" + item + "' value='" + $('#txtHistorico').val() + "'/>"
+                            <input type='hidden' class='postVLR' name='postVLR" + item + "' id='postVLR" + item + "' value='" + $('#txtValor').val() + "'/>"
+                            <input type='hidden' class='postPOR' name='postPOR" + item + "' id='postPOR" + item + "' value='" + porc + "'/>"*@
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                @item.UnidadeNegocio.unidade
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.historico
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.valor
+                            </div>
+
+                            <div class='col-md-2 form-group'>
+                                @item.percentual
+                            </div>
+
+                            <div>
+                                <br />
+                                <input type='button' name='btnExcluir" + item + "' class='btn-danger' id='btnExcluir" + item + "' onClick='@textoJS' value='Excluir' />
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <input type="hidden" name="txtItems" id="txtItems" value="@contaItem"/>
+
+
+                <div class='row'>
+                    <div class='col-md-2 form-group'>
+                    </div>
+                    <div class='col-md-2 form-group'>
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        Total
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <input type="text" readonly="readonly" id="txtValorTot" name="txtValorTot" class="form-control" />
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        <input type="text" readonly="readonly" id="txtValorTotPor" name="txtValorTotPor" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+
+<div ng-controller="CarController">
+    My name is {{ name }} and I am a {{ type }}
+     
+    <div ng-controller="BMWController">
+        My name is {{ name }} and I am a {{ type }}
+ 
+        <div ng-controller="BMWMotorcycleController">
+            My name is {{ name }} and I am a {{ type }}
+ 
+        </div>
+    </div>
+</div>
+
+            @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+            <div class="alert alert-info">
+                @ViewBag.msg
+            </div></div>
+    </fieldset>
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    alert(1);
+    function CarController($scope) {
+
+        $scope.name = 'Car';
+        $scope.type = 'Car';
+
+    }
+
+    function BMWController($scope) {
+
+        $scope.name = 'BMW';
+
+    }
+
+    function BMWMotorcycleController($scope) {
+
+        $scope.name = 'BMWMotorade';
+        $scope.type = 'Motorcycle';
+
+    }
+
+
+</script>
+
+
+
+

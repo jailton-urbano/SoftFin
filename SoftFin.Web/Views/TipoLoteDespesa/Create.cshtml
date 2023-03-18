@@ -1,0 +1,39 @@
+﻿@model SoftFin.Web.Models.TipoLoteDespesa
+@{
+    ViewBag.Title = "Tipo Lote Despesa - Novo";
+}
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   @Html.ValidationSummary(true)
+
+      
+      @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+                                                                                                                                                                                                                            
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null,  new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>                                                                                                                                                                                                                               
+            </div>                                                                                                                                                                                                                       
+        </div>                                                                                                                                                                                                                          
+                                                                                                                                                                                                             
+      @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+  
+    <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

@@ -1,0 +1,50 @@
+﻿@model SoftFin.Web.Models.CodigoServicoEstabelecimento
+@{
+    ViewBag.Title = "Código Serviço - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.estabelecimento_id)
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-12 form-group'>
+
+                    @Html.LabelFor(x => x.codigoServicoMunicipio_id)
+                    @Html.DropDownListFor(x => x.codigoServicoMunicipio_id, (SelectList)ViewData["CodigoServico"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigoServicoMunicipio_id)
+                </div>
+            </div>
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#aliquota').attr('maxlength', '18');
+        $('#aliquota').keyup(
+          function (event) {
+              formataValor(this, event);
+          });
+    });
+</script>

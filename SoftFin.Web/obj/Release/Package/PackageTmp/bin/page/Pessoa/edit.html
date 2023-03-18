@@ -1,0 +1,136 @@
+﻿
+        <div ng-form="frmpessoas">
+            <div class="panel-body">
+                <div class='container-fluid'>
+                    <div class='row'>
+                        <div class='col-md-6 form-group'>
+                            <label>Nome Pessoa</label>
+                            <input type="text" ng-model="pessoa.nome" class="form-control" required ng-maxlength="150" />
+                        </div>
+                        <div class='col-md-6 form-group'>
+                            <label>Razão Social</label>
+                            <input type="text" ng-model="pessoa.razao" class="form-control" required ng-maxlength="150" />
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-3 form-group'>
+                            <label>Tipo Pessoa</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoPessoa_ID" ng-options="o.Value as o.Text for o in ListaPessoas" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Categoria Pessoa</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.CategoriaPessoa_ID" ng-options="o.Value as o.Text for o in ListaCategorias" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Unidade de Negócio</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.UnidadeNegocio_ID" ng-options="o.Value as o.Text for o in ListaUnidadeNegocio" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Código</label>
+                            <input type="text" ng-model="pessoa.codigo" class="form-control" required ng-maxlength="20" />
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-3 form-group'>
+                            <label>Telefone Fixo</label>
+                            <input type="text" ng-model="pessoa.TelefoneFixo" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Celular</label>
+                            <input type="text" ng-model="pessoa.Celular" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>CNPJ/CPF</label>
+                            <input type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cnpj-mask ng-show="pessoa.CategoriaPessoa_ID != 1" />
+                            <input type="text" ng-model="pessoa.cnpj" class="form-control" ng-maxlength="20" ui-br-cpf-mask ng-show="pessoa.CategoriaPessoa_ID == 1" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Incrição Estadual</label>
+                            <input type="text" ng-model="pessoa.inscricao" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>CCM</label>
+                            <input type="text" ng-model="pessoa.ccm" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-7 form-group'>
+                            <label>E-Mail</label>
+                            <input type="text" ng-model="pessoa.eMail" class="form-control" ng-maxlength="3" />
+                        </div>
+                    </div>
+
+
+                    <h4>Endereço</h4>
+                    <div class='row'>
+
+                        <div class='col-md-2 form-group'>
+                            <label>CEP</label>
+                            <span class="input-group-btn">
+                                <input type="text" ng-model="pessoa.cep" class="form-control" ng-maxlength="14" ui-br-cep-mask />
+                                <a ng-click="BuscaCEP(pessoa.cep)" class="btn btn-default" role="button">Pesquisar</a>
+                            </span>
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Tipo Endereço</label>
+                            <select ng-disabled="ModoConsulta" class="form-control" ng-model="pessoa.TipoEndereco_ID" ng-options="o.Value as o.Text for o in ListaTipoEnderecos">
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-7 form-group'>
+                            <label>Endereço</label>
+                            <input type="text" ng-model="pessoa.endereco" class="form-control" ng-maxlength="50" />
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Número</label>
+                            <input type="text" ng-model="pessoa.numero" class="form-control" ng-maxlength="20" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Complemento</label>
+                            <input type="text" ng-model="pessoa.complemento" class="form-control" ng-maxlength="50" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Bairro</label>
+                            <input type="text" ng-model="pessoa.bairro" class="form-control" ng-maxlength="50" />
+                        </div>
+                        <div class='col-md-1 form-group'>
+                            <label>UF</label>
+                            <input type="text" ng-model="pessoa.uf" class="form-control" ng-maxlength="2" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Cidade</label>
+                            <input type="text" ng-model="pessoa.cidade" class="form-control" ng-maxlength="30" />
+                        </div>
+                    </div>
+                    <h4>Dados Bancários</h4>
+                    <div class='row'>
+                        <div class='col-md-2 form-group'>
+                            <label>Código Banco</label>
+                            <input type="text" ng-model="pessoa.bancoConta" class="form-control" ng-maxlength="3" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Agência</label>
+                            <input type="text" ng-model="pessoa.agenciaConta" class="form-control" ng-maxlength="10" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Digito</label>
+                            <input type="text" ng-model="pessoa.agenciaDigito" class="form-control" ng-maxlength="1" />
+                        </div>
+                        <div class='col-md-3 form-group'>
+                            <label>Conta</label>
+                            <input type="text" ng-model="pessoa.contaBancaria" class="form-control" ng-maxlength="12" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Dígito Conta</label>
+                            <input type="text" ng-model="pessoa.digitoContaBancaria" class="form-control" ng-maxlength="1" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

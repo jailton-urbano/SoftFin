@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SoftFin.Web.Models.TipoDocumento>
+@{
+    ViewBag.Title = "Apolice Certificado"; 
+
+}
+
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgObj').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesa
+            colNames: ['Codigo', 'Premio Liquido', 'Comissao', 'Endosso', 'Segurado', 'CPF_CNPJ', 'Atendimento', 'Login'],
+            //columns model
+
+            colModel: [
+                        { name: 'txtid', index: 'id', align: 'left', editable: false, width: '50', hidden: true },
+                        { name: 'txtPremioLiquido', index: 'PremioLiquido', align: 'right', editable: false, width: '100', hidden: false },
+                        { name: 'txtComissao', index: 'Comissao', align: 'right', editable: false, width: '100', hidden: false },
+                        { name: 'txtEndosso', index: 'Endosso', align: 'left', editable: false, width: '50', hidden: false },
+                        { name: 'txtSegurado', index: 'Segurado', align: 'left', editable: false, width: '250', hidden: false },
+                        { name: 'txtCPF_CNPJ', index: 'CPF_CNPJ', align: 'left', editable: false, width: '120', hidden: false },
+                        { name: 'txtAtendimento', index: 'Atendimento', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtLogin', index: 'Login', align: 'left', editable: false, width: '150', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+
+    });
+
+    </script>
+
+

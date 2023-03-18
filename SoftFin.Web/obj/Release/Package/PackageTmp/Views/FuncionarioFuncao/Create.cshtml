@@ -1,0 +1,63 @@
+﻿@model SoftFin.Web.Models.FuncionarioFuncao
+@{
+    ViewBag.Title = "Função - Novo";
+}
+
+
+
+@using (Html.BeginForm())
+{
+        @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.estabelecimento_id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.nome)
+
+                    @Html.TextBoxFor(x => x.nome, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.nome)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorpiso)
+                    @Html.TextBoxFor(x => x.valorpiso, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorpiso)
+                </div> 
+            </div>
+            <div class='row'>
+                <div class='col-md-9 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextAreaFor(x => x.descricao, 3, 1, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+            </div>
+
+        </div>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#valorpiso').attr('maxlength', '18');
+    $('#valorpiso').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>

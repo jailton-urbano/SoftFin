@@ -1,0 +1,147 @@
+﻿@model SoftFin.Web.Models.RegistroPontoView
+@{
+    ViewBag.Title = "Registro Ponto - Novo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205621099-Como-incluir-um-Registro-de-Ponto";
+
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<fieldset>
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    <div class='container-fluid'>
+        <div class="form-group">
+            <div class='row'>
+                @Html.HiddenFor(x => x.id)
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    <input type='text' id='data' name='data' class='form-control'
+                           value='@Model.data.ToShortDateString()' />
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+                <div class='col-md-6 form-group'>
+                    @Html.LabelFor(x => x.comentarios)
+                    <input type='text' id='comentarios' name='comentarios' class='form-control'
+                           value='@Model.comentarios' />
+                    @Html.ValidationMessageFor(x => x.comentarios)
+                </div>
+            </div>
+
+            <div class='row'>
+                <div class="col-md-2">
+                    <label>Ponto 1</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto1" name="ponto1" class="form-control timepicker timepicker-default" value='@Model.ponto1'>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>Ponto 2</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto2" name="ponto2" class="form-control timepicker timepicker-default" value='@Model.ponto2'>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>Ponto 3</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto3" name="ponto3" class="form-control timepicker timepicker-default" value='@Model.ponto3'>
+                    </div>
+                </div>gt
+                <div class="col-md-2">
+                    <label>Ponto 4</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto4" name="ponto4"  class="form-control timepicker timepicker-default" value='@Model.ponto4'>
+                    </div>
+                </div>
+
+            </div>
+            <div class='row'>
+                <div class="col-md-2">
+                    <label>Ponto 5</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto5" name="ponto5" class="form-control timepicker timepicker-default" value='@Model.ponto5'>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>Ponto 6</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto6" name="ponto6" class="form-control timepicker timepicker-default" value='@Model.ponto6'>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>Ponto 7</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto7" name="ponto7"  class="form-control timepicker timepicker-default" value='@Model.ponto7'>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label>Ponto 8</label>
+                    <div class="input-icon">
+                        <i class="fa fa-clock-o" title="Clique aqui para selecionar usar a data atual"></i>
+                        <input type="text" id="ponto8" name="ponto8" class="form-control timepicker timepicker-default" value='@Model.ponto8'>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+</fieldset>
+}
+<div class="alert alert-info">
+    @ViewBag.msg
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('.fa-clock-o').click(function () {
+            var obj = $(this).nextUntil("i");
+            currentDate = new Date();
+            hora = currentDate.getHours();
+            minuto = currentDate.getMinutes();
+            if (minuto < 10) {
+                time = hora + ":0" + minuto;
+            }
+            else {
+                time = hora + ":" + minuto;
+            }
+            obj.val(time);
+        });
+
+        $('.timepicker-default').timepicker({
+            explicitMode: true,
+            defaultTime: false,
+            showInputs: false,
+            minuteStep: 1,
+            showMeridian: false
+        });
+
+        $('.timepicker-default').blur(function () {
+            $('.timepicker-default').timepicker({ defaultTime: $(this).val() });
+        });
+
+
+        $('#data').datepicker({
+            dateFormat: 'dd/mm/yy',
+            autoclose: true
+        });
+    });
+
+
+
+</script>

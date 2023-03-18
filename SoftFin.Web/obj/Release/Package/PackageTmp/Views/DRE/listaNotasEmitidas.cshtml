@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Notas Fiscais Emitidas";
+}
+
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Listar Notas</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraListaNotasEmitidas",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (tabledata) {
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('number', 'Número');
+                data.addColumn('string', 'Emissão');
+                data.addColumn('string', 'Vencimento');
+                data.addColumn('string', 'Tomador');
+                data.addColumn('number', 'Valor Total');
+                data.addColumn('number', 'Valor Líquido');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].numeroNfse,
+                                 tabledata[i].dataEmissaoS,
+                                 tabledata[i].dataVencimentoS,
+                                 tabledata[i].razaoTomador,
+                                 tabledata[i].valorNfse,
+                                 tabledata[i].valorLiquido]);
+                }
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                formatter.format(data, 4);
+                formatter.format(data, 5);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, { showRowNumber: true });
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+</script>

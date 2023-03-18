@@ -1,0 +1,230 @@
+﻿@model SoftFin.Web.Models.Login
+@{
+    Layout = null;
+    ViewBag.Title = "Login";
+}
+
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="../../Content/site/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css?ver5">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/ss/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="fb-root"></div>
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v3.1&appId=1761769317370567&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                        <div class="infos_right_top">
+                            <ul style="margin-right: 2em;" class="mobile_none">
+                                <li><a href="#"><i class="fa fa-facebook-official"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            </ul>
+
+                            <ul>
+                                <li style="margin-top: 3px;"><a href=""><i class="fa fa-caret-right"></i> ENTRAR</a></li>
+                                <li style="margin-top: 3px;color:white">ou</li>
+                                <li><button class="button" href="#" data-toggle="modal" data-target="#ModalLoginForm"><span>EXPERIMENTE GRÁTIS </span></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader menu_interna">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index.html">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("~/Views/Site/_MenuCima.cshtml")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+
+    <div class="content_login">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4"></div>
+
+                <div class="col-sm-6 col-md-4">
+                    <h1 class="text-center login-title">Acesso ao Sistema</h1>
+                    <div class="account-wall">
+                        <img class="profile-img" src="../../Content/site/img/user.png"
+                             alt="">
+                        @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-signin" }))
+                        {
+                            @Html.TextBoxFor(model => model.codigo, new { placeholder = "Usuário", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.codigo)
+                            @Html.PasswordFor(model => model.senha, new { placeholder = "Senha", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.senha)
+                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                                Entrar
+                            </button>
+                            @Html.ValidationSummary(true)
+                            <label class="checkbox pull-left">
+                                <input type="checkbox" value="relembre-me" name="remember" id="remember">
+                                Esqueceu sua senha?
+                            </label>
+                            @*<a href="#" class="pull-right need-help">Esqueceu sua senha? </a><span class="clearfix"></span>*@
+                        }
+                    </div>
+                    @*<a href="#" class="text-center new-account">Crie sua conta </a>*@
+                </div>
+
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal HTML Markup -->
+    <div id="ModalLoginForm" class="modal fade" style="padding:0 !important">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title style_title_modal" style="line-height: 35px;">Experimente grátis! <br><span style="font-size: 16px;font-weight: 400;text-transform: initial;">Preencha os dados abaixo para realizar o seu cadastro:</span></h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" style="padding: 20px 30px;border-bottom:5px solid #84b2ff">
+
+                    <form role="form" method="POST" action="">
+                        <input type="hidden" name="_token" value="">
+                        <div class="form-group">
+                            <label class="control-label">Nome</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="name" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">E-Mail</label>
+                            <div>
+                                <input type="email" class="form-control input-lg" name="email" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Telefone</label>
+                            <div>
+                                <input type="tel" class="form-control input-lg tel" name="telefone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Crie sua senha de acesso</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="conta">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Você já tem empresa formalizada?</label>
+                            <div>
+                                <select name="empresa" class="select_form_modal">
+                                    <option value="contador">Sou contador(a)</option>
+                                    <option value="sim">Sim</option>
+                                    <option value="nao">Não</option>
+                                    <option value="empresa">Estou abrindo empresa</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <div>
+                                <button type="submit" class="btn btn-success">
+                                    Experimente Grátis
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    @*<section>
+        <div class="novidades_home">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="newslatter_text">
+                            <h2>SIMULE SEU INVESTIMENTO AGORA!</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="btn_simule_fixo_pages">
+                            <a href="<?php echo get_page_link(9); ?>">Simular Já <i class="fa fa-usd"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@
+    @Html.Partial("~/Views/Site/_Rodape.cshtml")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/img/js/bootstrap.js"></script>
+    <script src="../../Content/site/img/js/owl.js"></script>
+    <script src="../../Content/site/img/js/scripts.js"></script>
+    <script src="../../Content/site/img/js/validacao_contact_form7.js"></script>
+    <script src="~/Content/Site/js/site.js"></script>
+</body>
+</html>
+
+
+
+
+

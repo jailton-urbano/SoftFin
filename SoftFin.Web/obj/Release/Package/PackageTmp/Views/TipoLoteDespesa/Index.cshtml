@@ -1,0 +1,56 @@
+﻿@model SoftFin.Web.Models.TipoLoteDespesa
+@{
+    ViewBag.Title = "Lista de Tipo Lote Despesa";
+
+}
+
+<table id="jqgTipoDespesa" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgTipoDespesaOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgTipoDespesa').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Descrição'],
+            //columns model
+            colModel: [
+                        { name: 'txtTipo', index: 'Tipo', align: 'left', editable: false, width: '925', hidden: false },
+
+
+
+            ],
+            //pager for grid
+            pager: $('#jqgTipoDespesaOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgTipoDespesa').jqGrid('navGrid', '#jqgTipoDespesaOpc',
+            { add: false, del: false, edit: false, search: false });
+
+
+
+    });
+
+    </script>
+
+

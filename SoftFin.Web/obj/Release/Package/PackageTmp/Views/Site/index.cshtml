@@ -1,0 +1,556 @@
+﻿@{ 
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width, initial-scale=1.0">
+    <title>SoftFin</title>
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,800|Roboto:300,400,500,700|Raleway:300,400,500,700,800" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../Content/site/css/owl.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/Site/css/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+
+    @Html.Partial("_Escripts")
+
+    <header>
+        <div class="barra-cima-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="infos_left_top">
+                            <ul>
+                                <li><a href="tel:+551139001054"><i class="fa fa-phone"></i> 11 3900-1054</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5511987941053&text=SoftFin"><i class="fa fa-whatsapp"></i> 11 98794-1053</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                        @Html.Partial("_MenuCimaCima")
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barra-baixo-header">
+            <div class="menu-geral menuHeader">
+                <div class="container">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index">
+                            <img src="../../Content/site/img/logo_softfin.png" alt="Softfin" style="width:160px">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                            <ul class="navbar-nav ml-auto menu-desk">
+                                @Html.Partial("_MenuCima")
+                            </ul>
+
+
+
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+
+
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="slide" style="background:url('../../Content/Site/img/gestao-financeira-para-empresas-min.jpg');padding: 13em 0 0 0;text-align: center;background-size: cover;height: 650px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="texts_slide">
+                                    <h4>GESTÃO FINANCEIRA</h4>
+                                    <h2>PARA SUA<br> EMPRESA</h2>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="carousel-item">
+                <div class="slide" style="background:url('../../Content/Site/img/banners/Banner-1.jpg');padding: 13em 0 0 0;text-align: center;background-size: cover;height: 650px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="texts_slide">
+                                    <h4 style="font-size:31px">ADAPTAMOS O SOFTWARE</h4>
+                                    <h2 style="line-height: 85px;">PARA O SEU<br> NEGÓCIO</h2>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="slide" style="background:url('../../Content/Site/img/banners/Banner-2.jpg');padding: 13em 0 0 0;text-align: center;background-size: cover;height: 650px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="texts_slide">
+                                    <h4>FACILITAMOS</h4>
+                                    <h2>A GESTÃO<br> FINANCEIRA</h2>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="slide" style="background:url('../../Content/Site/img/banners/Banner-3.jpg');padding: 13em 0 0 0;text-align: center;background-size: cover;height: 650px;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="texts_slide">
+                                    <h4 style="font-size: 29px;">MENOS TRABALHO PARA O SEU</h4>
+                                    <h2 style="font-size: 70px;">FINANCEIRO</h2>
+                                    <h4 style="font-size: 30px;">E MENOS DESPESAS PARA SUA</h4>
+                                    <h2 style="font-size: 94px;">EMPRESA</h2>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+
+    <div class="form_fixo_slide">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+
+                </div>
+
+                <div class="col-md-5">
+                    <div class="bloco_form_banner ">
+                        <div class="form_banner_texto">
+                            <h3>Fazemos seu fluxo de caixa e sua gestão financeira. Ganhe <span style="color:#84b2ff;font-size:25px;margin: 0;">mais dinheiro!</span></h3>
+
+                            <span>Preencha os dados abaixo para fazer seu cadastro:</span>
+                        </div>
+
+                        <form>
+                            <input required id="frmNome" type="text" class="form-control" placeholder="Nome">
+                            <input required id="frmEmpresa" type="text" class="form-control" placeholder="Nome da empresa">
+                            <input required id="frmEmail" type="email" class="form-control" placeholder="E-mail">
+                            <input required id="frmTelefone" type="text" class="form-control" placeholder="Telefone">
+                            <input id="frmEnviar" type="submit" class="form_btn_slide" value="Enviar" style="cursor:pointer">
+                        </form>
+                        <span style="font-size: 14px;color: #545454;line-height: 15px;display: inline-block;">Clicando no botão acima você concorda com nossos termos de uso</span>
+                        <div class="simple-msg"></div>
+                        <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                        <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <section class="sect1">
+        <div class="parte-1">
+            <img src="../../Content/site/img/organizar-fluxo-de-caixa-min.png" alt="Organização do fluxo de caixa">
+            <div class="desc-parte1">
+                <h2>ESTÁ PERDENDO O CONTROLE<BR> NO FLUXO DE CAIXA<BR> DA SUA EMPRESA?</h2>
+                <p>
+                    O fluxo de caixa é como um órgão vital para sua empresa.<BR> É preciso o registro correto e a conciliação de cada entrada e saída<BR> para evitar a tomada de decisões erradas.
+                </p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="parte-2">
+            <img src="../../Content/site/img/financeiro-automatizado-min.png" alt="Financeiro automatizado">
+            <div class="desc-parte2">
+                <h2>NÓS CUIDAMOS DO SEU <br>FINANCEIRO PARA VOCÊ!</h2>
+                <p>
+                    A plataforma SoftFin foi desenvolvida para que você mantenha<BR> o foco nas atividades do seu negócio e também tenha<BR> o controle financeiro de sua empresa de forma simples.<BR> Tudo em um único lugar para facilitar a sua vida: Contas a Pagar,<BR> Contas a receber, emissão de notas, conciliação bancária,<BR> fluxo de caixa e muito mais.
+                </p>
+                <a href="simplicidade">saiba mais</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </section>
+
+    <section class="sect2">
+        <div class="container">
+            <h2>Um controle financeiro mais simples e fácil para sua <b>empresa</b></h2>
+
+
+
+            <p class="subtext">
+                Apresentamos a solução que lhe possibilita a disponibilidade de tempo para as atividades do seu <BR>negócio e reúne a praticidade e a simplicidade para que você tenha acesso as informações financeiras de forma simples e confiável.
+
+            </p>
+            <div class="icons-servs">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="unico-icons">
+                            <svg class="icon-001-contract"><use xlink:href="../../Content/site/icons/icons.svg#icon-001-contract"></use></svg>
+                            <h3>contratos</h3>
+                            <p>
+                                Controle seus contratos e vendas de forma a garantir o faturamento e recebimento dos negócios gerados, bem como projetar seu forecasting.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="unico-icons">
+                            <svg class="icon-003-money"><use xlink:href="../../Content/site/icons/icons.svg#icon-003-money"></use></svg>
+                            <h3>FINANCEIRO</h3>
+                            <p>
+                                Contas a pagar, receber, boletos e conciliação bancária.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="unico-icons">
+                            <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                            <h3>FLUXO DE CAIXA</h3>
+                            <p>
+                                Projete o caixa futuro de seu negócio para tomar as decisões estratégicas de forma rápida e acertiva.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="simplicidade" class="vermais">ver mais</a>
+        </div>
+    </section>
+
+    <section class="sect3">
+        <div class="container">
+            <h2>como o Software funciona?</h2>
+
+
+            <div class="software_mobile">
+
+
+                <div class="videos_img_software" style="margin-top:15px">
+                    <iframe width="100%" height="230" src="https://www.youtube.com/embed/mS6hVBJiuqg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <h3>Contas a Pagar</h3>
+                </div>
+
+
+
+                <div class="videos_img_software">
+                    <iframe width="100%" height="230" src="https://www.youtube.com/embed/Dqpx0Pnlw4c" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <h3>Fluxo de Caixa</h3>
+                </div>
+
+
+                <div class="videos_img_software">
+                    <iframe width="100%" height="230" src="https://www.youtube.com/embed/vwi0LEFtrx4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <h3>Faturamento</h3>
+                </div>
+
+
+                <div class="videos_img_software">
+                    <iframe width="100%" height="230" src="https://www.youtube.com/embed/DBJd-3FquSk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <h3>Cadastro de Pessoas</h3>
+                </div>
+
+
+                <div class="videos_img_software">
+                    <img src="../../Content/site/img/tela-software.jpg" style="width:100%">
+                    <h3>DRE</h3>
+                </div>
+
+
+                <div class="videos_img_software">
+                    <img src="../../Content/site/img/tela-software.jpg" style="width:100%">
+                    <h3>Contratos</h3>
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+            <div class="software-rodando">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="botoes-change botoes-change-1">
+                            <div class="btn-change">
+                                <a class="url" href="#1">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau1-left"></div>
+                                    <span>Contas a pagar</span>
+                                </a>
+                            </div>
+                            <div class="btn-change puxa-left">
+                                <a class="url" href="#2">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau2-left"></div>
+                                    <span>Fluxo de caixa</span>
+                                </a>
+                            </div>
+                            <div class="btn-change">
+                                <a class="url" href="#3">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau3-left"></div>
+                                    <span>Faturamento</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="center-monitor">
+                            <div class="monitor"></div>
+                            <div class="owl-carousel" id="monitorCarousel">
+                                <div class="item" data-hash="1">
+                                    <iframe width="100%" height="255" src="https://www.youtube.com/embed/mS6hVBJiuqg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
+                                <div class="item" data-hash="2">
+                                    <iframe width="100%" height="255" src="https://www.youtube.com/embed/Dqpx0Pnlw4c" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
+                                <div class="item" data-hash="3">
+                                    <iframe width="100%" height="255" src="https://www.youtube.com/embed/vwi0LEFtrx4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
+                                <div class="item" data-hash="4">
+                                    <iframe width="100%" height="255" src="https://www.youtube.com/embed/DBJd-3FquSk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                </div>
+                                <div class="item" data-hash="5">
+                                    <img src="../../Content/site/img/dre_tela.png">
+                                </div>
+                                <div class="item" data-hash="6">
+                                    <img src="../../Content/site/img/contrato_tela.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="botoes-change">
+                            <div class="btn-change">
+                                <a class="url" href="#4">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau1-right"></div>
+                                    <span>Cadastro de Pessoas</span>
+                                </a>
+                            </div>
+                            <div class="btn-change puxa-right">
+                                <a class="url" href="#5">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau2-right"></div>
+                                    <span>DRE</span>
+                                </a>
+                            </div>
+                            <div class="btn-change">
+                                <a class="url" href="#6">
+                                    <svg class="icon-002-employee"><use xlink:href="../../Content/site/icons/icons.svg#icon-002-employee"></use></svg>
+                                    <div class="line-indicador grau3-right"></div>
+                                    <span>Contratos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sect5">
+        <div class="mask-sect5">
+            <div class="container">
+
+                <h2 class="title_depoimentos">Veja o Que Dizem nossos Clientes</h2>
+
+                <div class="carousel-depoimentos">
+
+                    <div class="bloco_slide">
+                        <div class="owl-carousel" id="CarDepoimentos">
+
+                            <div class="item">
+                                <div class="box-depoimento">
+                                    <div class="perfil-depoimento">
+                                        <div style="border-radius:50%">
+                                            <img src="../../Content/site/img/img_depoimentos/img_gabriel_depoimento.jpg">
+                                        </div>
+                                    </div>
+                                    <span class="empresa-depoimento"> empresa Empodere-se - <a href="http://www.empoderese.com/" target="_blank">http://www.empoderese.com</a> </span>
+                                    <span class="title-depoimento"> Gabriel Coelho </span>
+                                    <p>
+                                        Como estou diretamente envolvido no atendimento aos meus Clientes, o apoio da SoftFin foi muito importante para que as rotinas financeiras caminhassem de forma continua, sem gargalos.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <div class="box-depoimento">
+                                    <div class="perfil-depoimento">
+                                        <div style="border-radius:50%">
+                                            <img src="../../Content/site/img/estudio_logo-black.png" style="padding: 5px;margin-top: 31px;border-radius: 0;height: auto;">
+                                        </div>
+                                    </div>
+                                    <span class="empresa-depoimento"> empresa Estudio Turmalina - <a href="http://www.estudioturmalina.com.br/" target="_blank">www.estudioturmalina.com.br</a> </span>
+                                    <span class="title-depoimento"> Leila Fittipaldi </span>
+                                    <p>
+                                        A implementação foi rápida, e no decorrer do primeiro mês já conseguimos montar e executar um planejamento para sanear uma série de questões tributárias que tínhamos acumuladas. Com esse apoio no financeiro pude concentrar minhas energias no operacional e comercial, o que acabou por alavancar o ingresso de contratos.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <div class="box-depoimento">
+                                    <div class="perfil-depoimento">
+                                        <div style="border-radius:50%">
+                                            <img src="../../Content/site/img/img_depoimentos/fernando_fefo.jpg">
+                                        </div>
+                                    </div>
+                                    <span class="empresa-depoimento"> empresa Decsigner - <a href="https://www.decsigner.com.br/" target="_blank">https://www.decsigner.com.br/</a> </span>
+                                    <span class="title-depoimento"> Decsigner </span>
+                                    <p>
+                                        Chegamos a SoftFin para atendê-los, e acabamos saindo não só com um Cliente, mas com um parceiro. Durante nosso processo de atendimento, notamos que as soluções da SoftFin vinham de encontro as nossas dores, e fechar o negócio foi a coisa mais lógica.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="sect6">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="textao-sect6" style="padding-top: 1.5em;">
+                        <h2>ganhe mais <br> dinheiro!</h2>
+                        <h3>Fazemos seu fluxo de caixa e <br> sua gestão financeira. </h3>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="formulario_home">
+
+                        <form>
+                            <input required type="text" id="frm2Nome" name="nome" placeholder="Nome completo" class="form-control">
+                            <input required type="text" id="frm2Empresa" name="empresa" placeholder="Nome da empresa" class="form-control">
+                            <input required type="email" id="frm2Email" name="email" placeholder="E-mail" class="form-control">
+                            <input required type="tel" id="frm2Telefone" name="telefone" placeholder="Telefone" class="form-control">
+                            <input type="submit" class="form_btn_slide" value="Enviar" id="frm2Enviar" style="cursor:pointer">
+
+                        </form>
+                        <span style="font-size: 14px;color: #545454;line-height: 15px;display: inline-block;width:100%;text-align:center">Clicando no botão acima você concorda com nossos termos de uso</span>
+                        <div class="simple-msg"></div>
+                        <div id="error_message" class="ajax_response msg_erro" style="float:left"></div>
+                        <div id="success_message" class="ajax_response msg_sucesso" style="float:left;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    @Html.Partial("_Experimente")
+
+
+    <section>
+        <div class="novidades_home">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="newslatter_text">
+                            <h2>SIMULE SEU INVESTIMENTO AGORA!</h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="btn_simule_fixo_pages">
+                            <a href="simule">Simular Já <i class="fa fa-usd"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @Html.Partial("_Rodape")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../../Content/site/js/bootstrap.js"></script>
+    <script src="../../Content/site/js/owl.js"></script>
+    <script src="../../Content/site/js/scripts.js"></script>
+    <script src="../../Content/site/js/validacao_contact_form7.js"></script>
+    <script src="../../Content/site/js/Site.js"></script>
+</body>
+</html>
+
+
+

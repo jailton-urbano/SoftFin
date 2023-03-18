@@ -1,0 +1,59 @@
+﻿<div id="Grid" class="container-fluid">
+    <div class='panel-body'>
+        <form class="form-search">
+            <div class='container'>
+
+                <div class='col-md-3 form-group'>
+                    <label>Pesquisa : </label>
+                    <input type="text" class="form-control" ng-model="procurar" />
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridMunicipios"></dir-pagination-controls>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th><span ng-click="ordenar('DESC_MUNICIPIO')"> Nome Municipio </span> </th>
+                <th><span ng-click="ordenar('codigoIBGE')"> Nome </span></th>
+                <th><span ng-click="ordenar('UF')"> Estado </span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr dir-paginate="item in ListaMunicipios|filter:procurar|itemsPerPage:5|orderBy:sortKey:reverse" pagination-id="gridMunicipios">
+                <td style="width: 40px;">
+                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                            ng-click="Selecionar(item)"
+                            class="btn btn-primary">
+                        <span class="glyphicon glyphicon-check"></span> Selecionar
+                    </button>
+                </td>
+                <td>
+                    {{item.DESC_MUNICIPIO}}
+                </td>
+                <td>
+                    {{item.codigoIBGE}}
+                </td>
+                <td>
+                    {{item.UF}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridMunicipios"></dir-pagination-controls>
+
+
+    <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+        {{msgOK}}
+    </div>
+    <div class="alert alert-danger" ng-show="showNOK">
+        {{msgNOK}}
+        <ul>
+            <li ng-repeat="item in Erros">{{item}}</li>
+        </ul>
+    </div>
+</div>

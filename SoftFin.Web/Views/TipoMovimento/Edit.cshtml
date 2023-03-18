@@ -1,0 +1,48 @@
+﻿@model SoftFin.Web.Models.TipoMovimento
+@{
+    ViewBag.Title = "Tipo Movimento - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+ 
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.Codigo)
+
+                    @Html.TextBoxFor(x => x.Codigo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Codigo)
+                </div>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Descricao)
+
+                    @Html.TextBoxFor(x => x.Descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Descricao)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

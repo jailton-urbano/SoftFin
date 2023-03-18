@@ -1,0 +1,95 @@
+﻿@model IEnumerable<SoftFin.Web.Models.CategoriaProfissional>
+@{
+    ViewBag.Title = "Categoria Profissional";
+
+}
+
+
+<table id="jqgCategoriaProfissional" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgCategoriaProfissionalOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgCategoriaProfissional').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Categoria', 'Descrição'],
+            //columns model
+            colModel: [
+                            {
+                                name: 'txtCategoria', index: 'categoria', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '300'
+                            },
+                            {
+                                name: 'txtDescricao', index: 'descricao', align: 'left', editable: false, edittype: 'text',
+                                editoptions: { maxlength: 100 }, editrules: { required: true }, width: '300'
+                            }
+            ],
+            //pager for grid
+            pager: $('#jqgCategoriaProfissionalOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'categoria',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgCategoriaProfissional').jqGrid('navGrid', '#jqgCategoriaProfissionalOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgCategoriaProfissional').navButtonAdd('#jqgCategoriaProfissionalOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgCategoriaProfissional').navButtonAdd('#jqgCategoriaProfissionalOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgCategoriaProfissional").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgCategoriaProfissional').navButtonAdd('#jqgCategoriaProfissionalOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgCategoriaProfissional").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+    });
+
+    </script>

@@ -1,0 +1,90 @@
+﻿@model SoftFin.Web.Models.TipoDocumento
+@{
+    ViewBag.Title = "Tipo Documento - Novo";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+  
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.codigo)
+                    @Html.TextBoxFor(x => x.codigo)
+                    @Html.ValidationMessageFor(x => x.codigo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao)
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.historicoPadrao)
+                    @Html.TextBoxFor(x => x.historicoPadrao)
+                    @Html.ValidationMessageFor(x => x.historicoPadrao)
+                </div>
+                <div class='span1'>
+                    @Html.LabelFor(x => x.Inativo)
+                    @Html.TextBoxFor(x => x.Inativo)
+                    @Html.ValidationMessageFor(x => x.Inativo)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+<style type='text/css'>
+    <!--
+    #id
+    {
+        width: 275.00px;
+    }
+
+    #empresa_id
+    {
+        width: 275.00px;
+    }
+
+    #Empresa
+    {
+        width: 275.00px;
+    }
+
+    #codigo
+    {
+        width: 200.50px;
+    }
+
+    #descricao
+    {
+        width: 275.00px;
+    }
+
+    #historicoPadrao
+    {
+        width: 275.00px;
+    }
+
+    #Inativo
+    {
+        width: 40.00px;
+    }
+    -->
+</style>

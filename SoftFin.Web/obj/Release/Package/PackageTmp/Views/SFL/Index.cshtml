@@ -1,0 +1,1076 @@
+﻿<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script src="~/Scripts/angular/chart/angular-chart.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+
+
+        <script type="text/ng-template" id="modalSFCapa.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Edição de Simulação</h3>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class='col-md-6 form-group'>
+                            <label>Descrição</label>
+                            <input type="text" ng-model="sfcapa.descricao" class="form-control" required ng-maxlength="100" />
+                        </div>
+                        <div class='col-md-2 form-group'>
+                            <label>Saldo Inicial</label> 
+                            <input ng-disabled="ModoConsulta" type="text" ng-model="sfcapa.SaldoInicial" class="form-control" required ng-maxlength="30" ui-number-mask="2" ui-negative-number />
+                        </div>
+
+                        <div class='col-md-2 form-group' datetimez ng-model="sfcapa.dataInicial">
+                            <label>Data inicial</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sfcapa.dataInicial" required ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+
+                        <div class='col-md-2 form-group' datetimez ng-model="sfcapa.dataFinal">
+                            <label>Data Final</label>
+                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="sfcapa.dataFinal" required ui-date-mask />
+                            <span class="add-on">
+                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class='col-md-4 form-group'>
+                            <label>Banco/Conta</label>
+                            <select class="form-control" ng-model="sfcapa.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                        <div class='col-md-4 form-group'>
+                            <label>Incluir Ordem de Venda</label>
+                            <select class="form-control" ng-model="sfcapa.incluirOrdemVenda" ng-options="o.Value as o.Text for o in ListaSimNao" required>
+                                <option value="">--Selecione--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Salvar
+                            </button>
+                            <button class="btn btn-default" ng-click="cancel()">
+                                <span class="glyphicon glyphicon-log-out"></span>
+                                Voltar
+                            </button>
+</div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalExcluirSFCapa.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir a Simulação ?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.descricao}} - {{item.dataInicial | date:'dd/MM/yyyy'}} - {{item.dataFinal | date:'dd/MM/yyyy'}}- {{item.SaldoInicial | number:2}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+
+
+        <script type="text/ng-template" id="modalDebTransf.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Transferência de Vencimentos</h3>
+                </div>
+                <div class="modal-body">
+
+                    <dir-pagination-controls max-size="10" boundary-links="true"  pagination-id="gridSecundario"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Vencimento</th>
+                                <th>Novo Vencimento</th>
+                                <th>Descrição</th>
+                                <th>Favorecido</th>
+                                <th>Plano</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaVencimentos|filter:procurar|itemsPerPage:31"  pagination-id="gridSecundario">
+
+                                <td>
+                                    {{item.Vencimento | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td>
+                                    <div  ng-show="ValidaCampo(item);" datetimez ng-model="item.NovoVencimento">
+                                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="item.NovoVencimento"  ui-date-mask />
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    {{item.erro}}
+                                </td>
+                                <td>
+                                    {{item.descricao}} - {{item.StatusPagamento}}
+                                </td>
+                                <td>
+                                    {{item.favorecido}}
+                                </td>
+                                <td>
+                                    {{item.plano}}
+                                </td>
+                                <td>
+                                    {{item.valor | number:2}}
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"  pagination-id="gridSecundario"></dir-pagination-controls>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalDebitosRecebidos.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Lançamentos Recebidos nesta data</h3>
+                </div>
+                <div class="modal-body">
+
+                    <dir-pagination-controls max-size="10" boundary-links="true"  pagination-id="gridSecundario"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Cancelar <br /> Movimentação</th>
+                                <th>Vencimento Original</th>
+                                <th>Novo Vencimento</th>
+                                <th>Descrição</th>
+                                <th>Favorecido</th>
+                                <th>Plano de Contas</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaVencimentos|filter:procurar|itemsPerPage:31" pagination-id="gridSecundario">
+                                
+                                <td>
+                                    <input type="checkbox" ng-model="item.cancelarMovimentacao" />
+                                </td>
+
+                                <td>
+                                    {{item.Vencimento | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td>
+                                    <div ng-show="ValidaCampo(item);" datetimez ng-model="item.NovoVencimento">
+                                        <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="item.NovoVencimento" ui-date-mask />
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <label style="color:red">{{item.erro}}</label>
+                                </td>
+                                <td>
+                                    {{item.descricao}} - "{{item.StatusPagamento}}"
+                                </td>
+                                <td>
+                                    {{item.favorecido}}
+                                </td>
+                                <td>
+                                    {{item.plano}}
+                                </td>
+                                <td>
+                                    {{item.valor | number:2}}
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridSecundario"></dir-pagination-controls>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-default" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+
+                </div>
+            </div>
+        </script>
+
+        <div id="GridSFCapa" class="container-fluid" ng-show="showGridSFCapa">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurarSFCapa" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="Pesquisa()"
+                                    title="Atualiza a lista"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="Novo()"
+                                    title="Novo fluxo de caixa"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+                        </th>
+                        <th>Dados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in listaSFCapa|orderBy:sortKey:reverse|filter:procurarSFCapa|itemsPerPage:31">
+                        <td style="width: 40px;">
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 68px;"
+                                    ng-click="Alterar(item)"
+                                    title="Editar o fluxo de caixa"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 56px;"
+                                    ng-click="Simular(item)"
+                                    title="Simular fluxo de caixa"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-cog"></span> Simular
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 63px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"
+                                    title="Excluir fluxo de caixa"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <b>Descrição:</b> {{item.descricao}}
+                                </li>
+                                <li>
+                                    <b>Período:</b>  {{item.dataInicial | date:'dd/MM/yyyy'}} - {{item.dataFinal | date:'dd/MM/yyyy'}}
+                                    
+                                </li>
+                                <li>
+                                    <b>Saldo:</b> {{item.SaldoInicial | number:2}}
+                                </li>
+                                <li>
+                                    <b>Situação:</b> {{item.situacao}}
+                                </li>
+                                <li>
+                                    <b>Banco:</b> {{item.banco}}
+                                </li>
+                                <li>
+                                    <b>Ordem Venda:</b> {{item.incluirOrdemVenda}}
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+
+        <div id="GridSFDetalhe" class="container-fluid" ng-show="showGridSFDetalhe">
+            <b>Descrição:</b> {{objselecionado.descricao}} <br />
+            <b>Período:</b>  {{objselecionado.dataInicial | date:'dd/MM/yyyy'}} - {{objselecionado.dataFinal | date:'dd/MM/yyyy'}} <br />
+            <b>Saldo:</b> {{objselecionado.SaldoInicial | number:2}} <br />
+            <b>Situação:</b> {{objselecionado.situacao}} <br />
+            <b>Banco:</b> {{objselecionado.banco}} <br />
+            <b>Ordem Venda:</b> {{objselecionado.incluirOrdemVenda}}
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                    {{msgOK}}
+                </div>
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+
+                </div>
+                <button class="btn btn-default" ng-click="Voltar()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+
+            <div id="container" class="container">
+                <div class="row" >
+                    <div class="col-lg-10 col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Fluxo de Caixa</div>
+                            <div class="panel-body">
+
+                                <canvas class="chart chart-line"
+                                        chart-data="data"
+                                        chart-labels="labels"
+                                        chart-series="series"
+                                        chart-options="options"
+                                        chart-backgroundColor='#3498db'
+                                        ></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button style="border-right-width: 0px; padding-right: 65px;"
+                                            ng-click="Simular(objselecionado)"
+                                            class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                                    </button>
+                                </th>
+                                <th>Data</th>
+                                <th>Crédito</th>
+                                <th>Débito</th>
+                                <th>Saldo Inicial: {{objselecionado.SaldoInicial | number:2}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr dir-paginate="item in listaSFDetalhe|filter:procurar|itemsPerPage:31">
+                                <td style="width: 40px;">
+
+                                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 5px;"
+                                            ng-click="Transferir(objselecionado,item)"
+                                            class="btn btn-success"
+                                            ng-show="item.lactodeb != 0 || item.lactocred != 0  ">
+
+                                        <span class="glyphicon glyphicon-transfer"></span> Transferir Lançamentos
+                                    </button>
+
+                                    <button style="margin-top: 4px; border-right-width: 0px; padding-right: 2px;"
+                                            ng-click="DebitosRecebidos(objselecionado,item)"
+                                            class="btn btn-warning"
+                                            ng-show="item.lactodebrec != 0 || item.lactocredrec != 0">
+
+                                        <span class="glyphicon glyphicon-download-alt"></span> Lançamentos Recebidos
+                                    </button>
+                                </td>
+                                <td>
+                                    {{item.data | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            Crédito: {{item.lactocred | number:2}} <br />
+                                        </li>
+                                        <li>
+                                            Movido:  -{{item.lactocredmov | number:2}} <br />
+
+                                        </li>
+                                        <li>
+                                            Recebido:  {{item.lactocredrec | number:2}} <br />
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            Débito:  {{item.lactodeb | number:2}} <br />
+                                        </li>
+                                        <li>
+                                            Movido:  -{{item.lactodebmov | number:2}} <br />
+
+                                        </li>
+                                        <li>
+                                            Recebido:  {{item.lactodebrec | number:2}} <br />
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            No dia:  {{item.lactosaldo| number:2}}
+                                        </li>
+                                        <li style="color : {{item.cor}}">
+                                            <b>Acumulado: {{item.saldofinal | number:2}}</b>
+                                        </li>
+                                    </ul>
+                                </td>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+
+                        </div>
+                        <button class="btn btn-default" ng-click="Voltar()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    var app = angular.module('SOFTFIN', ['ui.bootstrap', 'ui.utils.masks', 'angularUtils.directives.dirPagination', 'chart.js']);
+
+    app.config(function (ChartJsProvider) {
+        // Configure all charts
+        ChartJsProvider.setOptions({
+            colors: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360']
+        });
+        
+    });
+
+    app.directive('datetimez', function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, element, attrs, ngModelCtrl) {
+
+                element.datetimepicker({
+                    dateFormat: 'dd/MM/yyyy',
+                    language: 'ptbr',
+                    pickTime: false,
+                    startDate: '01-11-2013',      // set a minimum date
+                    endDate: '01-11-2030'          // set a maximum date
+                }).on('changeDate', function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.localDate).format());
+                    scope.$apply();
+                });
+            }
+        };
+    });
+
+    app.filter('yesNo', function () {
+        return function (input) {
+            return input == "True" ? 'Sim' : 'Não';
+        }
+    })
+
+    app.controller('MestreEntidade', [
+		'$scope', '$http', '$location', '$anchorScroll', '$timeout', '$modal', function ($scope, $http, $location, $anchorScroll, $timeout, $modal) {
+
+		    $scope.showGridSFCapa = true;
+		    $scope.showGridSFDetalhe = false;
+
+
+		    $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+
+		    $scope.listaSFDetalhe = [];
+
+		    $scope.listaSFCapa = [];
+
+
+		    $scope.LoadListaSFCapas = function () {
+		        Metronic.blockUI({
+		            boxed: true
+		        });
+
+		        $http.get("../../SFL/ListaSFCapas/")
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+                        $scope.listaSFCapa = data.objs;
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = data.DSMessage;
+                    }
+                    $timeout(
+                        function () {
+                            $scope.showNOK = false;
+                            $scope.showOK = false;
+
+                        }, 8000);
+
+
+                    Metronic.unblockUI();
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                    Metronic.unblockUI();
+                });
+		    }
+
+		    $scope.LoadListaSFCapas();
+
+		    $scope.Pesquisa = function () {
+		        $scope.LoadListaSFCapas();
+		    }
+
+
+
+		    $scope.Simular = function (item) {
+
+
+		        Metronic.blockUI({
+		            boxed: true
+		        });
+
+		        $http.post("../../SFL/ListaSFSaldos/", { id: item.id })
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+                        $scope.showGridSFCapa = false;
+                        $scope.showGridSFDetalhe = true;
+                        $scope.listaSFDetalhe = data.objs;
+                        $scope.objselecionado = item;
+                        
+                        $scope.labels = data.grafico.labels;
+                        $scope.series = ['Saldo', 'Crédito', 'Lançamentos'];
+                        $scope.data = data.grafico.data;
+                        $scope.options = {
+                            responsive: true,
+                            legend: {
+                                display: true
+                            },
+                            tooltips: {
+                                enabled: true
+                            },
+                            animation: {
+                                duration: 30
+                            },
+                        };
+                        
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = data.DSMessage;
+                    }
+                    $timeout(
+                        function () {
+                            $scope.showNOK = false;
+                            $scope.showOK = false;
+
+                        }, 8000);
+
+
+                    Metronic.unblockUI();
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                    Metronic.unblockUI();
+                });
+
+		    }
+
+		    $scope.Voltar = function () {
+		        $scope.showGridSFCapa = true;
+		        $scope.showGridSFDetalhe = false;
+		        $scope.Pesquisa();
+
+		    }
+
+
+		    $scope.LoadListaSFCapaPorId = function (id) {
+		        Metronic.blockUI({
+		            boxed: true
+		        });
+
+		        $http.post("../../SFL/ListaSFCapaPorId/", { id: id })
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+
+
+                        $scope.opts = {
+                            size: 'lg',
+                            animation: true,
+                            backdrop: false,
+                            backdropClick: false,
+                            dialogFade: false,
+                            keyboard: true,
+                            templateUrl: 'modalSFCapa.html',
+                            controller: ControllerSFCapa,
+                            resolve: {} // empty storage
+                        };
+
+                        $scope.opts.resolve.item = function () {
+                            return angular.copy({ item: data.item }); // pass name to Dialog
+                        }
+
+                        var modalInstance = $modal.open($scope.opts);
+
+                        modalInstance.result.then(function (value) {
+                            $scope.Pesquisa();
+                        }, function () {
+                        });
+
+
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = data.DSMessage;
+                    }
+                    $timeout(
+                        function () {
+                            $scope.showNOK = false;
+                            $scope.showOK = false;
+
+                        }, 8000);
+
+
+                    Metronic.unblockUI();
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                    Metronic.unblockUI();
+                });
+		    }
+
+
+
+		    $scope.Transferir = function (itemcapa, itemdetalhe) {
+		        Metronic.blockUI({
+		            boxed: true
+		        });
+
+		        $http.post("../../SFL/ListaSFDetalhes/", { id: itemcapa.id, data: itemdetalhe.data })
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+
+
+                        $scope.opts = {
+                            size: 'lg',
+                            animation: true,
+                            backdrop: false,
+                            backdropClick: false,
+                            dialogFade: false,
+                            keyboard: true,
+                            templateUrl: 'modalDebTransf.html',
+                            controller: ControllerDebTransf,
+                            resolve: {} // empty storage
+                        };
+
+                        $scope.opts.resolve.item = function () {
+                            return angular.copy({ item: data.objs }); // pass name to Dialog
+                        }
+
+                        var modalInstance = $modal.open($scope.opts);
+
+                        modalInstance.result.then(function (value) {
+                            $scope.Simular($scope.objselecionado);
+                        }, function () {
+                        });
+
+
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = data.DSMessage;
+                    }
+                    $timeout(
+                        function () {
+                            $scope.showNOK = false;
+                            $scope.showOK = false;
+
+                        }, 8000);
+
+
+                    Metronic.unblockUI();
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                    Metronic.unblockUI();
+                });
+		    }
+
+
+		    $scope.DebitosRecebidos = function (itemcapa, itemdetalhe) {
+		        Metronic.blockUI({
+		            boxed: true
+		        });
+
+		        $http.post("../../SFL/ListaSFDebitosRecebidos/", { id: itemcapa.id, data: itemdetalhe.data })
+                .success(function (data) {
+                    if (data.CDStatus == "OK") {
+
+
+                        $scope.opts = {
+                            size: 'lg',
+                            animation: true,
+                            backdrop: false,
+                            backdropClick: false,
+                            dialogFade: false,
+                            keyboard: true,
+                            templateUrl: 'modalDebitosRecebidos.html',
+                            controller: ControllerDebitosRecebidos,
+                            resolve: {} // empty storage
+                        };
+
+                        $scope.opts.resolve.item = function () {
+                            return angular.copy({ item: data.objs }); // pass name to Dialog
+                        }
+
+                        var modalInstance = $modal.open($scope.opts);
+
+                        modalInstance.result.then(function (value) {
+                            $scope.Simular($scope.objselecionado);
+                        }, function () {
+                        });
+
+
+                    } else {
+                        $scope.showNOK = true;
+                        $scope.msgNOK = data.DSMessage;
+                    }
+                    $timeout(
+                        function () {
+                            $scope.showNOK = false;
+                            $scope.showOK = false;
+
+                        }, 8000);
+
+
+                    Metronic.unblockUI();
+                }).error(function (data) {
+                    $scope.MsgError("Sistema indisponivel");
+                    Metronic.unblockUI();
+                });
+		    }
+
+		    $scope.Novo = function () {
+		        $scope.LoadListaSFCapaPorId(0);
+		    }
+
+		    $scope.Alterar = function (item) {
+		        $scope.LoadListaSFCapaPorId(item.id);
+		    }
+
+
+		    $scope.Excluir = function (item) {
+		        $scope.opts = {
+		            size: 'lg',
+		            animation: true,
+		            backdrop: false,
+		            backdropClick: false,
+		            dialogFade: false,
+		            keyboard: true,
+		            templateUrl: 'modalExcluirSFCapa.html',
+		            controller: ControllerExcluir,
+		            resolve: {} // empty storage
+		        };
+
+		        $scope.opts.resolve.item = function () {
+		            return angular.copy({ item: item }); // pass name to Dialog
+		        }
+
+		        var modalInstance = $modal.open($scope.opts);
+
+		        modalInstance.result.then(function (value) {
+		            $scope.Pesquisa();
+		        }, function () {
+		        });
+            }
+
+
+
+
+
+            $scope.onClick = function (points, evt) {
+                console.log(points, evt);
+            };
+
+
+
+		}
+    ]);
+
+
+    var ControllerSFCapa = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+
+        $scope.sfcapa = item.item;
+
+        $scope.LoadListaBanco = function () {
+            $http.post("../../SFL/ListaBanco")
+                .success(function (data) {
+                    $scope.ListaBanco = data;
+                });
+        }
+
+        $scope.LoadListaBanco();
+
+        $scope.ListaSimNao = [{ Value: false, Text: "Não" }, { Value: true, Text: "Sim" }];
+
+
+        $scope.ok = function () {
+            $http.post("../../SFL/SalvarCapa", $scope.sfcapa)
+			.success(function (data) {
+			    if (data.CDStatus == "OK") {
+			        $modalInstance.close(data);
+			    } else {
+			        $scope.showNOK = true;
+			        $scope.msgNOK = data.DSMessage;
+			        $scope.Erros = data.Erros;
+			    }
+			    $timeout(
+					function () {
+					    $scope.showNOK = false;
+					    $scope.showOK = false;
+
+					}, 8000);
+			}).error(function (data) {
+			    $scope.showNOK = true;
+			    $scope.msgNOK = "Sistema indisponivel";
+			});
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+
+
+
+    var ControllerExcluir = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+        console.log(item.item);
+
+        $scope.item = item.item;
+
+        $scope.ok = function () {
+            $http.post("../../SFL/ExcluirCapa", { id: $scope.item.id })
+			.success(function (data) {
+			    if (data.CDStatus == "OK") {
+			        $modalInstance.close(data);
+			    } else {
+			        $scope.showNOK = true;
+			        $scope.msgNOK = data.DSMessage;
+			        $scope.Erros = data.Erros;
+			    }
+			    $timeout(
+					function () {
+					    $scope.showNOK = false;
+					    $scope.showOK = false;
+
+					}, 8000);
+			}).error(function (data) {
+			    $scope.showNOK = true;
+			    $scope.msgNOK = "Sistema indisponivel";
+			});
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+
+
+    var ControllerDebTransf = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+
+        $scope.ValidaCampo = function (value) {
+            var valor = (value.StatusPagamento == 'Em Aberto' || value.StatusPagamento == 'Pendente' );
+            return valor;
+        };
+
+        $scope.listaVencimentos = item.item;
+
+        $scope.ok = function () {
+            $http.post("../../SFL/SalvarDetalhe", { objs: $scope.listaVencimentos })
+			.success(function (data) {
+			    if (data.CDStatus == "OK") {
+			        $modalInstance.close(data);
+			    } else {
+			        $scope.showNOK = true;
+			        $scope.msgNOK = data.DSMessage;
+			        if (data.objs != "")
+			            $scope.listaVencimentos = data.Objs;
+			    }
+			    $timeout(
+					function () {
+					    $scope.showNOK = false;
+					    $scope.showOK = false;
+
+					}, 8000);
+			}).error(function (data) {
+			    $scope.showNOK = true;
+			    $scope.msgNOK = "Sistema indisponivel";
+			});
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+
+
+    var ControllerDebitosRecebidos = function ($scope, $modalInstance, $modal, $http, $timeout, item) {
+
+
+        $scope.ValidaCampo = function (value) {
+            var valor = (value.StatusPagamento == 'Em Aberto');
+            return valor;
+        };
+
+        $scope.listaVencimentos = item.item;
+
+        $scope.ok = function () {
+            $http.post("../../SFL/SalvarDetalhe", { objs: $scope.listaVencimentos })
+			.success(function (data) {
+			    if (data.CDStatus == "OK") {
+			        $modalInstance.close(data);
+			    } else {
+			        $scope.showNOK = true;
+			        $scope.msgNOK = data.DSMessage;
+			        if (data.objs != "")
+			            $scope.listaVencimentos = data.Objs;
+			    }
+			    $timeout(
+					function () {
+					    $scope.showNOK = false;
+					    $scope.showOK = false;
+
+					}, 8000);
+			}).error(function (data) {
+			    $scope.showNOK = true;
+			    $scope.msgNOK = "Sistema indisponivel";
+			});
+        }
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+</script>

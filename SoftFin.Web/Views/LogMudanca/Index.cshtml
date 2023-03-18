@@ -1,0 +1,107 @@
+﻿@model SoftFin.Web.Models.LogMudanca
+@{
+    ViewBag.Title = "Log do Sistema";
+}
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                    Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+                        <div class="row">
+                            <div class='col-md-2 form-group'>
+                                <label>Data Inicial</label>
+                                <input type="text" name="dataInicial" class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Final</label>
+                                <input type="text" name="dataFinal" class="form-control" id="dataFinal" value="@ViewData["DataFinal"]" />
+                            </div>
+                         </div>
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                <label>Usuário</label>
+                                @Html.DropDownListFor(model => model.usuario_id, (SelectList)ViewData["usuario"], "---Selecione---", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="jqgLog" cellpadding="0" cellspacing="0"></table>
+<div id="jqgLogOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgLog').jqGrid({
+            //url from wich data should be requested
+            //url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Data', 'Usuário', 'Ação', 'Registro Novo', 'Registro Anterior'],
+            //columns model
+            colModel: [
+                        { name: 'txtData', index: 'data', align: 'center', editable: false, width: '180', hidden: false },
+                        { name: 'txtUsuario', index: 'usuario', align: 'center', editable: false, width: '200', hidden: false },
+                        { name: 'txtInformacao', index: 'informacao', align: 'left', editable: false, width: '200', hidden: false },
+                        { name: 'txtRegistroNovo', index: 'registroNovo', align: 'left', editable: false, width: '220', hidden: false },
+                        { name: 'txtRegistroAnterior', index: 'registroAnterior', align: 'left', editable: false, width: '220', hidden: false }
+            ],
+            //pager for grid
+            pager: $('#jqgLogOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'data',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+        });
+
+        $('#jqgLog').jqGrid('navGrid', '#jqgLogOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $("#data").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataInicial").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataFinal").datepicker({ dateFormat: "dd/mm/yy" });
+
+    });
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")';
+        caminho += '?usuario=';
+        caminho += $('#usuario_id').val();
+        caminho += '&dataInicial=';
+        caminho += $('#dataInicial').val();
+        caminho += '&dataFinal=';
+        caminho += $('#dataFinal').val();
+
+        jQuery("#jqgLog").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    });
+
+</script>

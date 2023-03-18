@@ -1,0 +1,74 @@
+﻿@model SoftFin.GestorProcessos.Models.Atividade
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Atividade</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AtividadeTipo.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AtividadeTipo.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Codigo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Codigo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoEmpresa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoEmpresa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoEstabelecimento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoEstabelecimento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Url)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Url)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,186 @@
+﻿<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/RelatorioDREContabil/RelatorioDREContabilIndex.js"></script>
+<style>
+
+</style>
+
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div class='row'>
+
+
+            <div class='col-md-2 form-group'>
+                <label>Mes</label>
+                <select class="form-control" ng-model="filter.mes" ng-options="o.Value as o.Text for o in listMonth">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Ano</label>
+                <select class="form-control" ng-model="filter.ano" ng-options="o.Value as o.Text for o in listYear">
+                    <option value="">--Selecione--</option>
+                </select>
+            </div>
+            <div class='col-md-2 form-group' datetimez ng-model="filter.excel">
+                <label>Gerar Excel</label>
+                <input type="checkbox" ng-model="filter.excel" ng-true-value="true" ng-false-value="false" />
+
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <button style="border-right-width: 0px; padding-right: 49px;"
+                    ng-click="Search()"
+                    title="Atualiza a lista na tela"
+                    class="btn btn-default">
+                <span class="glyphicon glyphicon-search"></span> Pesquisar
+            </button>
+
+        </div>
+
+        <div class='row'>
+            <div class='col-md-3 form-group'>
+                <label>Filtro : </label>
+                <input type="text" class="form-control" ng-model="locate" />
+            </div>
+
+        </div>
+        <div class="row" style="overflow-x: scroll">
+            <table  class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            <span style="cursor: pointer;" ng-click="Order('Nome')"> Nome </span>
+                        </th>
+                        <th ng-repeat="item in lista.relatorioRec[0].Recebimentos" style="text-align: right;">
+                            <span style="cursor: pointer;"> {{item.Key}} </span>
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="{{lista.relatorioRec[0].Recebimentos.length +2}}">
+                            <b>Recebimentos</b>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="item in lista.relatorioRec|filter:locate|orderBy:sortKey:reverse">
+
+                        <td>
+                            {{item.Nome}}
+                        </td>
+
+
+
+                        <td ng-repeat="itemDia in item.Recebimentos track by $index" style="text-align: right;">
+                            {{itemDia.Value | number:2}}
+                        </td>
+
+                        <td style="text-align: right;">
+                            <b>{{item.TotalRecebimento | number:2}}</b>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total</b>
+                        </td>
+                        <td ng-repeat="itemDia in lista.totalRecebimento track by $index" style="text-align: right;">
+                            <b>{{itemDia | number:2}}</b>
+                        </td>
+                        <td style="text-align: right;">
+                            <b>{{lista.totaltotalRecebimento | number:2}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="{{lista.relatorioRec[0].Recebimentos.length +2}}">
+                            <b>Pagamentos</b>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="item in lista.relatorioPag|filter:locate|orderBy:sortKey:reverse">
+
+                        <td>
+                            {{item.Nome}}
+                        </td>
+
+
+
+                        <td ng-repeat="itemDia in item.Pagamentos track by $index" style="text-align: right;">
+                            {{itemDia.Value | number:2}}
+                        </td>
+
+
+                        <td style="text-align: right;">
+                            <b>{{item.TotalPagamento | number:2}}</b>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Total</b>
+                        </td>
+                        <td ng-repeat="itemDia in lista.totalPagamento track by $index" style="text-align: right;">
+                            <b>{{itemDia | number:2}}</b>
+                        </td>
+
+                        <td style="text-align: right;">
+                            <b>{{lista.totaltotalPagamento | number:2}}</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Caixa</b>
+                        </td>
+                        <td ng-repeat="itemDia in lista.totalCaixa track by $index" style="text-align: right;">
+                            <b>{{itemDia | number:2}}</b>
+                        </td>
+
+                        <td style="text-align: right;">
+                            <b>{{lista.totaltotalCaixa | number:2}}</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <b>Caixa Inicial</b>
+                        </td>
+                        <td ng-repeat="itemDia in lista.totalCaixaInicial track by $index" style="text-align: right;">
+                            <b>{{itemDia | number:2}}</b>
+                        </td>
+
+                        <td style="text-align: right;">
+                            <b>{{lista.totaltotalCaixaInicial | number:2}}</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <b>Caixa Final</b>
+                        </td>
+                        <td ng-repeat="itemDia in lista.totalCaixaFinal track by $index" style="text-align: right;">
+                            <b>{{itemDia | number:2}}</b>
+                        </td>
+
+                        <td style="text-align: right;">
+                            <b>{{lista.totaltotalCaixaFinal | number:2}}</b>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+

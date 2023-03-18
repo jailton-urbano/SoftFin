@@ -1,0 +1,134 @@
+﻿@model IEnumerable<SoftFin.Web.Models.ParcelaContrato>
+@{
+    ViewBag.Title = "Emissão de NFS-e";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318845-Emiss%C3%A3o-NFS-Soft-Fin-semi-automatica-Prefeitura-S%C3%A3o-Paulo ";
+}
+
+        <div class="container-fluid">
+            <div class="row" >
+                <div class="col-md-3 form-group">
+                    Data Limite: <input type="text" id="datepicker" class = "form-control" name="data" value="@ViewData["data"]">
+                </div>
+                <div class="col-md-3 form-group">
+                    Contrato: <input type="text" id="txtcontrato" class = "form-control" name="contrato" value="@ViewData["contrato"]">
+                </div>
+                <div class="col-md-3 form-group">
+                    <button type="submit" id="pesquisa" name="pesquisa" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+<table id="jqgContratos" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgContratosOpc" style="text-align:center;"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+           
+        $('#jqgContratos').jqGrid({
+
+            //url from wich data should be requested
+            url: '@Url.Action("ListasEmissaoNfe")',
+                //type of data
+                datatype: 'json',
+                //url access method type
+                mtype: 'POST',
+                //columns names
+                colNames: ['Ordem Venda', 'Contrato', 'Parcela', 'Descrição', 'Pessoa', 'Data', 'Valor', 'Status'],
+                //columns model
+                colModel: [
+                            { name: 'Ordem de Venda', index: 'OV', align: 'center', editable: false, width: '70', hidden: false },
+                            { name: 'Contrato', index: 'Contrato', align: 'center', editable: false, width: '70', hidden: false },
+                            { name: 'Parcela', index: 'Parcela', align: 'center', editable: false, width: '70', hidden: false },
+                            { name: 'Descricao', index: 'Descricao', align: 'left', editable: false, width: '350', hidden: false },
+                            { name: 'Pessoa', index: 'Pessoa', align: 'left', editable: false, width: '200', hidden: false },
+                            { name: 'Data', index: 'Data', align: 'center', editable: false, width: '125', hidden: false },
+                            { name: 'Valor', index: 'Valor', align: 'right', editable: false, width: '100', hidden: false, formatter: 'currency' },
+                            { name: 'Status', index: 'Sattus', align: 'center', editable: false, width: '100', hidden: false },
+                ],
+                //pager for grid
+                pager: $('#jqgContratosOpc'),
+                //number of rows per page
+                rowNum: 12,
+                //initial sorting column
+                sortname: 'Contrato',
+                //initial sorting direction
+                sortorder: 'asc',
+                viewrecords: true,
+                //grid height
+                height: '100%'
+
+            });
+
+            $('#jqgContratos').jqGrid('navGrid', '#jqgContratosOpc',
+                { add: false, del: false, edit: false, search: false });
+
+
+            $('#jqgContratos').navButtonAdd('#jqgContratosOpc', { // custom edit button
+                caption: "Emitir",
+                buttonicon: "ui-icon ui-icon-transferthick-e-w",
+                onClickButton: function () {
+                    var gr = jQuery("#jqgContratos").jqGrid('getGridParam', 'selrow');
+                    if (gr != null) {
+                        window.location = "/Faturamento/Create/" + gr;
+                    }
+                    else {
+                        alert("Selecione 1 coluna.");
+                    };
+                },
+                position: "Last"
+            });
+
+
+            $('#pesquisa').click(function () {
+                var caminho = '@Url.Action("ListasEmissaoNfe")';
+                caminho += '?Data=';
+                caminho += $("#datepicker").val();
+                caminho += '&Contrato=';
+                caminho += $("#txtcontrato").val();
+                
+                jQuery("#jqgContratos").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+            });
+        });
+
+    </script>
+
+
+
+
+
+@*<div class="container">
+
+    @grid.GetHtml(
+        tableStyle: "gridTable",
+        headerStyle: "gridHead",
+        footerStyle: "gridFooter",
+        rowStyle: "gridRow",
+        alternatingRowStyle: "gridAltRow",
+
+        mode: WebGridPagerModes.All,
+        firstText: "<< Primeiro",
+        previousText: "< Anterior", nextText: "Próximo >",
+        lastText: "Último >>",
+
+
+        columns: new[]  {
+        grid.Column("contrato.contrato", "Contrato"),
+        grid.Column("parcela", "Parcela"),
+        grid.Column("descricao", "Descrição"),
+        grid.Column("data", "Data"),
+        grid.Column("valor", "Valor",format: (item) => string.Format("{0:C}", item.valor)),
+        grid.Column("statusParcela.status", "Status"),
+        grid.Column("", header: null, format: @<text>@Html.ActionLink("Emitir","EmitirNfse",
+        new {ID=item.id})</text>)
+        }
+
+        )
+</div>*@

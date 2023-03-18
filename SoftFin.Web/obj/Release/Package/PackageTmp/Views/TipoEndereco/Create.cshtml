@@ -1,0 +1,40 @@
+﻿@model SoftFin.Web.Models.TipoEndereco
+@{
+    ViewBag.Title = "Tipo Endereço - Novo";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.empresa_id)
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Descricao)
+
+                    @Html.TextBoxFor(x => x.Descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Descricao)
+                </div>
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

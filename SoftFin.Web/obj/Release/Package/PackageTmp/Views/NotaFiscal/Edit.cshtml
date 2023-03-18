@@ -1,0 +1,297 @@
+﻿@model SoftFin.Web.Models.NotaFiscal
+@{
+    ViewBag.Title = "Detalhe de Nota Fiscal";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <fieldset>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+    <h4>Dados da Empresa</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5 form-group">
+                Empresa:
+                <input type="text" name="empresa" value="@Model.Estabelecimento.Empresa.nome" readonly="readonly" class="form-control">
+            </div>
+            <div class="col-md-5 form-group">
+                Estabelecimento:
+                <input type="text" name="estabelecimento" value="@Model.Estabelecimento.NomeCompleto" readonly="readonly" class="form-control">
+                @Html.HiddenFor(x => x.estabelecimento_id)
+                @Html.HiddenFor(x => x.operacao_id)
+                @Html.HiddenFor(x => x.banco_id)
+                @Html.HiddenFor(x => x.ordemVenda_id)
+                @Html.HiddenFor(x => x.id)
+            </div>
+        </div>
+    </div>
+
+    <h4>Dados do RPS</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1 form-group">
+                Tipo:
+                <input type="text" name="tipoRps" value="@Model.tipoRps" readonly="readonly" class="form-control">
+            </div>
+            <div class="col-md-2 form-group">
+                Data de Emisssão:
+                <input type="text" name="dataEmissaoRps" value="@ViewData["dataEmissaoRPS"]" readonly="readonly" class="form-control">
+            </div>
+            <div class="col-md-1 form-group">
+                Série:
+                <input type="text" name="serieRps" value="@Model.serieRps" readonly="readonly" class="form-control">
+            </div>
+            <div class="col-md-1 form-group">
+                Situação:
+                <input type="text" name="situacaoRps" value="@Model.situacaoRps" readonly="readonly" class="form-control">
+            </div>
+        </div>
+    </div>
+
+    <h4>Dados da Nota Fiscal</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9 form-group">
+                Discriminação do Serviço:
+                @Html.TextAreaFor(x => x.discriminacaoServico, 10, 1, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.discriminacaoServico)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2     form-group">
+                Data de Vencimento:
+                <input type="text" class="form-control" name="dataVencimentoNfse" id="dataVencimentoNfse    " value="@ViewData["dataVencimento"]">
+            </div>
+        </div>
+    </div>
+
+
+    <h4>Dados do Tomador</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 form-group">
+                Razão do Tomador:
+                @Html.TextBoxFor(x => x.razaoTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.razaoTomador)
+            </div>
+            <div class="col-md-2 form-group">
+                Indicador CNPJ/CPF:
+                @Html.TextBoxFor(x => x.indicadorCnpjCpf, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.indicadorCnpjCpf)
+            </div>
+            <div class="col-md-2 form-group">
+                CNPJ/CPF:
+                @Html.TextBoxFor(x => x.cnpjCpf, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.cnpjCpf)
+            </div>
+            <div class="col-md-2 form-group">
+                Inscrição Estadual:
+                @Html.TextBoxFor(x => x.inscricaoEstadual, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.inscricaoEstadual)
+            </div>
+            <div class="col-md-2 form-group">
+                Inscrição Municipal:
+                @Html.TextBoxFor(x => x.inscricaoMunicipal, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.inscricaoMunicipal)
+            </div>
+            <div class="col-md-2 form-group">
+                Municipio do Tomador:
+                @Html.TextBoxFor(x => x.cidadeTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.cidadeTomador)
+            </div>
+            <div class="col-md-2 form-group">
+                UF do Tomador:
+                @Html.TextBoxFor(x => x.ufTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.ufTomador)
+            </div>
+
+            <div class="col-md-7 form-group">
+                E-mail do Tomador:
+                @Html.TextBoxFor(x => x.emailTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.emailTomador)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 form-group">
+                Tipo do Endereço:
+                @Html.TextBoxFor(x => x.tipoEndereco, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.tipoEndereco)
+            </div>
+
+            <div class="col-md-5 form-group">
+                Endereço do Tomador:
+                @Html.TextBoxFor(x => x.enderecoTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.enderecoTomador)
+            </div>
+
+
+            <div class="col-md-2 form-group">
+                Número:
+                @Html.TextBoxFor(x => x.numeroTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.numeroTomador)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Complemento:
+                @Html.TextBoxFor(x => x.complementoTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.complementoTomador)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Bairro:
+                @Html.TextBoxFor(x => x.bairroTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.bairroTomador)
+            </div>
+
+            <div class="col-md-2 form-group">
+                CEP:
+                @Html.TextBoxFor(x => x.cepTomador, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.cepTomador)
+            </div>
+
+
+        </div>
+    </div>
+
+    <h4>Detalhes da Nota Fiscal</h4>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-4 form-group">
+                Código do Serviço:
+                @Html.TextBoxFor(x => x.codigoServico,  new { @class = "form-control", @readonly = "readonply" })
+            </div>
+
+            <div class="col-md-2 form-group">
+                Valor da Nota Fiscal:
+                @Html.TextBoxFor(x => x.valorNfse, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorNfse)
+            </div>
+
+            <div class="col-md-2 form-group">
+                IRRF:
+                @Html.TextBoxFor(x => x.irrf, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.irrf)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Base de Cálculo ISS:
+                @Html.TextBoxFor(x => x.basedeCalculo, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.basedeCalculo)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 form-group">
+                Aliquota de ISS
+                @Html.TextBoxFor(x => x.aliquotaISS, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.aliquotaISS)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Valor do ISS:
+                @Html.TextBoxFor(x => x.valorISS, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorISS)
+            </div>
+
+
+            <div class='col-md-2 form-group'>
+                @Html.LabelFor(x => x.valorINSS)
+
+                @Html.TextBoxFor(x => x.valorINSS, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorINSS)
+            </div>
+            <div class='col-md-2 form-group'>
+                @Html.LabelFor(x => x.valorINSS)
+
+                @Html.TextBoxFor(x => x.valorINSS, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorINSS)
+            </div>
+
+            <div class="col-md-2 form-group">
+                PIS Retido:
+                @Html.TextBoxFor(x => x.pisRetido, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.pisRetido)
+            </div>
+
+            <div class="col-md-2 form-group">
+                COFINS Retida:
+                @Html.TextBoxFor(x => x.cofinsRetida, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.cofinsRetida)
+            </div>
+            <div class="col-md-2 form-group">
+                CSLL Retida:
+                @Html.TextBoxFor(x => x.csllRetida, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.csllRetida)
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-2 form-group">
+                Valor Líquido:
+                @Html.TextBoxFor(x => x.valorLiquido, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorLiquido)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Valor das Deduções:
+                @Html.TextBoxFor(x => x.valorDeducoes, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.valorDeducoes)
+            </div>
+
+            <div class="col-md-2 form-group">
+                Crédito do Imposto:
+                @Html.TextBoxFor(x => x.creditoImposto, null, new { @class = "form-control", @readonly = "readonply" })
+                @Html.ValidationMessageFor(x => x.creditoImposto)
+            </div>
+
+        </div>
+    </div>
+    
+    <h4>Dados do Contrato</h4>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 form-group">
+                Parcela do Contrato:
+                <input type="text" name="ParcelaIDX" value="@ViewData["ParcelaID"]" readonly="readonply" class="form-control">
+            </div>
+
+            <div class="col-md-2 form-group">
+                Contrato:
+                <input type="text" name="ContratoIDX" value="@ViewData["ContratoID"]" readonly="readonply" class="form-control">
+            </div>
+            <div class="col-md-2 form-group">
+                Ordem de Venda:
+                <input type="text" name="OVDX" value="@ViewData["OV"]" readonly="readonply" class="form-control">
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <p>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")   
+        <div class="alert alert-info">
+            @ViewBag.msg
+        </div>
+    </p>
+}
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#dataVencimentoNfse').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

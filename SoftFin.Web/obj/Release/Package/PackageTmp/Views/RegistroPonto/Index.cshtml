@@ -1,0 +1,151 @@
+﻿@model SoftFin.Web.Models.RegistroPonto
+@{
+    ViewBag.Title = "Lista Registro de Ponto ";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318885-Vis%C3%A3o-Geral-Controle-de-ponto";
+}
+
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                    Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.Label("Data do Ponto:")
+                                @Html.TextBox("dataPonto", @DateTime.Now.ToShortDateString(), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary'>
+                        <span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog" title="Informação">
+    <p>Informe a data do Ponto!</p>
+</div>
+
+<table id="jqgPessoa" cellpadding="0" cellspacing="0"></table>
+<div id="jqgPessoaOpc" style="text-align: center;"></div>
+
+<script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $("#dialog").dialog({
+            autoOpen: false,
+            show: {
+                effect: "blind",
+                duration: 500
+            },
+            hide: {
+                effect: "explode",
+                duration: 500
+            }
+        });
+
+        $('#dataPonto').datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $('#jqgPessoa').jqGrid({
+            //url from wich data should be requested
+            //url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns names
+            colNames: ['Colaborador', 'Data', 'Ponto1', 'Ponto2', 'Ponto3', 'Ponto4', 'Ponto5', 'Ponto6', 'Ponto7', 'Ponto8', 'Aprovador', 'Aprovação'],
+            //columns model
+            colModel: [
+                        { name: 'txtColaborador', index: 'colaborador', align: 'left', editable: false, width: '200', hidden: false },
+                        { name: 'txtData', index: 'data', align: 'center', editable: false, width: '100', hidden: false },
+                        { name: 'txtPonto1', index: 'ponto1', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto2', index: 'ponto2', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto3', index: 'ponto3', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto4', index: 'ponto4', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto5', index: 'ponto5', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto6', index: 'ponto6', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto7', index: 'ponto7', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtPonto8', index: 'ponto8', align: 'center', editable: false, width: '60', hidden: false },
+                        { name: 'txtAprovador', index: 'aprovador', align: 'left', editable: false, width: '150', hidden: false },
+                        { name: 'txtSituacaoAprovao', index: 'SituacaoAprovao', align: 'center', editable: false, width: '100', hidden: false },
+            ],
+            //pager for grid
+            pager: $('#jqgPessoaOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgPessoa').jqGrid('navGrid', '#jqgPessoaOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                if ($('#dataPonto').val() != "") {
+                    window.location = "Create?dataPonto=" + encodeURI($('#dataPonto').val());
+                }
+                else {
+                    $("#dialog").dialog("open");
+                }
+            },
+            position: "Last"
+        });
+
+        $('#jqgPessoa').navButtonAdd('#jqgPessoaOpc', { // custom edit button
+            caption: "Atualizar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgPessoa").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#pesquisa').click(function () {
+            var caminho = '@Url.Action("Listas")';
+            caminho += '?dataPonto=';
+            caminho += $('#dataPonto').val();
+            jQuery("#jqgPessoa").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+        });
+
+    });
+
+    
+</script>

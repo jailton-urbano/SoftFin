@@ -1,0 +1,379 @@
+﻿@model SoftFin.Web.Models.GPSVLW
+@{
+    ViewBag.Title = "GUIA PREVIDÊNCIA SOCIAL - GPS"; 
+
+}
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse out'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.codigoPagamento)
+                                <br />
+                                @Html.TextBoxFor(x => x.codigoPagamento)
+                                @Html.ValidationMessageFor(x => x.codigoPagamento)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.competencia)
+                                <br />
+                                @Html.TextBoxFor(x => x.competencia)
+                                @Html.ValidationMessageFor(x => x.competencia)
+                             </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.identificador)
+                                <br />
+                                @Html.TextBoxFor(x => x.identificador)
+                                @Html.ValidationMessageFor(x => x.identificador)
+                             </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.informacoesComplementares)
+                                <br />
+                                @Html.TextBoxFor(x => x.informacoesComplementares)
+                                @Html.ValidationMessageFor(x => x.informacoesComplementares)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorTributoInicial)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorTributoInicial)
+                                @Html.ValidationMessageFor(x => x.valorTributoInicial)
+                             </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorTributoFinal)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorTributoFinal)
+                                @Html.ValidationMessageFor(x => x.valorTributoFinal)
+                             </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.nomeContribuinte)
+                                <br />
+                                @Html.TextBoxFor(x => x.nomeContribuinte)
+                                @Html.ValidationMessageFor(x => x.nomeContribuinte)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorOutrasEntidadesInicial)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorOutrasEntidadesInicial)
+                                @Html.ValidationMessageFor(x => x.valorOutrasEntidadesInicial)
+                             </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorOutrasEntidadesFinal)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorOutrasEntidadesFinal)
+                                @Html.ValidationMessageFor(x => x.valorOutrasEntidadesFinal)
+                             </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorAtualizacaoMonetariaInicial)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorAtualizacaoMonetariaInicial)
+                                @Html.ValidationMessageFor(x => x.valorAtualizacaoMonetariaInicial)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorAtualizacaoMonetariaFinal)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorAtualizacaoMonetariaFinal)
+                                @Html.ValidationMessageFor(x => x.valorAtualizacaoMonetariaFinal)
+                             </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorArrecadadoInicial)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorArrecadadoInicial)
+                                @Html.ValidationMessageFor(x => x.valorArrecadadoInicial)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.valorArrecadadoFinal)
+                                <br />
+                                @Html.TextBoxFor(x => x.valorArrecadadoFinal)
+                                @Html.ValidationMessageFor(x => x.valorArrecadadoFinal)
+                             </div>
+                        </div>
+
+                        <div class='row'>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.dataArrecadacaoInicial)
+                                <br />
+                                @Html.TextBoxFor(x => x.dataArrecadacaoInicial)
+                                @Html.ValidationMessageFor(x => x.dataArrecadacaoInicial)
+                            </div>
+                            <div class='col-md-3 form-group'>
+                                @Html.LabelFor(x => x.dataArrecadacaoFinal)
+                                <br />
+                                @Html.TextBoxFor(x => x.dataArrecadacaoFinal)
+                                @Html.ValidationMessageFor(x => x.dataArrecadacaoFinal)
+                             </div>
+                        </div>
+
+                    </div>
+                    <br />
+            <button type='button' name='pesquisa' id='pesquisa' class='btn'>Pesquisar</button>
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<table id="jqgObj" cellpadding="0" cellspacing="0"></table>
+<div   id="jqgObjOpc" style="text-align:center;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+        $('#jqgObj').jqGrid({
+            //url from wich data should be requested
+            url: '@Url.Action("Listas")',
+            //type of data
+            datatype: 'json',
+            //url access method type
+            mtype: 'POST',
+            //columns namesa
+            colNames: ['Código de Pagamento'
+                , 'Competência'
+                , 'Identificador'
+                , 'Valor do Tributo'
+                , 'Valor Outras Entidades'
+                , 'Valor Atualização Monetária'
+                , 'Valor Arrecadado'
+                , 'Data da Arrecadação'
+                , 'Informações Complementares'
+                , 'Nome do Contribuinte'],
+            //columns model
+            colModel: [
+                        { name: 'txtCodigodePagamento', index: 'CodigodePagamento', align: 'left', editable: false, width: '120', hidden: false },
+                        { name: 'txtCompetencia', index: 'Competencia', align: 'left', editable: false, width: '100', hidden: false },
+                        { name: 'txtIdentificador', index: 'Identificador', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtValordoTributo', index: 'ValordoTributo', align: 'right', editable: false, width: '80', hidden: false },
+                        { name: 'txtValorOutrasEntidades', index: 'ValorOutrasEntidades', align: 'right', editable: false, width: '80', hidden: false },
+                        { name: 'txtValorAtualizacaoMonetaria', index: 'ValorAtualizacaoMonetaria', align: 'right', editable: false, width: '50', hidden: false },
+                        { name: 'txtValorArrecadado', index: 'ValorArrecadado', align: 'right', editable: false, width: '80', hidden: false },
+                        { name: 'txtDatadaArrecadacao', index: 'DatadaArrecadacao', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtInformacoesComplementares', index: 'InformacoesComplementares', align: 'left', editable: false, width: '80', hidden: false },
+                        { name: 'txtNomedoContribuinte', index: 'NomedoContribuinte', align: 'left', editable: false, width: '120', hidden: false }
+
+            ],
+            //pager for grid
+            pager: $('#jqgObjOpc'),
+            //number of rows per page
+            rowNum: 12,
+            //initial sorting column
+            sortname: 'Tipo',
+            //initial sorting direction
+            sortorder: 'asc',
+            viewrecords: true,
+            //grid height
+            height: '100%'
+
+        });
+
+        $('#jqgObj').jqGrid('navGrid', '#jqgObjOpc',
+            { add: false, del: false, edit: false, search: false });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Detalhe",
+            buttonicon: "ui-icon ui-icon-document",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Detail/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Novo",
+            buttonicon: "ui-icon ui-icon-plus",
+            onClickButton: function () {
+                window.location = "Create/";
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Alterar",
+            buttonicon: "ui-icon ui-icon-pencil",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Edit/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+        $('#jqgObj').navButtonAdd('#jqgObjOpc', { // custom edit button
+            caption: "Excluir",
+            buttonicon: "ui-icon ui-icon-trash",
+            onClickButton: function () {
+                var gr = jQuery("#jqgObj").jqGrid('getGridParam', 'selrow');
+                if (gr != null) {
+                    window.location = "Delete/" + gr;
+                }
+                else {
+                    alert("Selecione 1 coluna.");
+                };
+            },
+            position: "Last"
+        });
+
+
+
+    });
+
+
+
+    $("#competencia").datepicker({ dateFormat: "mm/yy" });
+
+
+
+    $('#pesquisa').click(function () {
+        var caminho = '@Url.Action("Listas")';
+
+        caminho += '?codigoPagamento=';
+        caminho += $('#codigoPagamento').val();
+        caminho += '&competencia=';
+        caminho += $('#competencia').val();
+        caminho += '&identificador=';
+        caminho += $('#identificador').val();
+        caminho += '&valorTributoInicial=';
+        caminho += $('#valorTributoInicial').val();
+        caminho += '&valorOutrasEntidadesInicial=';
+        caminho += $('#valorOutrasEntidadesInicial').val();
+        caminho += '&valorAtualizacaoMonetariaInicial=';
+        caminho += $('#valorAtualizacaoMonetariaInicial').val();
+        caminho += '&valorArrecadadoInicial=';
+        caminho += $('#valorArrecadadoInicial').val();
+        caminho += '&dataArrecadacaoInicial=';
+        caminho += $('#dataArrecadacaoInicial').val();
+        caminho += '&valorTributoFinal=';
+        caminho += $('#valorTributoFinal').val();
+        caminho += '&valorOutrasEntidadesFinal=';
+        caminho += $('#valorOutrasEntidadesFinal').val();
+        caminho += '&valorAtualizacaoMonetariaFinal=';
+        caminho += $('#valorAtualizacaoMonetariaFinal').val();
+        caminho += '&valorArrecadadoFinal=';
+        caminho += $('#valorArrecadadoFinal').val();
+        caminho += '&dataArrecadacaoFinal=';
+        caminho += $('#dataArrecadacaoFinal').val();
+        caminho += '&informacoesComplementares=';
+        caminho += $('#informacoesComplementares').val();
+        caminho += '&nomeContribuinte=';
+        caminho += $('#nomeContribuinte').val();
+
+
+
+        jQuery("#jqgObj").jqGrid('setGridParam', { url: caminho }).trigger("reloadGrid");
+
+    });
+
+    </script>
+
+
+
+<script>
+    $('#valorTributoInicial').attr('maxlength', '18');
+    $('#valorTributoInicial').keyup(
+      function (event) {
+          $('#valorTributoInicial').val(filtraNumerosComVirgula($('#valorTributoInicial').val()));
+      });
+    $('#valorTributoInicial').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorOutrasEntidadesInicial').attr('maxlength', '18');
+    $('#valorOutrasEntidadesInicial').keyup(
+      function (event) {
+          $('#valorOutrasEntidadesInicial').val(filtraNumerosComVirgula($('#valorOutrasEntidadesInicial').val()));
+      });
+    $('#valorOutrasEntidadesInicial').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorAtualizacaoMonetariaInicial').attr('maxlength', '18');
+    $('#valorAtualizacaoMonetariaInicial').keyup(
+      function (event) {
+          $('#valorAtualizacaoMonetariaInicial').val(filtraNumerosComVirgula($('#valorAtualizacaoMonetariaInicial').val()));
+      });
+    $('#valorAtualizacaoMonetariaInicial').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorArrecadadoInicial').attr('maxlength', '18');
+    $('#valorArrecadadoInicial').keyup(
+      function (event) {
+          $('#valorArrecadadoInicial').val(filtraNumerosComVirgula($('#valorArrecadadoInicial').val()));
+      });
+    $('#valorArrecadadoInicial').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#dataArrecadacaoInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#valorTributoFinal').attr('maxlength', '18');
+    $('#valorTributoFinal').keyup(
+      function (event) {
+          $('#valorTributoFinal').val(filtraNumerosComVirgula($('#valorTributoFinal').val()));
+      });
+    $('#valorTributoFinal').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorOutrasEntidadesFinal').attr('maxlength', '18');
+    $('#valorOutrasEntidadesFinal').keyup(
+      function (event) {
+          $('#valorOutrasEntidadesFinal').val(filtraNumerosComVirgula($('#valorOutrasEntidadesFinal').val()));
+      });
+    $('#valorOutrasEntidadesFinal').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorAtualizacaoMonetariaFinal').attr('maxlength', '18');
+    $('#valorAtualizacaoMonetariaFinal').keyup(
+      function (event) {
+          $('#valorAtualizacaoMonetariaFinal').val(filtraNumerosComVirgula($('#valorAtualizacaoMonetariaFinal').val()));
+      });
+    $('#valorAtualizacaoMonetariaFinal').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorArrecadadoFinal').attr('maxlength', '18');
+    $('#valorArrecadadoFinal').keyup(
+      function (event) {
+          $('#valorArrecadadoFinal').val(filtraNumerosComVirgula($('#valorArrecadadoFinal').val()));
+      });
+    $('#valorArrecadadoFinal').blur(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#dataArrecadacaoFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>

@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Painel de Projetos";
+}
+
+
+@using (Html.BeginForm())
+{
+    
+    <header></header>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <button style="margin-top:25px;" class="btn btn-primary" type="button" id="gerar" name="gerar">
+                    <span class="glyphicon glyphicon-cog"></span> Processar</button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/content/images/loading_bar_animated.gif" />
+    </div>
+
+    <div id="table_div">
+    </div>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "geraPainelProjetos",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (tabledata) {
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Contrato');
+                data.addColumn('string', 'Cliente');
+                data.addColumn('string', 'Projeto');
+                data.addColumn('string', 'Data Inicial');
+                data.addColumn('string', 'Data Final');
+                data.addColumn('string', 'Ativo');
+                data.addColumn('number', 'Total de Horas');
+                data.addColumn('number', 'Horas Apontadas');
+                data.addColumn('number', 'Saldo de Horas');
+
+                data.addColumn('number', 'Valor Total');
+                data.addColumn('number', 'Despesas Diretas');
+                data.addColumn('number', 'Custo Total');
+                data.addColumn('number', 'Margem');
+                
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([
+                                 tabledata[i].contrato,
+                                 tabledata[i].cliente,
+                                 tabledata[i].projeto,
+                                 tabledata[i].dataInicialS,
+                        tabledata[i].dataFinalS,
+                        tabledata[i].ativo,
+                                tabledata[i].totalHoras,
+                                tabledata[i].horasApontadas,
+                                tabledata[i].saldoHoras,
+                                 tabledata[i].valorProjeto,
+                                    
+                                    tabledata[i].despesasDiretas,
+                                 tabledata[i].custoTotal,
+                                 tabledata[i].margem,
+                                 
+                    ]);
+                }
+
+                var formatter = new google.visualization.NumberFormat({ decimalSymbol: ',', groupingSymbol: '.', negativeColor: 'red', negativeParens: true, prefix: 'R$ ' });
+                formatter.format(data, 9);
+                formatter.format(data, 10);
+                formatter.format(data, 11);
+                formatter.format(data, 12);
+
+                var formatter = new google.visualization.ColorFormat();
+                formatter.addRange(-100000000, 0, 'white', 'orange');
+                formatter.format(data, 7);
+                formatter.format(data, 8);
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                table.draw(data, {allowHtml: true, showRowNumber: true});
+
+                $('#indicator').hide();
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+</script>

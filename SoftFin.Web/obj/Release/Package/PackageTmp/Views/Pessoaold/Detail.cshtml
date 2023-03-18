@@ -1,0 +1,233 @@
+﻿@model SoftFin.Web.Models.Pessoa
+
+@{
+    ViewBag.Title = "Pessoa - Detalhe";
+
+}
+
+
+    <fieldset>
+        <div class="container-fluid">
+            @RenderPage("~/Views/Shared/_Botaovoltar.cshtml")
+            @if (!string.IsNullOrEmpty(Model.Foto))
+            {
+                <div class='row'>
+                    <div class='col-md-8 form-group'>
+                        <label>Imagem</label>
+                        <img src='@Model.Foto' />
+                    </div>
+                </div>
+            }
+            <div class="row" >
+                <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.TipoPessoa_ID)
+
+                        @Html.DropDownList("TipoPessoa_ID", ViewData["TipoPessoa"] as SelectList, new { @class = "form-control" })  
+                        @*@Html.TextBoxFor(model => model.id_EMPRESA)*@
+                        @Html.ValidationMessageFor(model => model.TipoPessoa_ID)
+                </div>
+
+                <div class="col-md-4 form-group">
+                        @Html.LabelFor(model => model.CategoriaPessoa_ID)
+
+                        @Html.DropDownList("CategoriaPessoa_id", ViewData["CategoriaPessoa"] as SelectList, new { @class = "form-control" })  
+                        @*@Html.TextBoxFor(model => model.id_EMPRESA)*@
+                        @Html.ValidationMessageFor(model => model.CategoriaPessoa_ID)
+                </div>
+                <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.UnidadeNegocio_ID)
+
+                        @Html.DropDownList("UnidadeNegocio_ID", ViewData["UnidadeNegocio"] as SelectList, new { @class = "form-control" })  
+                        @*@Html.TextBoxFor(model => model.id_EMPRESA)*@
+                        @Html.ValidationMessageFor(model => model.UnidadeNegocio_ID)
+                </div>
+
+
+            </div>
+            <div class="row">
+                
+                <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.codigo)
+
+                        @Html.TextBoxFor(model => model.codigo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.codigo)
+                </div>
+                <div class="col-md-4 form-group">
+                        @Html.LabelFor(model => model.nome)
+
+                        @Html.TextBoxFor(model => model.nome, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.nome)
+                </div>
+
+                <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.razao)
+
+                        @Html.TextBoxFor(model => model.razao, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.razao)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.cep)
+                        
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.cep, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.cep)
+                            <span class="input-group-btn">
+                                <a id="btnCep" name="btnCep" class="btn btn-default" role="button">Pesquisar</a>
+                            </span>
+                        </div>
+                </div>
+
+                <div class="col-md-4 form-group">
+                        @Html.LabelFor(model => model.TipoEndereco_ID)
+
+                        @Html.DropDownList("TipoEndereco_id", ViewData["TipoEndereco"] as SelectList, new { @class = "form-control" })  
+                        @*@Html.TextBoxFor(model => model.id_EMPRESA)*@
+                        @Html.ValidationMessageFor(model => model.TipoEndereco_ID)
+                </div>
+                 <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.endereco)
+
+                        @Html.TextBoxFor(model => model.endereco, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.endereco)
+                </div>  
+
+            </div>
+
+             <div class="row">
+                <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.numero)
+
+                        @Html.TextBoxFor(model => model.numero, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.numero)
+                </div>
+                <div class="col-md-4 form-group">
+                        @Html.LabelFor(model => model.complemento)
+
+                        @Html.TextBoxFor(model => model.complemento, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.complemento)
+                </div>
+                <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.bairro)
+
+                        @Html.TextBoxFor(model => model.bairro, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.bairro)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1 form-group">
+                        @Html.LabelFor(model => model.uf)
+
+                        @Html.TextBoxFor(model => model.uf, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.uf)
+                </div>
+
+                <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.cidade)
+
+                        @Html.TextBoxFor(model => model.cidade, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.cidade)
+                </div>
+
+                <div class="col-md-5 form-group">
+                        @Html.LabelFor(model => model.eMail)
+
+                        @Html.TextBoxFor(model => model.eMail, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.eMail)
+                </div>
+             </div>
+               
+            <div class="row">
+                <div class="col-md-3 form-group">
+                        @Html.LabelFor(model => model.TelefoneFixo)
+
+                        @Html.TextBoxFor(model => model.TelefoneFixo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TelefoneFixo)
+                </div>
+                <div class="col-md-3     form-group">
+                        @Html.LabelFor(model => model.Celular)
+
+                        @Html.TextBoxFor(model => model.Celular, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Celular)
+                </div>
+             
+                <div class="col-md-2 form-group">
+                        @Html.LabelFor(model => model.cnpj)
+                        
+
+                        @Html.TextBoxFor(model => model.cnpj, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.cnpj)    
+                        <span id="ErroCNPJ" name="ErroCNPJ" class="field-validation-error" ></span>
+                </div>
+                <div class="col-md-2 form-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.inscricao)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.inscricao, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.inscricao)
+                    </div>
+                </div>
+                 <div class="col-md-2 form-group">
+                        @Html.LabelFor(model => model.ccm)
+
+                        @Html.TextBoxFor(model => model.ccm, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ccm)
+                 </div>
+
+
+            </div>
+            <div class="row">
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.bancoConta)
+                   
+                    @Html.TextBoxFor(x => x.bancoConta, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.bancoConta)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.agenciaConta)
+                   
+                    @Html.TextBoxFor(x => x.agenciaConta, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.agenciaConta)
+                </div>
+                <div class='col-md-1 form-group'>
+                    @Html.LabelFor(x => x.agenciaDigito)
+                   
+                    @Html.TextBoxFor(x => x.agenciaDigito, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.agenciaDigito)
+			    </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.contaBancaria)
+                   
+                    @Html.TextBoxFor(x => x.contaBancaria, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.contaBancaria)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.digitoContaBancaria)
+                   
+                    @Html.TextBoxFor(x => x.digitoContaBancaria, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.digitoContaBancaria)
+                </div>
+             
+            </div>
+            @RenderPage("~/Views/Shared/_Botaovoltar.cshtml")
+         </div>
+    </fieldset>
+
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("input[type!=hidden]").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>
+

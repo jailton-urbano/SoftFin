@@ -1,0 +1,52 @@
+﻿@model SoftFin.Web.Models.Calendario
+@{
+    ViewBag.Title = "Calendário - Editar";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    <input type='text' id='data' name='data' class = "form-control"  value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+                <div class='col-md-6 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tipoData_ID)
+                    @Html.DropDownListFor(x => x.tipoData_ID, (SelectList)ViewData["TipoData"], "--Selecione--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tipoData_ID)
+                </div>
+            </div>
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#data').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#data').keyup(
+          function (event) {
+              formataData(this, event);
+          });
+    });
+</script>

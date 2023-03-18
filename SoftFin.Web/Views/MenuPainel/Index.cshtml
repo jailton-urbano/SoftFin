@@ -1,0 +1,86 @@
+﻿@model List<SoftFin.Web.Models.SistemaDashBoardFuncionalidade>
+@{
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205097615-Antes-de-utilizar";
+    ViewBag.MigalhaA = "Processos";
+    ViewBag.MigalhaB = "Painel";
+    ViewBag.MigalhaC = "";
+    ViewBag.MigalhaD = "";
+}
+<html>
+<body>
+    <div class="container-fluid" id="DivFuncionalidades">
+
+
+        <div class="row">
+
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="dashboard-stat green-haze">
+                    <div class="visual">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                    <div class="details">
+                        <div class="desc">Meus Processos</div>
+                    </div>
+                    <a class="more lksf" href="../../ProcessoMeus/Index">
+                        Meus Processos
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="dashboard-stat green-haze">
+                    <div class="visual">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                    <div class="details">
+                        <div class="desc">Processo em Andamento</div>
+                    </div>
+                    <a class="more" href="../../ProcessoAndamento/Index">
+                        Processo em Andamento
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="dashboard-stat green-haze">
+                    <div class="visual">
+                        <i class="fa fa-asterisk"></i>
+                    </div>
+                    <div class="details">
+                        <div class="desc">Histórico Processo</div>
+                    </div>
+                    <a class="more" href="../../ProcessoHistorico/Index">
+                        Histórico Processo
+                        <i class="m-icon-swapright m-icon-white"></i>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+
+ 
+
+    });
+
+</script>
+

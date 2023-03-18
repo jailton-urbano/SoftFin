@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | SoftFin Gestor de Processos</title>
+
+
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/simple-line-icons.min.css" rel="stylesheet" />
+
+    <link href="~/Content/angular/bower-material/v1.1.8/angular-material.css" rel="stylesheet" />
+    <link href="~/Content/angular/bower-material/v1.1.8/docs.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://rawgit.com/daniel-nagy/md-data-table/master/dist/md-data-table.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+
+
+    @* Jquery *@
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-migrate.min.js"></script>
+    <script src="~/Scripts/jquery.blockui.min.js"></script>
+    <script src="~/Scripts/jquery.cokie.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+
+    @*Bootstrap*@
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+    @* Angulajs *@
+    <script src="~/Scripts/angular/angular.js"></script>
+    <script src="~/Scripts/angular/angular-animate.js"></script>
+    <script src="~/Scripts/angular/angular-aria.js"></script>
+    <script src="~/Scripts/angular/angular-messages.js"></script>
+    <script src="~/Scripts/angular/angular-route.js"></script>
+    <script src="~/Scripts/angular/angular-sanitize.js"></script>
+    <script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+
+    @* AngulaTools *@
+    <script src="~/Scripts/angular/mask/moment.js"></script>
+    <script src="~/Scripts/angular/mask/masks.js"></script>
+    <script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.8/angular-material.js"></script>
+    <script src="https://rawgit.com/daniel-nagy/md-data-table/master/dist/md-data-table.js"></script>
+
+    @*Bootstrap*@
+    <script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+
+
+
+</head>
+<body>
+
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

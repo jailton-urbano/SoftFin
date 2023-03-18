@@ -1,0 +1,46 @@
+﻿@model SoftFin.Web.Models.OrigemMovimento
+@{
+    ViewBag.Title = "Origem Movimento - Alteração";
+}
+
+
+@using (Html.BeginForm())
+{
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+
+            <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Modulo)
+
+                    @Html.TextBoxFor(x => x.Modulo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Modulo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Tipo)
+
+                    @Html.TextBoxFor(x => x.Tipo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Tipo)
+                </div>            
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

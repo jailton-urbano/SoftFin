@@ -1,0 +1,12 @@
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Debug\SoftFin.Infrastructure.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Debug\SoftFin.Infrastructure.Comum.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.csproj.CoreCompileInputs.cache
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.dll
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.pdb
+C:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.csprojAssemblyReference.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Debug\SoftFin.Infrastructure.Comum.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\bin\Debug\SoftFin.Infrastructure.Comum.pdb
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.csprojAssemblyReference.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.csproj.CoreCompileInputs.cache
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.dll
+D:\Source\Repos\SoftFin\Projetos\SoftFin.Infrastructure.Comum\obj\Debug\SoftFin.Infrastructure.Comum.pdb

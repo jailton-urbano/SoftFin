@@ -1,0 +1,209 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+
+h1, h2, h3, h4, h5, h6 {
+    color: #777;
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 300;
+}
+
+.panel-title > a {
+    display: block;
+}
+
+.form-group label {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 500;
+}
+
+.field-validation-error {
+    color: #a94442;
+    font-size: .75em;
+    font-weight: bold;
+}
+
+.input-validation-error {
+    border-color: #a94442;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+.navbar-brand {
+    padding: 0 15px;
+    height: 50px;
+    line-height: 50px;
+}
+
+@media (min-width: 768px) {
+    .navbar-brand {
+        width: 250px;
+        text-align: center;
+    }
+}
+
+.col-md-2 form-group {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.text-right-bold {
+    text-align: right !important;
+    font-weight: bold;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-right-red {
+    text-align: right !important;
+    color: red;
+}
+
+.text-right-blue {
+    text-align: right !important;
+    color: blue;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.result {
+    background-color: lightgreen;
+}
+
+.green {
+    background-color: green;
+    color: green;
+}
+
+.red {
+    background-color: red;
+    color: red;
+}
+
+
+.table > thead > tr > td.selected, .table > tbody > tr > td.selected, .table > tfoot > tr > td.selected, .table > thead > tr > th.selected, .table > tbody > tr > th.selected, .table > tfoot > tr > th.selected, .table > thead > tr.selected > td, .table > tbody > tr.selected > td, .table > tfoot > tr.selected > td, .table > thead > tr.selected > th, .table > tbody > tr.selected > th, .table > tfoot > tr.selected > th {
+    background-color: #a6b3cd;
+}
+
+input.ng-invalid {
+    border-color: red;
+}
+
+select.ng-invalid {
+    border-color: red;
+}
+
+.page-header.navbar .page-logo .logo-default {
+    margin: 0 0 0 25px;
+}
+
+.ui-state-hover {
+    border: 1px solid blue;
+    background: #7BA1C1;
+}
+
+.ui-jqgrid-btable .ui-widget-content.ui-state-hover {
+    background-image: none;
+    background-color: #F7F7BA;
+    color: #000000;
+    opacity: 1;
+}
+
+.ui-jqgrid-btable .ui-widget-content.ui-state-highlight {
+    background-color: #E4EFC9;
+}
+
+.ui-jqgrid .ui-jqgrid-htable th div {
+    height: auto;
+    overflow: hidden;
+    padding-right: 4px;
+    position: relative;
+    vertical-align: text-top;
+    white-space: normal !important;
+}
+
+.ui-jqgrid-sortable {
+    padding-left: 4px;
+    font-size: 13px;
+    color: #655D5D;
+    font-weight: 700;
+}
+
+    .ui-jqgrid-sortable:hover {
+        color: #FDFDFD;
+    }
+
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a, .page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a {
+    background: #337ab7;
+    border-top-color: transparent;
+    color: #ffffff;
+}
+
+.ui-jqgrid-view > .ui-jqgrid-titlebar {
+    height: 40px;
+    line-height: 24px;
+    color: #FFFFFF;
+    background: #428bca;
+    padding: 0;
+    font-size: 15px;
+}
+
+.page-header.navbar .top-menu .navbar-nav > li.dropdown .dropdown-toggle .badge.badge-default {
+    background-color: #428bca;
+    color: #ffffff;
+}
+
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open > a, .page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a {
+    background: #428bca;
+    border-top-color: transparent;
+    color: #ffffff;
+}
+
+.glyphicon-time:hover {
+    cursor: pointer;
+}
+
+.fa-clock-o {
+    cursor: pointer;
+}
+
+.fa-star:active {
+    cursor: pointer;
+    color: #578EBE;
+    border-color: black;
+}
+
+.fa-star:hover {
+    cursor: pointer;
+    color: blue;
+    border-color: black;
+}
+
+.paginapreferida {
+    color: #578EBE;
+    border-color: black;
+}
+
+.dropzone {
+    border: 2px dashed #bbb;
+    border-radius: 5px;
+    padding: 25px;
+    text-align: center;
+    font: 12pt bold;
+    color: #bbb;
+    margin-bottom: 15px;
+}
+
+
+
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    z-index: 0;
+}
+
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    z-index: 1;
+    margin-left: -1px;
+}

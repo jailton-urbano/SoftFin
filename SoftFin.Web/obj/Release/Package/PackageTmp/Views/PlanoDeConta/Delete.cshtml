@@ -1,0 +1,49 @@
+﻿
+@model SoftFin.Web.Models.PlanoDeConta
+@{
+    ViewBag.Title = "Plano de Contas - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.codigo)
+                    @Html.TextBoxFor(x => x.codigo, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.codigo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.nivelSuperior)
+                    @Html.TextBoxFor(x => x.nivelSuperior, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.nivelSuperior)
+                </div>
+            </div>
+        </div>
+        
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>

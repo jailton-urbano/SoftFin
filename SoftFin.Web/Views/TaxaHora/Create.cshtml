@@ -1,0 +1,80 @@
+﻿@model SoftFin.Web.Models.TaxaHora
+@{
+    ViewBag.Title = "Taxa Hora - Novo";
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.empresa_id)
+
+
+
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.categoria_id)
+                    @Html.DropDownListFor(model => model.categoria_id, (SelectList)ViewData["categoria"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.categoria_id)
+                </div>
+                <div class='col-md-6 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.dataValidade)
+                    <input type="text" id="dataValidade" name="dataValidade" class="form-control" value="@Model.dataValidade.ToString("dd/MM/yyyy")" />
+
+                    @Html.ValidationMessageFor(x => x.dataValidade)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.taxaHoraVenda)
+                    @Html.TextBoxFor(x => x.taxaHoraVenda, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.taxaHoraVenda)
+                </div>
+                <div class='col-md-2 form-group'>
+                    @Html.LabelFor(x => x.taxaHoraCusto)
+                    @Html.TextBoxFor(x => x.taxaHoraCusto, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.taxaHoraCusto)
+                </div>
+            </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    </fieldset>
+}
+
+<div class="alert alert-info">
+    @ViewBag.msg
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#taxaHoraVenda').attr('maxlength', '18');
+    $('#taxaHoraVenda').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#taxaHoraCusto').attr('maxlength', '18');
+    $('#taxaHoraCusto').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $("#dataValidade").datepicker({ dateFormat: "dd/mm/yy" });
+    $('#dataValidade').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+</script>

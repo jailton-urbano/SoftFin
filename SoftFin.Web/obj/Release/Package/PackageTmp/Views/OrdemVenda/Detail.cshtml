@@ -1,0 +1,166 @@
+﻿@model SoftFin.Web.Models.OrdemVenda
+@{
+    ViewBag.Title = "Ordem de Venda - Consulta";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @Html.ActionLink("Voltar", "/Index", "OrdemVenda", null, new { @class = "btn btn-primary" })
+        <br /> <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.descricao)
+                    @Html.TextBoxFor(x => x.descricao, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.descricao)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.data)
+                    <input type='text' id='data' name='data' class='form-control' value='@Model.data.Date.ToString("dd/MM/yyyy")' />
+                    @Html.ValidationMessageFor(x => x.data)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.statusParcela_ID)
+                    @Html.DropDownListFor(x => x.statusParcela_ID, (SelectList)ViewData["statusParcela"], new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.statusParcela_ID)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.itemProdutoServico_ID)
+                    @Html.DropDownListFor(x => x.itemProdutoServico_ID, (SelectList)ViewData["item"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.itemProdutoServico_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.tabelaPreco_ID)
+                    @Html.DropDownListFor(x => x.tabelaPreco_ID, (SelectList)ViewData["tabelaPreco"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.tabelaPreco_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valor)
+                    @Html.TextBoxFor(x => x.valor, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valor)
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.pessoas_ID)
+                    @Html.DropDownListFor(x => x.pessoas_ID, (SelectList)ViewData["pessoas"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.pessoas_ID)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.unidadeNegocio_ID)
+                    @Html.DropDownListFor(x => x.unidadeNegocio_ID, (SelectList)ViewData["unidadeNegocio"], "---Selecione---", new { @class = "form-control" })
+
+                    @Html.ValidationMessageFor(x => x.unidadeNegocio_ID)
+                </div>
+            </div>
+        <div class='row'>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.ParcelaContrato.ContratoItem.Contrato.contrato)
+                    @Html.TextBoxFor(x => x.ParcelaContrato.ContratoItem.Contrato.contrato,null, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.ParcelaContrato.parcela)
+                    @Html.TextBoxFor(x => x.ParcelaContrato.parcela,null, new { @class = "form-control" })
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.Numero)
+                    @Html.TextBoxFor(x => x.Numero,null, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        @Html.ActionLink("Voltar", "/Index", "OrdemVenda", null, new { @class = "btn btn-primary" })
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('input[type!=hidden]').attr('disabled', 'disabled')
+    $('select').attr('disabled', 'disabled')
+</script>
+<style type='text/css'>
+    <!--
+    #id {
+        width: 275.00px;
+    }
+
+    #descricao {
+        width: 275.00px;
+    }
+
+    #valor {
+        width: 275.00px;
+    }
+
+    #data {
+        width: 275.00px;
+    }
+
+    #parcelaContrato_ID {
+        width: 275.00px;
+    }
+
+    #statusParcela_ID {
+        width: 275.00px;
+    }
+
+    #unidadeNegocio_ID {
+        width: 275.00px;
+    }
+
+    #ParcelaContrato {
+        width: 275.00px;
+    }
+
+    #statusParcela {
+        width: 275.00px;
+    }
+
+    #UnidadeNegocio {
+        width: 275.00px;
+    }
+
+    #pessoas_ID {
+        width: 275.00px;
+    }
+
+    #Pessoa {
+        width: 275.00px;
+    }
+
+    #estabelecimento_id {
+        width: 275.00px;
+    }
+
+    #Estabelecimento {
+        width: 275.00px;
+    }
+
+    #usuarioAutorizador_id {
+        width: 275.00px;
+    }
+
+    #usuarioAutorizador {
+        width: 275.00px;
+    }
+
+    #dataAutorizacao {
+        width: 275.00px;
+    }
+    -->
+</style>
+
+

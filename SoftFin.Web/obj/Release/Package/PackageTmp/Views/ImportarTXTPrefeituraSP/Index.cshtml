@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Importar Arquivo de Retorno Prefeitura de São Paulo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318845-Emiss%C3%A3o-NFS-Soft-Fin-semi-automatica-Prefeitura-S%C3%A3o-Paulo";
+    
+}
+@using (Html.BeginForm("Index", "ImportarTXTPrefeituraSP", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <label>Clique no botão abaixo e informe o arquivo texto: </label> 
+    <input class="btn" type="file" name="file" />
+    
+    <button class="btn btn-primary" type="submit" id="Submit" name="Submit">
+        <span class="glyphicon glyphicon-cloud-upload"></span> Ler Arquivo
+    </button>
+}
+
+
+      <div class='alert alert-info'>
+          @ViewBag.msg
+      </div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

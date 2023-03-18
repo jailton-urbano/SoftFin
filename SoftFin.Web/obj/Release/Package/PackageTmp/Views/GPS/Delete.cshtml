@@ -1,0 +1,106 @@
+﻿
+@model SoftFin.Web.Models.GPS
+@{
+    ViewBag.Title = "GUIA PREVIDÊNCIA SOCIAL - GPS - Exclusão";
+}
+
+
+
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesExclusao.cshtml")
+        <br />
+<div class='container'> 
+
+            <div class='row' >
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.nomeContribuinte)
+                        @Html.TextBoxFor(x => x.nomeContribuinte)                        
+                    </div>
+                    <div class='col-md-4 form-group'>
+                        @Html.LabelFor(x => x.informacoesComplementares)
+                        @Html.TextBoxFor(x => x.informacoesComplementares)                        
+                    </div>
+
+            </div>
+        
+            <div class='row' >
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.dataArrecadacao)
+                        <input type="text" id="dataArrecadacao" name="dataArrecadacao" value="@Model.dataArrecadacao.Date.ToString("dd/MM/yyyy")" />
+                            @Html.ValidationMessageFor(x => x.dataArrecadacao)
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.codigoPagamento)
+                        @Html.TextBoxFor(x => x.codigoPagamento)                        
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.competencia)
+                        @Html.TextBoxFor(x => x.competencia)                        
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.identificador)
+                        @Html.TextBoxFor(x => x.identificador)
+                    </div>
+            </div>
+
+            <div class='row' >
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorArrecadado)
+                        @Html.TextBoxFor(x => x.valorArrecadado)                        
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorOutrasEntidades)
+                        @Html.TextBoxFor(x => x.valorOutrasEntidades)                        
+                    </div>
+
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorAtualizacaoMonetaria)
+                        @Html.TextBoxFor(x => x.valorAtualizacaoMonetaria)                        
+                    </div>
+                    <div class='col-md-2 form-group'>
+                        @Html.LabelFor(x => x.valorTributo)
+                        @Html.TextBoxFor(x => x.valorTributo)
+'                    </div>
+            </div>
+
+
+        </div>
+        <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+
+
+@section scripts{
+    
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $("fieldset input").attr("disabled", "disabled");
+    $("select").attr("disabled", "disabled");
+</script>
+
+<style type='text/css'>
+<!--
+
+#codigoPagamento {width:210.00px;}
+#competencia {width:210.00px;}
+#identificador {width:210.00px;}
+#valorTributo {width:210.00px;}
+#valorOutrasEntidades {width:210.00px;}
+#valorAtualizacaoMonetaria {width:210.00px;}
+#valorArrecadado {width:210.00px;}
+#dataArrecadacao {width:210.00px;}
+#informacoesComplementares {width:360.00px;}
+#nomeContribuinte {width:360.00px;}
+#estabelecimento_id {width:210.00px;}
+#Estabelecimento {width:210.00px;}
+-->
+</style>

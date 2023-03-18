@@ -1,0 +1,61 @@
+﻿@model SoftFin.Web.Models.SaldoBancarioReal
+@{
+    ViewBag.Title = "Saldo Bancário Real - Novo";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206367725-Como-incluir-o-saldo-banc%C3%A1rio-real";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+
+                <div class='col-md-6 form-group'>
+                    @Html.LabelFor(x => x.banco_id)
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.banco_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.dataSaldo)
+                    <input type="text" class="form-control" id="dataSaldo" name="dataSaldo" value="@Model.dataSaldo.ToShortDateString()" />
+                    @Html.ValidationMessageFor(x => x.dataSaldo)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.saldoFinal)
+                    @Html.TextBoxFor(x => x.saldoFinal, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.saldoFinal)
+                </div>
+
+            </div>
+        </div>
+        @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#dataSaldo').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataSaldo').keyup(
+      function (event) {
+          formataData(this, event);
+      });
+
+    $('#saldoFinal').attr('maxlength', '18');
+    $('#saldoFinal').keyup(
+      function (event) {
+          mascara_num(this);
+          //formataValor(this, event);
+      });
+</script>
+

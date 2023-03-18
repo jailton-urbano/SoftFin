@@ -1,0 +1,66 @@
+﻿@model SoftFin.Web.Models.PerfilPagarAprovacao
+@{
+    ViewBag.Title = "Perfil Pagar Aprovação - Alteração";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='container-fluid'>
+            @Html.HiddenFor(x => x.id)
+            @Html.HiddenFor(x => x.usuarioAutorizador_id)
+            <div class='row'>
+
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.usuarioAutorizador_id)
+                    @Html.DropDownListFor(model => model.usuarioAutorizador_id, (SelectList)ViewData["pessoa"], "---Selecione---", new { @class = "form-control", disabled="disabled" })
+                    @Html.ValidationMessageFor(x => x.usuarioAutorizador_id)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorLimiteCPAG)
+                    @Html.TextBoxFor(x => x.valorLimiteCPAG, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorLimiteCPAG)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.valorLimiteNFSE)
+                    @Html.TextBoxFor(x => x.valorLimiteNFSE, null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.valorLimiteNFSE)
+                </div>
+                <div class='col-md-1 form-group'>
+                    @Html.LabelFor(x => x.Inativo)
+                    @Html.CheckBoxFor(x => x.Inativo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Inativo)
+                </div>
+            </div>
+        </div>
+
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class='alert alert-info'>
+            @ViewBag.msg
+        </div>
+    </fieldset>
+}
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#valorLimiteCPAG').attr('maxlength', '18');
+    $('#valorLimiteCPAG').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+    $('#valorLimiteNFSE').attr('maxlength', '18');
+    $('#valorLimiteNFSE').keyup(
+      function (event) {
+          formataValor(this, event);
+      });
+</script>
+

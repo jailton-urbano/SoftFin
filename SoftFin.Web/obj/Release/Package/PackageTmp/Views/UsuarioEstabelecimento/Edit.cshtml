@@ -1,0 +1,55 @@
+﻿@model SoftFin.Web.Models.UsuarioEstabelecimento
+@{
+    ViewBag.Title = "Relacionamento Usuário X Estabelecimento - Editar";
+
+}
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Relacionamento Usuário X Estabelecimento - Alteração</legend>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="container">
+             <div class="row">
+                <div class="col-md-4 form-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.usuario_id)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.usuario_id, ViewData["Usuarios"] as SelectList)   
+                        @Html.ValidationMessageFor(model => model.usuario_id)
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.estabelecimento_id)
+                    </div>
+                    <div class="editor-field">
+                        @Html.DropDownListFor(model => model.estabelecimento_id, ViewData["Estabelecimentos"] as SelectList)   
+                        @Html.ValidationMessageFor(model => model.estabelecimento_id)
+                    </div>
+                </div>
+             </div>
+        </div>
+                <div class="alert alert-info">
+            
+            @ViewBag.msg
+        </div>
+
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
+

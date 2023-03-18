@@ -1,0 +1,209 @@
+﻿@model SoftFin.Web.Models.Estabelecimento
+@{
+    ViewBag.Title = "Relatório Dados Cadastrais Estabelecimento";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class="col-md-4 form-group">
+                @Html.LabelFor(model => model.NomeCompleto)
+                @Html.DropDownList("Estabelecimento_ID", ViewData["Estabelecimento"] as SelectList, new { @class = "form-control" })
+            </div>
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+                    <span class=dddd"glyphicon glyphicon-cog"></span> Gerar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+<div class='container' id="DivDadosEmpresa">
+    <h3>Dados da Empresa:</h3>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            Razão Social:
+        </div>
+        <div class="col-md-2 form-group" id="DivRazaoSocial">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            Endereço:
+        </div>
+        <div class="col-md-2 form-group" id="DivEndereco">
+
+        </div>
+        <div class="col-md-2 form-group">
+            Numero:
+        </div>
+        <div class="col-md-2 form-group" id="DivNumero">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            Bairro:
+        </div>
+        <div class="col-md-2 form-group" id="DivBairro">
+
+        </div>
+        <div class="col-md-2 form-group">
+            UF:
+        </div>
+        <div class="col-md-2 form-group" id="DivUF">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            Cidade:
+        </div>
+        <div class="col-md-2 form-group" id="DivCidade">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            Complemento:
+        </div>
+        <div class="col-md-2 form-group" id="DivComplemento">
+
+        </div>
+        <div class="col-md-2 form-group">
+            Cep:
+        </div>
+        <div class="col-md-2 form-group" id="DivCep">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            CNPJ:
+        </div>
+        <div class="col-md-2 form-group" id="DivCNPJ">
+
+        </div>
+        <div class="col-md-2 form-group">
+            I.Estadual:
+        </div>
+        <div class="col-md-2 form-group" id="DivIEstadual">
+
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-2 form-group">
+            I.Municipal:
+        </div>
+        <div class="col-md-2 form-group" id="DivIMunicipal">
+
+        </div>
+    </div>
+</div>
+    <table>
+        <tr>
+            <th>Bancos</th>
+        </tr>
+        <tr>
+            <td style="width: 100%;">
+                <div id="table_div"></div>
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+
+}
+
+
+
+
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $('#DivDadosEmpresa').hide();
+    });
+
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $('#table_div').html("");
+        $('#DivDadosEmpresa').hide();
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "GetReport",
+            data: {
+                'Estabelecimento_ID': $("#Estabelecimento_ID").val()
+            },
+            success: function (tabledata) {
+
+                $("#DivRazaoSocial").html(tabledata.RazaoSocial);
+                $("#DivEndereco").html(tabledata.Endereco);
+                $("#DivNumero").html(tabledata.Numero);
+                $("#DivBairro").html(tabledata.Bairro);
+                $("#DivDivUF").html(tabledata.Bairro);
+                $("#DivEndereco").html(tabledata.UF);
+                $("#DivComplemento").html(tabledata.Complemento);
+                $("#DivCidade").html(tabledata.Cidade);
+                $("#DivCep").html(tabledata.Cep);
+                $("#DivCNPJ").html(tabledata.CNPJ);
+                $("#DivIEstadual").html(tabledata.IEstadual);
+                $("#DivIMunicipal").html(tabledata.IMunicipal);
+
+                var data = new google.visualization.DataTable();
+
+
+                data.addColumn('string', 'Banco');
+                data.addColumn('string', 'Código');
+                data.addColumn('string', 'Agência');
+                data.addColumn('string', 'Conta');
+
+                for (var i = 0; i < tabledata.bancos.length; i++) {
+                    data.addRow([tabledata.bancos[i].banco,
+                                tabledata.bancos[i].codigo,
+                                tabledata.bancos[i].agencia,
+                                tabledata.bancos[i].conta]);
+
+                    data.setProperty(i, 0, 'style', 'font-weight: bold;');
+
+                }
+
+
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                $('#indicator').hide();
+                $('#DivDadosEmpresa').show();
+
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+
+
+</script>

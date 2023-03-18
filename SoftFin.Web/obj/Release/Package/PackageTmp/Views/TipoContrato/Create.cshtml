@@ -1,0 +1,35 @@
+﻿@model SoftFin.Web.Models.TipoContrato
+@{
+    ViewBag.SubTitle = "";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/202252849";
+
+
+}
+
+
+@using (Html.BeginForm())
+{
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+    <div class="container-fluid">
+        <div class="row" >
+            <div class="col-md-3 form-group">
+                    Tipo do Contrato:
+                    @Html.TextBoxFor(x => x.tipo,null, new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.tipo) 
+            </div>
+        </div>
+    </div>
+    @RenderPage("~/Views/Shared/_BotoesInclusao.cshtml")
+
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>

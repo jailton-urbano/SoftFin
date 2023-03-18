@@ -1,0 +1,106 @@
+﻿@model SoftFin.Web.Models.Pessoa
+@{
+    ViewBag.Title = "Relatório Usuário";
+}
+
+
+@using (Html.BeginForm())
+{
+    <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+        <span class="glyphicon glyphicon-cog"></span> Gerar
+    </button>
+    
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+    <table>
+        <tr>
+            <th>Resultado</th>
+        </tr>
+        <tr>
+            <td style="width: 100%;">
+                <div id="table_div"></div>
+            </td>
+        </tr>
+    </table>
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+}
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+
+</script>
+
+<script src="https://www.google.com/jsapi"></script>
+
+<script>
+    google.load("visualization", "1", { packages: ["table"] });
+    $('#gerar').click(function () {
+        $('#indicator').show();
+        $('#table_div').html("");
+
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "GetReport",
+
+            success: function (tabledata) {
+
+                var data = new google.visualization.DataTable();
+
+
+                data.addColumn('string', 'Código');
+                data.addColumn('string', 'Nome Estabelecimento');
+                data.addColumn('string', 'Codigo Usuario');
+                data.addColumn('string', 'Nome Usuario');
+                data.addColumn('string', 'Perfil');
+
+                for (var i = 0; i < tabledata.length; i++) {
+                    data.addRow([tabledata[i].empcod,
+                                tabledata[i].empnom,
+                                tabledata[i].codigo,
+                                tabledata[i].nome,
+                                tabledata[i].Descricao
+                    ]);
+
+                    data.setProperty(i, 2, 'style', 'font-weight: bold;');
+
+                }
+
+
+
+                var table = new google.visualization.Table(document.getElementById('table_div'));
+
+                
+                table.draw(data, { allowHtml: true, showRowNumber: false });
+
+
+                $('#indicator').hide();
+
+
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+ 
+
+</script>

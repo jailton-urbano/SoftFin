@@ -1,0 +1,124 @@
+﻿
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/RelatorioFechamentoCaixa/RelatorioFechamentoCaixa.js"></script>
+
+<div ng-app="SOFTFIN">
+    <div ng-controller="MestreEntidade">
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+
+
+
+        <div id="Grid" class="container-fluid" ng-show="true">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class=''>
+                        <div class='row'>
+
+                            <div class='col-md-3 form-group'>
+                                <label>Loja</label>
+                                <select class="form-control" ng-model="entidade.loja" ng-options="o.Value as o.Text for o in ListaLoja" ng-change="LoadCaixa()">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label>Caixa</label>
+                                <select class="form-control" ng-model="entidade.idCaixa" ng-options="o.Value as o.Text for o in ListaCaixa">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+
+                            <div class='col-md-3 form-group'>
+                                <label>Operador</label>
+                                <select class="form-control" ng-model="entidade.idOperador" ng-options="o.Value as o.Text for o in ListaOperador">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3 form-group' datetimez ng-model="entidade.dataIni">
+                                <label>Data Inicial</label>
+                                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataIni" required ui-date-mask />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+                            <div class='col-md-3 form-group' datetimez ng-model="entidade.dataFim">
+                                <label>Data Final</label>
+                                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataFim" required ui-date-mask />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+                            <div class='col-md-3 form-group' >
+                                <span class="input-group-btn">
+                                    <button type="button"
+                                            ng-click="Executar()"
+                                            style="top: 24px;"
+                                            class="btn btn-primary"
+                                            ng-show="!ModoConsulta">
+                                        <span class="glyphicon glyphicon-print"></span> Executar
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+        <div class="container-fluid" ng-show="true">
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class='container-fluid'>
+                        <div class='row'>
+                            <iframe src="{{paramReport}}" style="width:100%; height:980px;" scrolling="no" frameborder="0"></iframe>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+

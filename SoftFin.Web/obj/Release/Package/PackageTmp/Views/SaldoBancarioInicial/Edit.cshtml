@@ -1,0 +1,62 @@
+﻿@model SoftFin.Web.Models.SaldoBancarioInicial
+@{
+    ViewBag.Title = "Saldo Bancario Inicial  - Alteração";
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/205667859";
+}
+
+
+@using (Html.BeginForm())
+{
+         @Html.AntiForgeryToken()
+     @Html.ValidationSummary(true)
+    <fieldset>
+        
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <br />
+        <div class='container'>
+            @Html.HiddenFor(x => x.id)
+            <div class='row'>
+
+                <div class='col-md-4 form-group'>
+                    @Html.LabelFor(x => x.banco_id)
+                    @Html.DropDownListFor(model => model.banco_id, (SelectList)ViewData["banco"], "---Selecione---", new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.banco_id)
+                </div>
+                <div class='col-md-1 form-group'>
+                    @Html.LabelFor(x => x.Ano)
+                    @Html.TextBoxFor(x => x.Ano, null , new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.Ano)
+                </div>
+                <div class='col-md-3 form-group'>
+                    @Html.LabelFor(x => x.saldoInicial)
+                    @Html.TextBoxFor(x => x.saldoInicial, null , new { @class = "form-control" }) 
+                    @Html.ValidationMessageFor(x => x.saldoInicial)
+                </div>
+
+            </div>
+        </div>
+
+        @RenderPage("~/Views/Shared/_BotoesAlteracao.cshtml")
+        <div class="alert alert-info">
+            
+
+            @ViewBag.msg
+        </div>
+    </fieldset>
+
+}
+
+
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+    $('#saldoInicial').attr('maxlength', '18');
+    $('#saldoInicial').keyup(
+      function (event) {
+          mascara_num(this);
+      });
+</script>

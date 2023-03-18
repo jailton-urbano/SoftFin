@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <script>
+            $('#excluir').click(function () {
+                $(function() {
+                    $( "#dialog" ).dialog();
+                });
+            });
+    </script>
+</head>
+<body>
+    <form>
+        <input id="excluir" type="submit" name="buttonExcluir" />
+    </form>
+    <div id="dialog" title="Basic dialog">
+        <p>Confirmar exclusão?</p>
+    </div>
+</body>
+</html>
+

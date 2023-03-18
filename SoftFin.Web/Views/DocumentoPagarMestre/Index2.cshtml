@@ -1,0 +1,334 @@
+﻿@model SoftFin.Web.Models.DocumentoPagarMestreVlw
+@{
+    ViewBag.Title = "Lista Contas a Pagar"; 
+
+}
+
+    
+
+
+
+
+<div class='panel-group' id='accordion'>
+    <div class='panel panel-default'>
+        <div class='panel-heading'>
+            <h4 class='panel-title'>
+                <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>Filtros:
+                </a>
+            </h4>
+        </div>
+        <div id='collapseOne' class='panel-collapse collapse in'>
+            <div class='panel-body'>
+                <form class='form-search'>
+                    <div class='container'>
+
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                @Html.LabelFor(x => x.pessoa_id)
+                                
+                                @Html.DropDownListFor(model => model.pessoa_id, (SelectList)ViewData["Pessoas"], "---Selecione---", new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.pessoa_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataCompetencia) 
+                                
+                                @Html.TextBox("dataCompetencia", ViewData["competencia"].ToString(), new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.dataCompetencia)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataPagamentoIni) 
+                                
+                                <input type='text' id='dataPagamentoIni' name='dataPagamentoIni' class='form-control' value='' />
+                                @Html.ValidationMessageFor(x => x.dataPagamentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataPagamentoFim) 
+                                
+                                <input type='text' id='dataPagamentoFim' name='dataPagamentoFim' class='form-control' value='' />
+                                @Html.ValidationMessageFor(x => x.dataPagamentoFim)
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.tipodocumento_id)
+                                
+                                @Html.DropDownListFor(model => model.tipodocumento_id, (SelectList)ViewData["TipoDocumento"], "---Selecione---", new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.tipodocumento_id)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.tipolancamento)
+
+                                @Html.DropDownListFor(x => x.tipolancamento, (SelectList)ViewData["TipoLancamento"], new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.tipolancamento)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.numeroDocumento)
+                                
+                                @Html.TextBoxFor(x => x.numeroDocumento, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.numeroDocumento)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataDocumentoIni)
+                                
+                                <input type='text' id='dataDocumentoIni' name='dataDocumentoIni' class = "form-control" value='' />
+                                @Html.ValidationMessageFor(x => x.dataDocumentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataDocumentoFim)
+                                
+                                <input type='text' id='dataDocumentoFim' name='dataDocumentoFim' class = "form-control" value='' />
+                                @Html.ValidationMessageFor(x => x.dataDocumentoFim)
+                            </div>
+
+                        </div>
+                        <div class='row'>
+
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataVencimentoIni)
+                                
+                                <input type='text' id='dataVencimentoIni' name='dataPagamentoIni' class = "form-control value='' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.dataVencimentoFim)
+                                
+                                <input type='text' id='dataVencimentoFim' name='dataVencimentoFim' class = "form-control value='' />
+                                @Html.ValidationMessageFor(x => x.dataVencimentoFim)
+                            </div>
+
+
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.valorBrutoIni)
+                                
+                                @Html.TextBoxFor(x => x.valorBrutoIni, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.valorBrutoIni)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                @Html.LabelFor(x => x.valorBrutoFim)
+                                
+                                @Html.TextBoxFor(x => x.valorBrutoFim, null, new { @class = "form-control" }) 
+                                @Html.ValidationMessageFor(x => x.valorBrutoFim)
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                Banco
+                                
+                                @Html.DropDownList("banco", (SelectList)ViewData["bancp"], "---Selecione---", new { @class = "form-control" }) 
+                                
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <button type='button' name='pesquisa' id='pesquisa' class='btn'>Pesquisar</button>
+                    <button type="reset" name='limpar' id='limpar' class='btn'>Limpar</button>
+
+                    <a href='@Url.Action("Excel")'>
+                        <img src='~/Content/images/icoExcel.gif' /></a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="indicator" style="display: none; text-align: center;" class="loading_img">
+    <img src="~/content/images/loading_bar_animated.gif" />
+</div>
+
+<div id="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body" id="dtgd">
+                    <div class="table-responsive" id="table-responsive">
+                    </div>
+                    <!-- /.table-responsive -->
+                    <a href="#" id="btnDet" class="btn btn-default" role="button"><span class="glyphicon glyphicon-info-sign"></span> Detalhar</a>
+                    <a href="#" id="btnAdd" class="btn btn-default" role="button"><span class="glyphicon glyphicon-plus"></span> Incluir</a>
+                    <a href="#" id="btnEdi" class="btn btn-default" role="button"><span class="glyphicon glyphicon-edit"></span> Prorrogar Vencto</a>
+                    <a href="#" id="btnExc" class="btn btn-default" role="button"><span class="glyphicon glyphicon-trash"></span> Excluir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+        $("#dtgd").hide();
+        var table;
+
+        function IniciaDT()
+        {
+            table = $('#dataTables').DataTable({
+                stateSave: true,
+                "fnStateSave": function (oSettings, oData) {
+                    localStorage.setItem( 'DataTables_'+window.location.pathname, JSON.stringify(oData) );
+                },
+                "fnStateLoad": function (oSettings) {
+                    return JSON.parse( localStorage.getItem('DataTables_'+window.location.pathname) );
+                }
+            });
+
+            $('#dataTables tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    $('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        }
+
+
+
+        $('#btnAdd').click(function () {
+            window.location = "Create";
+        });
+
+
+        $('#btnEdi').click(function () {
+            var gr = table.cell('.selected', 0).data();
+            console.log(gr);
+            if (gr != null) {
+                window.location = "Prorrogar/" + gr;
+            }
+            else {
+                alert("Selecione um item da lista.");
+            };
+        });
+
+        $('#btnExc').click(function () {
+            var gr = table.cell('.selected', 0).data();
+            console.log(gr);
+            if (gr != null) {
+                window.location = "Delete/" + gr;
+            }
+            else {
+                alert("Selecione um item da lista.");
+            };
+        });
+
+        $('#btnDet').click(function () {
+            var gr = table.cell('.selected', 0).data();
+            console.log(gr);
+            if (gr != null) {
+                window.location = "Detail/" + gr;
+            }
+            else {
+                alert("Selecione um item da lista.");
+            };
+        });
+
+
+
+        $('#example tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#button').click(function () {
+            table.row('.selected').remove().draw(false);
+        });
+        
+
+        $("#dataCompetencia").datepicker({ dateFormat: "mm/yy" });
+
+        $("#dataDocumento").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataVencimentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataVencimentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataLancamentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataLancamentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataPagamentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataPagamentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+
+        $("#dataDocumentoIni").datepicker({ dateFormat: "dd/mm/yy" });
+        $("#dataDocumentoFim").datepicker({ dateFormat: "dd/mm/yy" });
+
+
+        $('#valorBrutoIni').attr('maxlength', '18');
+        $('#valorBrutoIni').keyup(
+          function (event) {
+              formataValor(this, event);
+          });
+        $('#valorBrutoFim').attr('maxlength', '18');
+        $('#valorBrutoFim').keyup(
+          function (event) {
+              formataValor(this, event);
+          });
+
+        $('#pesquisa').click(function () {
+            $("#indicator").show();
+            $("#container").hide();
+            var caminho = '@Url.Action("ListasDT")';
+            caminho += '?pessoa_id=';
+            caminho += $('#pessoa_id').val();
+            caminho += '&banco=';
+            caminho += $('#banco').val();
+            caminho += '&dataCompetencia=';
+            caminho += $('#dataCompetencia').val();
+            caminho += '&dataVencimentoIni=';
+            caminho += $('#dataVencimentoIni').val();
+            caminho += '&dataVencimentoFim=';
+            caminho += $('#dataVencimentoFim').val();
+            caminho += '&valorBrutoIni=';
+            caminho += $('#valorBrutoIni').val();
+            caminho += '&valorBrutoFim=';
+            caminho += $('#valorBrutoFim').val();
+            caminho += '&tipodocumento_id=';
+            caminho += $('#tipodocumento_id').val();
+            caminho += '&tipolancamento=';
+            caminho += $('#tipolancamento').val();
+            caminho += '&numeroDocumento=';
+            caminho += $('#numeroDocumento').val();
+            caminho += '&dataDocumentoIni=';
+            caminho += $('#dataDocumentoIni').val();
+            caminho += '&dataDocumentoFim=';
+            caminho += $('#dataDocumentoFim').val();
+            caminho += '&dataPagamentoIni=';
+            caminho += $('#dataPagamentoIni').val();
+            caminho += '&dataPagamentoFim=';
+            caminho += $('#dataPagamentoFim').val();
+
+            $.ajax(
+            {
+                url: caminho,
+                type: 'POST',
+                success: function (data) {
+                    $("#table-responsive").html(data);
+                    IniciaDT();
+                    $("#dtgd").show();
+
+                    $("#indicator").hide();
+                    $("#container").show();
+                },
+                error: function () {
+                    $("#indicator").hide();
+                    $("#container").show();
+                    alert("error");
+                }
+            }
+);
+
+
+        });
+
+    });
+    </script>
+
+
+

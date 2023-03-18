@@ -1,0 +1,464 @@
+﻿
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/LojaFechamento/LojaFechamentoIndex.js"></script>
+
+<div ng-app="SOFTFIN" id="DivTotal">
+    <div ng-controller="MestreEntidade">
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+
+
+
+        <script type="text/ng-template" id="modalNovo.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Novo Fechamento de Caixa</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-4 form-group'>
+                                <label>Loja</label>
+                                <select ng-disabled="false" ng-change="LoadCaixa()" class="form-control" ng-model="entidade.idLoja" ng-options="o.Value as o.Text for o in ListaLoja">
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-3 form-group' datetimez ng-model="entidade.dataFechamento" ng-disabled="true">
+                                <label>Data Fechamento</label>
+                                <input ng-disabled="false" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataFechamento" required ui-date-mask />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Cancelar o fechamento ?</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.dataFechamento | date:dd/MM/yyyy}} - {{item.sequencia}}</label>
+                                <label> / {{item.loja}}
+                                / {{item.caixa}}
+                                / {{item.operador}}
+                            </label>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+
+            <div class='panel-body'>
+                <form class="form-search">
+                    <div class='container'>
+
+                        <div class='col-md-3 form-group'>
+                            <label>Pesquisa : </label>
+                            <input type="text" class="form-control" ng-model="procurar" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridPrincipal"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+
+
+                            <button style="border-right-width: 0px; padding-right: 49px;"
+                                    ng-click="ObterTodos()"
+                                    title="Atualiza a lista na tela"
+                                    class="btn btn-warning">
+                                <span class="glyphicon glyphicon-refresh"></span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 72px;"
+                                    ng-click="Novo()"
+                                    ng-show="EditAccess"
+                                    title="Novo registro"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+
+
+                        </th>
+                        <th>Dados</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in lista|orderBy:sortKey:reverse|filter:procurar|itemsPerPage:10" pagination-id="gridPrincipal">
+                        <td style="width: 40px;">
+
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 50px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 62px;"
+                                    ng-click="Alterar(item)"
+                                    ng-show="EditAccess"
+                                    title="Alterar o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Alterar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 50px;"
+                                    type="button"
+                                    ng-click="Excluir(item)"
+                                    ng-show="EditAccess"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Cancelar
+                            </button>
+
+                        </td>
+
+                        <td>
+                            <b>
+                                <span ng-click="ordenar('loja')"> Loja </span>
+                                / <span ng-click="ordenar('caixa')"> Caixa </span>
+                                / <span ng-click="ordenar('operador')">Operador</span>
+
+
+                            </b>
+                            <br />
+
+                            <label>
+                                {{item.loja}}
+                                / {{item.caixa}}
+                                / {{item.operador}}
+
+                            </label>
+
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('dataFechamento')"> Data </span>
+                                / <span ng-click="ordenar('sequencia')"> Sequecia </span>
+                                / <span ng-click="ordenar('descricao')">Descrição</span>
+                                / <span ng-click="ordenar('ativo')">Ativo</span>
+                                / <span ng-click="ordenar('flgSituacao')">Situação</span>
+
+                            </b>
+                            <br />
+
+                            <label>
+                                {{item.dataFechamento | date:'dd/MM/yyyy'}}
+                                / {{item.sequencia}}
+                                / {{item.descricao}}
+                                / {{item.ativo | yesNo }}
+                                / {{item.flgSituacao | flgSituacao }}
+                            </label>
+                            <br />
+
+                            <b>
+                                <span ng-click="ordenar('saldoInicial')"> Saldo Inicial </span>
+                                / <span ng-click="ordenar('valorBruto')"> Valor Bruto </span>
+                                / <span ng-click="ordenar('valorLiquido')"> Liquido </span>
+                                / <span ng-click="ordenar('valorTaxas')">Taxas</span>
+                                / <span ng-click="ordenar('saldoFinal')">Saldo Final</span>
+
+                            </b>
+                            <br />
+
+                            <label>
+                                {{item.saldoInicial | number:2}}
+                                / {{item.valorBruto | number:2}}
+                                / {{item.valorLiquido | number:2}}
+                                / {{item.valorTaxas | number:2}}
+                                / {{item.saldoFinal  | number:2}}
+
+                            </label>
+                            <br />
+
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridPrincipal"></dir-pagination-controls>
+
+
+
+        </div>
+
+        <div class="container-fluid" ng-show="showManut">
+
+            <div class="panel panel-primary">
+
+
+
+                <div ng-form="frm">
+                    <div class="panel-body">
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-9 form-group'>
+                                </div>
+                                <div class='col-md-3 form-group'>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Salvar()"
+                                                class="btn btn-primary"
+                                                ng-show="!ModoConsulta">
+                                            <span class="glyphicon glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                        </button>
+                                    </span>
+                                    <span class="input-group-btn">
+                                        <button type="button"
+                                                ng-click="Voltar()"
+                                                class="btn btn-default">
+                                            <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Loja</label>
+                                    <select ng-disabled="true" ng-change="LoadCaixa(entidade.Loja_id)" class="form-control" ng-model="entidade.Loja_id" ng-options="o.Value as o.Text for o in ListaLoja">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Caixa</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.LojaCaixa_id" ng-options="o.Value as o.Text for o in ListaCaixa">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Operador</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.LojaOperador_id" ng-options="o.Value as o.Text for o in ListaOperador">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-3 form-group' datetimez ng-model="entidade.dataFechamento" ng-disabled="true">
+                                    <label>Data Fechamento</label>
+                                    <input ng-disabled="true" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="entidade.dataFechamento" required ui-date-mask />
+                                    @*<span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>*@
+                                </div>
+                                <div class='col-md-1 form-group'>
+                                    <label>Sequencia</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.sequencia" class="form-control" required ng-maxlength="3" maxlength="3" />
+                                </div>
+
+                                <div class='col-md-8 form-group'>
+                                    <label>Descrição</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="entidade.descricao" class="form-control" required ng-maxlength="50" maxlength="50" />
+                                </div>
+
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Inicial</label>
+                                    <input ng-disabled="ModoConsulta" ng-change="Saldo()" type="text" ng-model="entidade.saldoInicial" class="form-control" required ui-number-mask="2" ui-negative-number />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Bruto</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.valorBruto" class="form-control" required ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Liquido</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.valorLiquido" class="form-control" required ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Taxas</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.valorTaxas" class="form-control" required ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Saldo Final</label>
+                                    <input ng-disabled="true" type="text" ng-model="entidade.saldoFinal" class="form-control" required ui-number-mask="2" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Situação</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="entidade.flgSituacao" ng-options="o.Value as o.Text for o in ListaSituacao">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class='row'>
+                                <div class='col-md-12 form-group'>
+                                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridSecundario"></dir-pagination-controls>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Descrição Recebimento / Taxa / Dias Prazo
+                                                </th>
+                                                <th>
+                                                    Valor Bruto Recebido 
+                                                </th>
+                                                <th>
+                                                    Valor Taxa
+                                                </th>
+                                                <th>
+                                                    Valor Liquido
+                                                </th>
+                                                <th>
+                                                    Data Previsão Pagamento
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr dir-paginate="item in ListaTipoRecebimentoCaixa|orderBy:sortKey:reverseRec|filter:procurarRec|itemsPerPage:10" pagination-id="gridSecundario">
+                                                <td>{{item.codigo}} {{item.descricao}} / {{item.taxa|number:2}}% / {{item.prazoDias}}</td>
+                                                <td>
+
+                                                    <input type="text" ng-model="item.valorBruto" class="form-control" required ui-number-mask="2" ng-change="Calcula(item)" ng-disabled="ModoConsulta" />
+
+                                                </td>
+                                                <td>{{item.valorTaxa | number:2}}</td>
+                                                <td>{{item.valorLiquido | number:2}}</td>
+                                                <td>
+                                                    <div datetimez ng-model="item.dataPagamentoPrevisto" ng-disabled="ModoConsulta">
+                                                        <input ng-disabled="ModoConsulta" data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="item.dataPagamentoPrevisto" required ui-date-mask />
+                                                        <span class="add-on">
+                                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <dir-pagination-controls max-size="10" boundary-links="true" pagination-id="gridSecundario"></dir-pagination-controls>
+
+                                </div>
+                            </div>
+
+                                    <div class='row'>
+                                        <div class='col-md-9 form-group'>
+                                        </div>
+                                        <div class='col-md-3 form-group'>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="Salvar()"
+                                                        class="btn btn-primary"
+                                                        ng-show="!ModoConsulta">
+                                                    <span class="glyphicon glyphicon-floppy-disk"></span> {{msgSalvar}}
+                                                </button>
+                                            </span>
+                                            <span class="input-group-btn">
+                                                <button type="button"
+                                                        ng-click="Voltar()"
+                                                        class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-log-out"></span> Voltar
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+            </div>
+        </div>
+
+
+        <div class="alert alert-info" ng-show="showOK">
+            {{msgOK}}
+        </div>
+        <div class="alert alert-danger" ng-show="showNOK">
+            {{msgNOK}}
+            <ul>
+                <li ng-repeat="item in Erros">{{item}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+

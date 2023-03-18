@@ -1,0 +1,1351 @@
+﻿@{
+
+    ViewBag.Helplink = "https://softfin.zendesk.com/hc/pt-br/articles/206318865";
+}
+
+<script src="~/Scripts/angular/angular.js"></script>
+<script src="~/Scripts/angular/angular-i18n/1.2.5/angular-locale_pt-br.js"></script>
+<script src="~/Scripts/bootstap/ui-bootstrap-tpls-0.13.0.js"></script>
+<script src="~/Scripts/angular/mask/moment.js"></script>
+<script src="~/Scripts/angular/mask/masks.js"></script>
+<script src="~/Scripts/angular/utils/directives/pagination/dirPagination.js"></script>
+<script src="~/Scripts/bootstap/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.20.js"></script>
+<script src="~/Scripts/Views/CPAG/CPAGIndex.js"></script>
+
+
+
+<div ng-app="SOFTFIN" class="container-fluid">
+    <div ng-controller="MestreCPAG" ng-cloak>
+
+        <script type="text/ng-template" id="modalExcluir.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Excluir o Lançamento ?</h3>
+                </div>
+               
+                <div class="modal-body">
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 form-group'>
+                                <label>{{item.pessoa}} - {{item.descricao}} - {{item.valorBruto}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" title="Executa o procedimento">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        OK
+                    </button>
+
+                    <button class="btn btn-default" ng-click="cancel()" title="Saida da opção">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalUpload.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo para upload</h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-12 form-group'>
+                                <label> Descrição </label>
+                                <input type="text" maxlength="50" ng-model="descricao" id="DescricaoArquivo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                        @*<div class="row">
+                                <div class='col-md-3 form-group'>
+                                <label>ou</label>
+                                </div>
+                            </div>*@
+                        @*<div class="row">
+                                <div class='col-md-12 form-group'>
+
+                                    <div class="asset-upload" dropzone="openFolder">
+                                        Upload into: ****
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+                        </div>
+                        
+                        
+
+                    
+                            
+                                  
+                      <button class="btn btn-primary" ng-click="ok()">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Upload
+                        </button>
+                            
+         
+                        <button class="btn btn-" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+                       
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalUploadLacto.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Selecione o arquivo para upload e lançamento no Contas a Pagar somente extensões .png, .jpg e .pdf (convertido para .png) </h3>
+                </div>
+                <div class="modal-body">
+                    <div class='container-fluid'>
+                        <div class="row">
+                            <div class='col-md-12 form-group'>
+                                <label> Descrição </label>
+                                <input type="text" maxlength="50" ng-model="descricao" id="DescricaoArquivo" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-md-3 form-group'>
+                                <label> Arquivo </label>
+                                <input type="file" id="newPhotos" accept="*" ng-model="arquivo" has-files="hasFiles">
+                            </div>
+                        </div>
+                        @*<div class="row">
+                                <div class='col-md-3 form-group'>
+                                <label>ou</label>
+                                </div>
+                            </div>*@
+                        @*<div class="row">
+                                <div class='col-md-12 form-group'>
+
+                                    <div class="asset-upload" dropzone="openFolder">
+                                        Upload into: ****
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" ng-show="showOK">
+                            {{msgOK}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showNOK">
+                            {{msgNOK}}
+                            <ul>
+                                <li ng-repeat="item in Erros">{{item}}</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" ng-click="ok()">
+
+                           <span class="glyphicon glyphicon-ok"></span>
+                            Upload
+                           
+
+                        </button>
+
+                        <button class="btn btn-default" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Voltar
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="modalArquivos.html">
+
+            <div class="modal-header">
+                <h3>Arquivos Relacionados</h3>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">Opção</th>
+                            <th>Visualização</th>
+                            <th>Informação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ListaArquivos">
+                            <td>
+
+                                <button ng-show="!ModoConsulta"
+                                        type="button"
+                                        ng-click="Excluir(item)"
+                                        class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-minus"></span> Excluir
+                                </button>
+
+                                <a href='{{item.arquivoReal}}' class="btn btn-success" target="_blank" style="margin-top: 4px; padding-right: 26px;">
+                                    <span class="glyphicon glyphicon-open-file"></span> Abrir
+                                </a>
+                            </td>
+                            <td>
+                                <a prettyp href="{{item.arquivoReal}}" rel="prettyPhoto[main]" title="{{item.Descricao}}">
+                                    <img src="{{item.arquivoReal}}" width="80" height="80" alt="{{item.Descricao}}" />
+                                </a>
+                            </td>
+                            <td>
+                                <b>Nome Arquivo:</b>{{item.arquivoOriginal}} <br />
+                                <b>Descrição:</b>{{item.descricao}} <br />
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+
+                <div class="alert alert-danger" ng-show="showNOK">
+                    {{msgNOK}}
+                    <ul>
+                        <li ng-repeat="item in Erros">{{item}}</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-default" ng-click="cancel()">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+            </div>
+
+
+
+        </script>
+
+        <script type="text/ng-template" id="modalVencimentos.html">
+            <div>
+                <div class="modal-header">
+                    <h3>Alterar a Data Previsto Vencimento</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Erro</th>
+                                <th>Situação</th>
+                                <th>Valor</th>
+                                <th>Data Vencimento</th>
+                                <th>Pagamento Previsto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in objs">
+                                <td>
+                                    {{item.desc}}
+                                </td>
+                                <td style="color: red">
+                                    {{item.erro}}
+                                </td>
+                                <td>
+                                    {{item.status}}
+                                </td>
+                                <td>
+                                    {{item.valor | number:2}}
+                                </td>
+                                <td>
+                                    {{item.vencimento | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td>
+                                    <div ng-show="item.statusPagamento != 1">
+                                        {{item.vencimentoPrevisto | date:'dd/MM/yyyy' }}
+                                    </div>
+                                    <div ng-show="item.statusPagamento == 1" datetimez ng-model="item.vencimentoPrevisto" >
+                                        <input data-format="dd/MM/yyyy" type="text" class="form-control"
+                                               ng-model="item.vencimentoPrevisto" required ui-date-mask />
+                                        <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div class="alert alert-info" ng-show="showOK">
+                        {{msgOK}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="showNOK">
+                        {{msgNOK}}
+                        <ul>
+                            <li ng-repeat="item in Erros">{{item}}</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" ng-click="ok()" ng-hide="!showSalvar">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Salvar
+                    </button>
+                    <button class="btn btn-" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Voltar
+                    </button>
+                </div>
+            </div>
+        </script>
+
+        <div id="Grid" class="container-fluid" ng-show="showGrid">
+            
+            <div class='panel-group' id='accordion'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordion' href='#collapseOne'>
+                                Filtros:
+                            </a>
+                        </h4>
+                    </div>
+                    <div id='collapseOne' class='panel-collapse collapse in'>
+                        <div class='panel-body'>
+                            <form class='form-search'>
+                                <div class='container'>
+
+                                    <div class='row'>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataVencimentoIni">
+                                            <label>Data Vencimento Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataVencimentoIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataVencimentoFim">
+                                            <label>Data Vencimento Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataVencimentoFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Bruto Inicial</label>
+                                            <input type="text" ng-model="filtro.valorBrutoIni" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                        <div class='col-md-2 form-group'>
+                                            <label>Valor Bruto Final</label>
+                                            <input type="text" ng-model="filtro.valorBrutoFim" class="form-control" ui-number-mask="2" />
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+
+
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataLancamentoIni">
+                                            <label>Data Documento Inicial</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataLancamentoIni" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <div class='col-md-2 form-group' datetimez ng-model="filtro.dataLancamentoFim">
+                                            <label>Data Documento Final</label>
+                                            <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="filtro.dataLancamentoFim" ui-date-mask />
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+                                <button type='button' name='pesquisa' id='pesquisa' class='btn btn-primary' ng-click="Pesquisar(true)">
+                                    <span class="glyphicon glyphicon-search"></span> Pesquisar
+                                </button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='panel-body'>
+                    <form class="form-search">
+                        <div class='container'>
+
+                            <div class='col-md-3 form-group'>
+                                <label>Localizar : </label>
+                                <input type="text" class="form-control" ng-model="procurar" />
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+
+
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 142px;">
+
+
+                            <button style="border-right-width: 0px; padding-right: 85px;"
+                                    ng-click="Pesquisar(true)" title="Atualiza a lista na tela" class="btn btn-warning">
+
+                                <span class=" glyphicon glyphicon-refresh">
+                                </span> Atualizar
+                            </button>
+
+                            <button style="margin-top: 4px; padding-right: 109px;"
+                                    ng-click="Incluir()"
+                                    ng-show="EditAccess"
+                                    title="Novo registro" 
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Novo
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 16px;"
+                                    type="button"
+                                    ng-click="uploadLacto()"
+                                    title="Novo registro por imagem de documento (darf, gps, ...)"
+                                    class="btn btn-success">
+                                <span class="glyphicon glyphicon-open-file"></span> Lancto por Imagem
+                            </button>
+
+
+                        </th>
+
+                        <th>
+                            Total de Registro: {{ListaCPAG.length}}
+
+                            Total Valores: {{calculateSum(ListaCPAG) |number:2}}
+                        </th>
+
+                        <th>
+                            Parcelas
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr dir-paginate="item in ListaCPAG|filter:procurar|orderBy:sortKey:reverse|itemsPerPage:7">
+                        <td style="width: 40px;">
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 85px;"
+                                    ng-click="Detalhar(item)"
+                                    title="Detalha o lançamento da lista"
+                                    class="btn btn-primary">
+                                <span class="glyphicon glyphicon-list-alt"></span> Detalhar
+                            </button>
+
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 103px;"
+                                    ng-click="Editar(item)"
+                                    ng-show="EditAccess"
+                                    class="btn btn-primary"
+                                    title="Edita o lançamento">
+                                <span class="glyphicon glyphicon-edit"></span> Editar
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 7px;"
+                                    type="button"
+                                    ng-click="Venctos(item)"
+                                    class="btn btn-warning"
+                                    title="Altera o pagamento previsto de parcelas">
+                                <span class="glyphicon glyphicon-road"></span> Pagamento Previsto
+                            </button>
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 97px;"
+                                    type="button"
+                                    ng-show="EditAccess"
+                                    ng-click="Excluir(item)"
+                                    title="Remove o lançamento"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span> Excluir
+                            </button>
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 93px;"
+                                    type="button"
+                                    ng-show="EditAccess"
+                                    ng-click="upload(item)"
+                                    class="btn btn-warning"
+                                    title="Anexa um ou mais arquivos ao lançamento">
+                                <span class="glyphicon glyphicon-cloud-upload"></span> Upload
+                            </button>
+
+
+                            <button style="margin-top: 4px;border-right-width: 0px; padding-right: 64px;"
+                                    type="button"
+                                    ng-click="Arquivos(item)"
+                                    ng-show="EditAccess"
+                                    class="btn btn-warning"
+                                    title="Lista de arquivos anexada ao lançamento">
+                                <span class="glyphicon glyphicon-file"></span> Arquivos ({{item.qtdImagens}})
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 99px;"
+                                    ng-click="Copiar(item)"
+                                    class="btn btn-success"
+                                    title="A partir de um lançamento cria um outro
+">
+                                <span class="glyphicon glyphicon-duplicate"></span> Copiar
+                            </button>
+
+                            <button style="margin-top: 4px; border-right-width: 0px; padding-right: 30px;"
+                                    ng-click="ObterConsultaLC(item)"
+                                    class="btn btn-success"
+                                    title="Lista de Impacto Contábil">
+                                <span class="glyphicon glyphicon-subtitles"></span> Impacto Contábil
+                            </button>
+
+                            
+                        </td>
+                        <td>
+                            <span ng-click="ordenar('situacao')" class="label label-sm label-info" ng-show="item.situacao == '1 - Em Aberto'"> {{item.situacao}}</span>
+                            <span ng-click="ordenar('situacao')" class="label label-sm label-warning" ng-show="item.situacao == '2 - Pago Parcialmente'"> {{item.situacao}}</span>
+                            <span ng-click="ordenar('situacao')" class="label label-sm label-success" ng-show="item.situacao == '3 - Pago Total'"> {{item.situacao}}</span>
+                            <span ng-click="ordenar('situacao')" class="label label-sm label-danger" ng-show="item.situacao == 'Outro'"> {{item.situacao}}</span>
+
+
+                            <span ng-click="ordenar('aprovado')" class="label label-sm label-success" ng-show="item.aprovado == 'Sim'"> Aprovado</span>
+                            <span ng-click="ordenar('aprovado')" class="label label-sm label-danger" ng-show="item.aprovado == 'Não'"> Aguardando Aprovação</span>
+
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('banco')"> Banco </span> / <span ng-click="ordenar('pessoa')">Nome </span> / <span ng-click="ordenar('ProjetoNome')"> Projeto </span>
+                            </b>
+                            <br />
+                            {{item.banco}} / {{item.pessoa}} / {{item.ProjetoNome}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('numeroDocumento')"> Número Docto </span> / <span ng-click="ordenar('dataLancamento')"> Lançamento </span>  / <span ng-click="ordenar('qtdParcelas')"> Parcelas </span>
+                            </b>
+                            <br />
+                            {{item.numeroDocumento}} / {{item.dataLancamento | date:'dd/MM/yyyy'}}  / {{item.qtdParcelas}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('planoContas')"> Plano de Contas </span> / <span ng-click="ordenar('dataDocumento')"> Data Documento </span> / <span ng-click="ordenar('valorBruto')"> Valor </span>
+                            </b>
+                            <br />
+                            {{item.planoContas}} / {{item.dataDocumento | date:'dd/MM/yyyy'}} / {{item.valorBruto |number:2}}
+                            <br />
+                            <b>
+                                <span ng-click="ordenar('Agencia')"> Agência Favorecido </span> / <span ng-click="ordenar('Conta')"> Conta Favorecido </span>
+                            </b>
+                            <br />
+                            {{item.Agencia}} / {{item.Conta}} - {{item.DigitoConta}}
+                            <br />
+                        </td>
+
+                        <td>
+                            
+                            <div ng-show="EditAccess" class="dropzone" file-dropzone="[image/png, image/jpeg, image/gif, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/msword, application/excel]"
+                                 file="image" file-name="imageFileName" data-max-file-size="3" data-idcpag="{{item.id}}">
+                                <span class="glyphicon glyphicon-upload" ></span>
+                                <span>Upload de Arquivos (doc, pdf, jpg, png)</span>
+                                <div class="alert alert-info" ng-show="item.showupload == 1">
+                                    Arquivos Carregados = {{item.carregados}} e Não Carregados = {{item.naocarregados}}
+                                </div>
+                            </div>
+
+                            <div ng-show="item.ultParcelaPaga != null">
+                                <b> <span>Última Parcela Paga (Parcela /Pagamento Previsto/ Valor)</span></b>
+                                <br />
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-info" ng-show="item.ultParcelaPaga.situacao == '1 - Em Aberto'"> {{item.ultParcelaPaga.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-warning" ng-show="item.ultParcelaPaga.situacao == '2 - Pago Parcialmente'"> {{item.ultParcelaPaga.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-success" ng-show="item.ultParcelaPaga.situacao == '3 - Pago Total'"> {{item.ultParcelaPaga.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-danger" ng-show="item.ultParcelaPaga.situacao == 'Outro'"> {{item.ultParcelaPaga.situacao}}</span>
+
+
+                                <span ng-click="ordenar('aprovado')" class="label label-sm label-success" ng-show="item.ultParcelaPaga.aprovado == 'Sim'"> Aprovado</span>
+                                <span ng-click="ordenar('aprovado')" class="label label-sm label-danger" ng-show="item.ultParcelaPaga.aprovado == 'Não'"> Aguardando Aprovação</span>
+
+                                {{item.ultParcelaPaga.parcela }} / {{item.ultParcelaPaga.vencimentoPrevisto | date:'dd/MM/yyyy'}} / {{item.ultParcelaPaga.valor |number:2}}
+                            </div>
+
+                            <br />
+                            <div ng-show="item.ultParcelaAvencer != null">
+                                <b> <span>Próxima Parcela a Vencer  (Parcela /Pagamento Previsto/ Valor)</span></b>
+                                <br />
+
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-info" ng-show="item.ultParcelaAvencer.situacao == '1 - Em Aberto'"> {{item.ultParcelaAvencer.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-warning" ng-show="item.ultParcelaAvencer.situacao == '2 - Pago Parcialmente'"> {{item.ultParcelaAvencer.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-success" ng-show="item.ultParcelaAvencer.situacao == '3 - Pago Total'"> {{item.ultParcelaAvencer.situacao}}</span>
+                                <span ng-click="ordenar('situacao')" class="label label-sm label-danger" ng-show="item.ultParcelaAvencer.situacao == 'Outro'"> {{item.ultParcelaAvencer.situacao}}</span>
+
+
+                                <span ng-click="ordenar('aprovado')" class="label label-sm label-success" ng-show="item.ultParcelaAvencer.aprovado == 'Sim'"> Aprovado</span>
+                                <span ng-click="ordenar('aprovado')" class="label label-sm label-danger" ng-show="item.ultParcelaAvencer.aprovado == 'Não'"> Aguardando Aprovação</span>
+                                {{item.ultParcelaAvencer.parcela }} / {{item.ultParcelaAvencer.vencimentoPrevisto | date:'dd/MM/yyyy'}} / {{item.ultParcelaAvencer.valor |number:2}}
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <dir-pagination-controls max-size="10" boundary-links="true"></dir-pagination-controls>
+
+
+            <div class="alert alert-info" ng-show="showOK" id="showOKTop">
+                {{msgOK}}
+            </div>
+            <div class="alert alert-danger" ng-show="showNOK">
+                {{msgNOK}}
+                <ul>
+                    <li ng-repeat="item in Erros">{{item}}</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div ng-show="showCadastro">
+
+            <div class="button-row form-group">
+                <button class="btn btn-primary" ng-click="OK()" ng-hide="ModoConsulta" type="submit">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {{TitulobtnOK}}
+                </button>
+                <button class="btn btn-default" ng-click="Voltar()" type="submit">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+                <div class="alert alert-info" ng-show="(MsgDivSuccess != '')">
+                    {{MsgDivSuccess}}
+                </div>
+                <div class="alert alert-danger" ng-show="(MsgDivDanger != '')">
+
+                    {{MsgDivDanger}}
+                </div>
+
+            </div>
+
+            <!--Mensagem tipo Modal Salvar-->
+            <script type="text/ng-template" id="divModalSalvar.html">
+                <div>
+                    <div class="modal-header">
+                        <h3 class="modal-title">Confirme.</h3>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja lançar o Contas a Pagar?
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn bkg" ng-click="Ok()">Sim</button>
+                        <button class="btn bkg" ng-click="Cancel()">Não</button>
+                    </div>
+                </div>
+            </script>
+            <!--Mensagem tipo Modal Salvar Fim-->
+
+            <div id="DivDadosGerais" class="panel panel-primary">
+                <div class="panel-heading">Imagem</div>
+                <div class="panel-body">
+                    <img src="{{CPAG.urlimg}}" id="imgcabec" style="max-width:900px; _width:900px; " />
+                </div>
+            </div>
+
+
+
+            <form name="frmDadosGerais" novalidate>
+                <div id="DivDadosGerais" class="panel panel-primary">
+                    <div class="panel-heading">Dados do pagamento</div>
+                    <div class="panel-body">
+                        <div class='row'>
+                            <div class='col-md-10 form-group'>
+                                <label>Código de Barras</label>
+                                <input type="text" class="form-control" name="LinhaDigitavel" id="LinhaDigitavel" value="@ViewBag.LinhaDigitavel" ng-model="CPAG.LinhaDigitavel" ng-disabled="ModoConsulta" />
+                                <div class="alert alert-danger" ng-show="MsgLinha != ''">
+                                    {{MsgLinha}}
+                                </div>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <br />
+                                <button class="btn btn-primary" name="Processar" id="Processar" ng-click="CodigoBarras()">
+                                    <span class="glyphicon glyphicon-cog"></span> Processar
+                                </button>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-6 form-group'>
+                                <label>Fornecedor</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.pessoa_desc" typeahead="o.Text as o.Text for o in ListaPessoas | filter:$viewValue | limitTo:8" class="form-control" required />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Data Lançamento</label>
+                                <label>{{CPAG.dataLancamento |date:'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataCompetencia">
+                                <label>Data Competência</label>
+                                <input data-format="MM/yyyy" type="text" ng-model="CPAG.dataCompetencia" class="form-control" ng-disabled="ModoConsulta" />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+
+                            <div class='col-md-2 form-group' datetimez ng-model="CPAG.dataDocumento">
+                                <label>Data Documento</label>
+                                <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAG.dataDocumento" ui-date-mask ng-disabled="ModoConsulta" />
+                                <span class="add-on">
+                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class='row'>
+
+
+                            <div class='col-md-2 form-group'>
+                                <label>Valor Bruto</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.valorBruto" ng-change="CPAGITEM.valor = CPAG.valorBruto; PROJETOITEM.Valor = CPAG.valorBruto; " class="form-control" ui-number-mask="2" />
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Número Documento</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.numeroDocumento" class="form-control" />
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Tipo Documento</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipodocumento_id" ng-options="o.Value as o.Text for o in ListaTipoDocumento" ng-change="MostraComplementoTipoDOC(true)" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-2 form-group'>
+                                <label>Tipo Lançamento</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.tipolancamento" ng-options="o.Value as o.Text for o in ListaTipoLancamento" required>
+                                    <option value="">--Selecione--</option>
+                                </select>
+                            </div>
+                            <div class='col-md-2 form-group'>
+                                <label>Código Pagamento</label>
+                                <input ng-disabled="ModoConsulta" type="text" ng-model="CPAG.codigoPagamento" name="txtcodigoPagamento" class="form-control" required />
+                                <span class='help-block' ng-show='frmDadosGerais.txtcodigoPagamento.$error.required && frmDadosGerais.txtcodigoPagamento.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Banco/Conta</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.banco_id" ng-options="o.Value as o.Text for o in ListaBanco" id="txtbanco_id" required>
+                                    <option value=" ">
+                                        --Selecione--
+                                    </option>
+                                </select>
+                                <span class='help-block' ng-show='frmDadosGerais.txtbanco_id.$error.required && frmDadosGerais.txtbanco_id.$dirty'>Campo Obrigatório</span>
+                            </div>
+                            <div class='col-md-4 form-group'>
+                                <label>Conta de Despesa</label>
+                                <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAG.planoDeConta_id" ng-options="o.Value as o.Text for o in ListaContaContabil" id="txtplanoDeConta_id" required>
+                                    <option value=" ">
+                                        --Selecione--
+                                    </option>
+                                </select>
+                                <span class='help-block' ng-show='frmDadosGerais.txtplanoDeConta_id.$error.required && frmDadosGerais.txtplanoDeConta_id.$dirty'>Campo Obrigatório</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="DivFGTS" name="DivFGTS" ng-show="showDivFGTS" class="panel panel-primary">
+
+                <div class="panel-heading">FGTS</div>
+                <div class='panel-body'>
+                    <div class='container-fluid'>
+                        <form name="frmFGTS">
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Nome do Contribuinte</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.nomeContribuinte" name="txtFGTSnomeContribuinte" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSnomeContribuinte.$error.required && frmFGTS.txtFGTSnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>CNPJ</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.cnpj" name="txtFGTScnpj" class="form-control" ui-br-cnpj-mask required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTScnpj.$error.required && frmFGTS.txtFGTScnpj.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Código Receita</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.codigoReceita" name="txtFGTScodigoReceita" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTScodigoReceita.$error.required && frmFGTS.txtFGTScodigoReceita.$dirty'>Campo Obrigatório</span>
+                                </div>
+                            </div>
+                            <div class='row'>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Código Barras</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.codigoBarras" name="txtFGTScodigoBarras" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTScodigoBarras.$error.required && frmFGTS.txtFGTScodigoBarras.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Identificação FGTS</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.identificadorFgts" name="txtFGTSidentificadorFgts" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSidentificadorFgts.$error.required && frmFGTS.txtFGTSidentificadorFgts.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Lacre Conectividae Social</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.lacreConectividadeSocial" name="txtFGTSlacreConectividadeSocial" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSlacreConectividadeSocial.$error.required && frmFGTS.txtFGTSlacreConectividadeSocial.$dirty'>Campo Obrigatório</span>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Digito Lacre</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.digitoLacre" name="txtFGTSdigitoLacre" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSdigitoLacre.$error.required && frmFGTS.txtFGTSdigitoLacre.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+
+                                <div class='col-md-2 form-group' datetimez ng-model="FGTS.dataPagamento">
+                                    <label>Data de Pagamento</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="FGTS.dataPagamento" ui-date-mask ng-disabled="ModoConsulta" id="txtFGTSdataPagamento" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSdataPagamento.$error.required && frmFGTS.txtFGTSdataPagamento.$dirty'>Campo Obrigatório</span>
+
+                                </div>
+
+
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Tipo Inscrição</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.tipoInscricao" name="txtFGTStipoInscricao" class="form-control" required />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTStipoInscricao.$error.required && frmFGTS.txtFGTStipoInscricao.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Pagamento</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="FGTS.valorPagamento" name="txtFGTSvalorPagamento" class="form-control" required ui-number-mask="2" />
+                                    <span class='help-block' ng-show='frmFGTS.txtFGTSvalorPagamento.$error.required && frmFGTS.txtFGTSvalorPagamento.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="DivDARF" name="DivDARF" ng-show="showDivDARF" class="panel panel-primary">
+
+                <div class="panel-heading">DARF</div>
+                <div class='panel-body'>
+                    <div class='container-fluid'>
+                        <form name="frmDARF">
+                            <div class='row'>
+                                <div class='col-md-5 form-group'>
+                                    <label>Nome do Contribuinte</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.nomeContribuinte" name="txtDARFnomeContribuinte" class="form-control" required />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFnomeContribuinte.$error.required && frmDARF.txtDARFnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-2 form-group' datetimez ng-model="DARF.periodoApuracao">
+                                    <label>Periodo de Apuração</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="DARF.periodoApuracao" ui-date-mask ng-disabled="ModoConsulta" id="txtDARFperiodoApuracao" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                    <span class='help-block' ng-show='frmDARF.txtDARFperiodoApuracao.$error.required && frmDARF.txtDARFperiodoApuracao.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>CNPJ</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.cnpj" name="txtDARFcnpj" class="form-control" ui-br-cnpj-mask required />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFcnpj.$error.required && frmDARF.txtDARFcnpj.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código Receita</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.codigoReceita" name="txtDARFcodigoReceita" class="form-control" required />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFcodigoReceita.$error.required && frmDARF.txtDARFcodigoReceita.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Numero Referencia</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.numeroReferencia" name="txtDARFnumeroReferencia" class="form-control" />
+                                </div>
+                                <div class='col-md-1 form-group'>
+                                </div>
+
+                                <div class='col-md-2 form-group' datetimez ng-model="DARF.dataVencimento">
+                                    <label>Data Vencimento</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="DARF.dataVencimento" ui-date-mask ng-disabled="ModoConsulta" id="txtdARFDataVencimento" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                    <span class='help-block' ng-show='frmDARF.txtdARFDataVencimento.$error.required && frmDARF.txtdARFDataVencimento.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Principal</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.valorPrincipal" name="txtDARFvalorPrincipal" class="form-control" required ui-number-mask="2" />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFvalorPrincipal.$error.required && frmDARF.valorPrincipal.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                            </div>
+
+                            <div class='row'>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Multa</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.multa" name="txtDARFmulta" class="form-control" required ui-number-mask="2" />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFmulta.$error.required && frmDARF.txtDARFmulta.$dirty'>Campo Obrigatório</span>
+
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Juros Encargos</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.jurosEncargos" name="txtDARFjurosEncargos" class="form-control" required ui-number-mask="2" />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFjurosEncargos.$error.required && frmDARF.txtDARFjurosEncargos.$dirty'>Campo Obrigatório</span>
+
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Total</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="DARF.valorTotal" name="txtDARFvalorTotal" class="form-control" required ui-number-mask="2" />
+                                    <span class='help-block' ng-show='frmDARF.txtDARFvalorTotal.$error.required && frmDARF.txtDARFvalorTotal.$dirty'>Campo Obrigatório</span>
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="DivGPS" name="DivGPS" ng-show="showDivGPS" class="panel panel-primary">
+
+                <div class="panel-heading">GPS</div>
+                <div class='panel-body'>
+
+                    <div class='container-fluid'>
+                        <form name="frmGPS">
+                            <div class='row'>
+                                <div class='col-md-5 form-group'>
+                                    <label>Nome Contribuinte</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.nomeContribuinte" name="txtGPSnomeContribuinte" class="form-control" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSnomeContribuinte.$error.required && frmGPS.txtGPSnomeContribuinte.$dirty'>Campo Obrigatório</span>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Informações complementares</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.informacoesComplementares" name="txtGPSinformacoesComplementares" class="form-control" required />
+                                </div>
+
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-md-2 form-group' datetimez ng-model="GPS.dataArrecadacao">
+                                    <label>Data Arrecadação</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="GPS.dataArrecadacao" ui-date-mask ng-disabled="ModoConsulta" id="txtGPSdataArrecadacao" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                    <span class='help-block' ng-show='frmGPS.txtGPSdataArrecadacao.$error.required && frmGPS.txtGPSdataArrecadacao.$dirty'>Campo Obrigatório</span>
+
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Código Pagamento</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.codigoPagamento" name="txtGPScodigoPagamento" class="form-control" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPScodigoPagamento.$error.required && frmGPS.txtGPScodigoPagamento.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                                <div class='col-md-2     form-group'>
+                                    <label>Competencia</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.competencia" name="txtGPScompetencia" class="form-control" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPScompetencia.$error.required && frmGPS.txtGPScompetencia.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Identificador</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.identificador" name="txtGPSidentificador" class="form-control" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSidentificador.$error.required && frmGPS.txtGPSidentificador.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+                            </div>
+
+                            <div class='row'>
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Arrecadado</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.valorArrecadado" name="txtGPSvalorArrecadado" class="form-control" ui-number-mask="2" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSvalorArrecadado.$error.required && frmGPS.txtGPSvalorArrecadado.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Valor Outras Entidades</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.valorAtualizacaoMonetaria" name="txtGPSvalorAtualizacaoMonetaria" class="form-control" ui-number-mask="2" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSvalorAtualizacaoMonetaria.$error.required && frmGPS.txtGPSvalorAtualizacaoMonetaria.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+
+                                <div class='col-md-3 form-group'>
+                                    <label>Valor Atualização Monetária</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.valorOutrasEntidades" name="txtGPSvalorOutrasEntidades" class="form-control" ui-number-mask="2" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSvalorOutrasEntidades.$error.required && frmGPS.txtGPSvalorOutrasEntidades.$dirty'>Campo Obrigatório</span>
+                                </div>
+
+
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor Tributo</label>
+                                    <input ng-disabled="ModoConsulta" type="text" ng-model="GPS.valorTributo" name="txtGPSvalorTributo" class="form-control" ui-number-mask="2" required />
+                                    <span class='help-block' ng-show='frmGPS.txtGPSvalorTributo.$error.required && frmGPS.txtGPSvalorTributo.$dirty'>Campo Obrigatório</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Parcelamento</div>
+                <div class="panel-body">
+                    <form id="frmItem">
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-2 form-group' datetimez ng-model="CPAGPARCELA.vencimento">
+                                    <label>Vencimento</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAGPARCELA.vencimento" ui-date-mask ng-disabled="ModoConsulta" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                </div>
+                                <div class='col-md-2 form-group' datetimez ng-model="CPAGPARCELA.vencimentoPrevisto">
+                                    <label>Pagamento Previsto</label>
+                                    <input data-format="dd/MM/yyyy" type="text" class="form-control" ng-model="CPAGPARCELA.vencimentoPrevisto" ui-date-mask ng-disabled="ModoConsulta" />
+                                    <span class="add-on">
+                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                    </span>
+                                </div>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Histórico</label>
+                                    <input ng-disabled="ModoConsulta" type="text" id="txtparcelaHistorico" class="form-control" ng-model="CPAGPARCELA.historico" ng-maxlength="250" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Qtd. Parcelas</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="CPAGPARCELA.parcelas" ui-number-mask="0">
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Acrescenta Sobra</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAGPARCELA.sobra" ng-options="o.Value as o.Text for o in ListaSobra">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-10 form-group'>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <span class="input-group-btn">
+                                        <button ng-show="!ModoConsulta" type="button"
+                                                ng-click="fcAdicionaParcela(CPAGPARCELA)"
+                                                name="btnAdicione" id="btnAdicione"
+                                                class="btn btn-success">
+                                            <span class="glyphicon glyphicon-share-alt"></span> Gerar Parcelas
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="alert alert-success" ng-show="ShowDivValidacao != ''">
+                        {{ShowDivValidacao}}
+                    </div>
+                    <div class="alert alert-danger" ng-show="MsgDivValidacaoParcela != ''">
+                        {{MsgDivValidacaoParcela}}
+                    </div>
+                </div>
+                <div class='container-fluid'>
+                    <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                    <div id="Repositorio">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Parcela</th>
+                                    <th>Data de Vencimento</th>
+                                    <th>Data Prevista Pagar</th>
+                                    <th>Histórico</th>
+                                    <th>Valor</th>
+                                    <th>Situação</th>
+                                    <th>Lote</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in CPAGPARCELAS">
+                                    <td>
+                                        <button ng-show="!ModoConsulta"
+                                                type="button"
+                                                ng-click="fcEditarParcela($index)"
+                                                class="btn btn-success">
+                                            <span class="glyphicon glyphicon-edit"></span> Editar
+                                        </button>
+                                    </td>
+                                    <td>{{item.parcela}}</td>
+                                    <td>{{item.vencimento | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{item.vencimentoPrevisto | date:'dd/MM/yyyy' }}</td>
+                                    <td>{{item.historico}}</td>
+                                    <td>{{item.valor | number:2}}</td>
+                                    <td>{{item.status}}</td>
+                                    <td>{{item.lotePagamentoBanco}}</td>
+                                    @*<td>
+
+                                    <button ng-show="!ModoConsulta"
+                                            type="button"
+                                            ng-click="fcExcluirParcela($index)"
+                                            class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span> Excluir
+                                    </button>
+
+                                    <button ng-show="!ModoConsulta"
+                                            type="button"
+                                            ng-click="fcEditarParcela($index)"
+                                            class="btn btn-success">
+                                        <span class="glyphicon glyphicon-minus"></span> Editar
+                                    </button>
+                                </td>*@
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total</td>
+                                    <td>{{valorTotalParcelas | number:2}}</td>
+                                    <td></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Distribuição de custo por área</div>
+                <div class="panel-body">
+                    <form id="frmItem">
+                        <div class='container-fluid'>
+                            <div class='row'>
+
+                                <div class='col-md-4 form-group'>
+                                    <label>Unidade de Negócio</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="CPAGITEM.UnidadeNegocio_desc" ng-options="o.Text as o.Text for o in ListaUnidadeNegocio">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Histórico</label>
+                                    <input ng-disabled="ModoConsulta" type="text" id="txtHistorico" class="form-control" ng-model="CPAGITEM.historico" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="CPAGITEM.valor" ui-number-mask="2">
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>%</label>
+                                    <input ng-disabled="ModoConsulta" type="text" id="txtPorcentagemLct" class="form-control" ng-model="CPAGITEM.PorcentagemLct" ui-number-mask="2" />
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-10 form-group'>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <span class="input-group-btn">
+                                        <button ng-show="!ModoConsulta" type="button"
+                                                ng-click="fcAdiciona(CPAGITEM)"
+                                                name="btnAdicione" id="btnAdicione"
+                                                class="btn btn-success">
+                                            <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-danger" ng-show="ShowDivValidacao">
+                        {{MsgDivValidacao}}
+                    </div>
+                </div>
+                <div class='container-fluid'>
+                    <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                    <div id="Repositorio">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Unidade de Negócio</th>
+                                    <th>Histórico</th>
+                                    <th>Valor</th>
+                                    <th>Opções</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in CPAGITEMS">
+                                    <td>{{item.UnidadeNegocio_desc}}</td>
+                                    <td>{{item.historico}}</td>
+                                    <td>{{item.valor | number:2}}</td>
+                                    <td>
+
+                                        <button ng-show="!ModoConsulta"
+                                                type="button"
+                                                ng-click="fcExcluir($index)"
+                                                class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove"></span> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Total</td>
+                                    <td>{{valorTotal | number:2}}</td>
+                                    <td></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Distribuição de Projetos</div>
+                <div class="panel-body">
+                    <form id="frmItem">
+                        <div class='container-fluid'>
+                            <div class='row'>
+                                <div class='col-md-4 form-group'>
+                                    <label>Projeto</label>
+                                    <select ng-disabled="ModoConsulta" class="form-control" ng-model="PROJETOITEM.Projeto_Id" ng-options="o.Value as o.Text for o in ListaProjetosDrop">
+                                        <option value="">--Selecione--</option>
+                                    </select>
+                                </div>
+                                <div class='col-md-4 form-group'>
+                                    <label>Histórico</label>
+                                    <input ng-disabled="ModoConsulta" type="text" id="txtparcelaHistorico" class="form-control" ng-model="PROJETOITEM.Historico" ng-maxlength="250" />
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <label>Valor</label>
+                                    <input ng-disabled="ModoConsulta" type="text" class="form-control" ng-model="PROJETOITEM.Valor" ui-number-mask="2">
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-md-10 form-group'>
+                                </div>
+                                <div class='col-md-2 form-group'>
+                                    <span class="input-group-btn">
+                                        <button ng-show="!ModoConsulta" type="button"
+                                                ng-click="AdicionaProjeto()"
+                                                name="btnAdicione" id="btnAdicione"
+                                                class="btn btn-success">
+                                            <span class="glyphicon glyphicon-plus"></span> Adicionar
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-danger" ng-show="ShowDivValidacaoProjeto">
+                        {{MsgDivValidacaoProjeto}}
+                    </div>
+                </div>
+                <div class='container-fluid'>
+                    <input ng-disabled="ModoConsulta" type="hidden" name="txtItems" id="txtItems" value="0" />
+                    <div id="Repositorio">
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Projeto</th>
+                                    <th>Histórico</th>
+                                    <th>Valor</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in PROJETOITEMS">
+                                    <td>{{item.ProjetoNome}}</td>
+                                    <td>{{item.Historico}}</td>
+                                    <td>{{item.Valor | number:2}}</td>
+                                    <td>
+                                        <button ng-show="!ModoConsulta"
+                                                type="button"
+                                                ng-click="ExcluirProjeto($index)"
+                                                class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove"></span> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Total</td>
+                                    <td>{{ValorTotalProjetos | number:2}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class='container-fluid' ng-show="!ModoConsulta">
+            <div class='row'>
+                <div class='col-md-2 form-group'>
+                    <label>Repetir lançamento por meses seguintes: </label>
+                    <input type="text" ng-model="CPAG.RepetirLancamento" id="txtRepetirLancamento" class="form-control" required ui-number-mask="0" />
+                </div>
+            </div>
+        </div>*@
+            <div class="alert alert-info" ng-show="(MsgDivSuccess != '')">
+                {{MsgDivSuccess}}
+            </div>
+            <div class="alert alert-danger" ng-show="(MsgDivDanger != '')">
+
+                {{MsgDivDanger}}
+            </div>
+            <div class="button-row form-group">
+
+                <button class="btn btn-primary" ng-click="OK()" ng-hide="ModoConsulta" type="submit">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    {{TitulobtnOK}}
+                </button>
+                <button class="btn btn-default" ng-click="Voltar()" type="submit">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    Voltar
+                </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+

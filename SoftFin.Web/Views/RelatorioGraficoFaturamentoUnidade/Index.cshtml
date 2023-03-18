@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Gráfico de Faturamento por Unidade";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Inicial</label>
+                <input type="text" name="dataInicial"  class="form-control" id="dataInicial" value="@ViewData["DataInicial"]" />
+            </div>
+            <div class='col-md-2 form-group'>
+                <label>Periodo Final</label>
+                <input type="text" name="dataFinal"  class="form-control" id="dataFinal"  value="@ViewData["DataFinal"]" />
+            </div>
+
+            <div class='col-md-2 form-group'>
+                <button class="btn btn-primary" type="button" id="gerar" name="pesquisa">
+                    <span class="glyphicon glyphicon-cog"></span> Gerar</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class='col-md-12 form-group'>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Faturamento por Unidade</div>
+                    <div class="panel-body" id="chart_div"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div id="indicator" style="display: none; text-align: center;" class="loading_img">
+        <img src="~/Content/images/loading_bar_animated.gif" />
+    </div>
+
+  
+   
+    <div class="alert alert-info">
+        @ViewBag.msg
+    </div>
+
+
+}
+
+
+
+
+<script src="https://www.google.com/jsapi"></script>
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+
+    $('#dataInicial').datepicker({ dateFormat: 'dd/mm/yy' });
+    $('#dataFinal').datepicker({ dateFormat: 'dd/mm/yy' });
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    $('#gerar').click(function () {
+
+        $('#indicator').show();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: "GetReport",
+            data: {
+                'DataInicial': $("#dataInicial").val(),
+                'DataFinal': $("#dataFinal").val()
+            },
+            success: function (chartsdata) {
+
+                function pad(n, width, z) {
+                    z = z || '0';
+                    n = n + '';
+                    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+                }
+
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Mês');
+                for (var i = 0; i < chartsdata.unidades.length; i++) {
+                    data.addColumn('number', chartsdata.unidades[i].unidade);
+                    
+                }
+
+                for (var i = 0; i < chartsdata.objs.length; i++) {
+                    data.addRow(chartsdata.objs[i]);
+                }
+                
+
+                //var chart = new google.visualization.LineCharts(document.getElementById('chart_div'));
+
+                //chart.draw(data,
+                //  {
+                //      title: "Gráfico de Faturamento Por Unidade",
+                //  });
+
+
+
+
+                //var data = google.visualization.arrayToDataTable([
+                //         ["date", "product", "recipe", "both"],
+                //         ["Jan 1, 2012", 176, 0, 144],
+                //         ["Jul 1, 2012", 16, 0, 82],
+                //         ["Aug 1, 2012", 41, 81, 82],
+                //         ["Sep 1, 2012", 27, 7, 7],
+                //         ["Oct 1, 2012", 9, 0, 0]
+                //]);
+
+                var options = {
+                    title: "Gráfico de Faturamento Por Unidade"
+
+                };
+
+                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+                $('#indicator').hide();
+
+
+            },
+            error: function () {
+                alert("Ops...");
+            }
+        });
+    })
+
+
+
+</script>

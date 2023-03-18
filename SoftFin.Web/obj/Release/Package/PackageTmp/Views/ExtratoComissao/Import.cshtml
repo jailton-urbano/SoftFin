@@ -1,0 +1,24 @@
+﻿
+
+<h2>Importar Extrato de Comissão</h2>
+
+@using (Html.BeginForm("Import", "ExtratoComissao", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    <label>Clique no botão abaixo e informe o arquivo : </label> 
+    <input class="btn" type="file" name="file" />
+    
+    <input class="btn btn-primary" type="submit" name="Submit" id="Submit" value="Ler Arquivo" />
+}
+
+
+<div class='alert alert-info'>
+    @ViewBag.msg
+</div>
+
+<script>
+    $(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+        QuickSidebar.init(); // init quick sidebar
+    });
+</script>
